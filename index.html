@@ -5,43 +5,111 @@
   <title>SQL Mad Minutes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial, sans-serif; background:#111; color:#eee; padding:20px; }
-    button { padding:10px 14px; margin-right:6px; cursor:pointer; }
-    pre { background:#222; padding:14px; }
+    body { font-family: Arial, sans-serif; background:#111; color:#eee; padding:20px; max-width: 900px; margin:0 auto; }
+    button { padding:10px 14px; margin:6px 6px 6px 0; cursor:pointer; }
+    pre { background:#222; padding:14px; border-radius:8px; }
+    input {
+      padding:10px; width: min(520px, 95%);
+      border-radius: 8px; border: 1px solid #444;
+      background:#181818; color:#eee; font-size: 15px;
+    }
+    .row { margin: 10px 0; }
+    .hint { opacity:0.85; font-size: 13px; }
+    .ok { color: #7CFC9A; font-weight: bold; }
+    .bad { color: #FF7C7C; font-weight: bold; }
+    .chip { display:inline-block; padding:4px 10px; border:1px solid #444; border-radius:999px; margin-left:8px; font-size:12px; opacity:.9;}
   </style>
 </head>
 <body>
 
 <h1>SQL Mad Minutes</h1>
-<p>Intro SQL fill-in-the-blank practice (SQLite / DBeaver)</p>
+<p class="hint">
+  Type the missing syntax for the <b>____</b> blank, then click <b>Check Answer</b>.
+  (SQLite / DBeaver aligned)
+</p>
 
-<button onclick="nextQ()">Next Question</button>
-<button onclick="showA()">Show Answer</button>
+<div class="row">
+  <button onclick="nextQ()">Next Question</button>
+  <button onclick="reveal()">Reveal Answer</button>
+</div>
 
 <pre id="q">Click “Next Question” to begin…</pre>
-<pre id="a" style="display:none;"></pre>
+
+<div class="row">
+  <label for="ans"><b>Your answer:</b></label><br>
+  <input id="ans" type="text" placeholder="Type the missing keyword/operator… (e.g., WHERE)" autocomplete="off">
+</div>
+
+<div class="row">
+  <button onclick="check()">Check Answer</button>
+  <span id="result" class="chip">—</span>
+</div>
+
+<pre id="explain" style="display:none;"></pre>
 
 <script>
+/*
+  For now: demo set (5 questions).
+  After you confirm the input works, we’ll drop in the full 75 SQLite-safe bank.
+*/
 const questions = [
-  { q: "____ * FROM customers;", a: "SELECT" },
-  { q: "SELECT ____ country FROM customers;", a: "DISTINCT" },
-  { q: "SELECT * FROM customers ____ country='Canada';", a: "WHERE" },
-  { q: "SELECT * FROM orders ORDER BY order_date ____;", a: "DESC" },
-  { q: "SELECT COUNT(*) ____ customers;", a: "FROM" }
+  { q: "____ * FROM customers;", a: "SELECT", topic: "SELECT" },
+  { q: "SELECT ____ country FROM customers;", a: "DISTINCT", topic: "DISTINCT" },
+  { q: "SELECT * FROM customers ____ country='Canada';", a: "WHERE", topic: "WHERE" },
+  { q: "SELECT * FROM orders ORDER BY order_date ____;", a: "DESC", topic: "ORDER BY" },
+  { q: "SELECT COUNT(*) ____ customers;", a: "FROM", topic: "FROM" }
 ];
 
 let i = -1;
 
-function nextQ() {
-  i = (i + 1) % questions.length;
-  document.getElementById("q").textContent = questions[i].q;
-  document.getElementById("a").style.display = "none";
+function normalize(s) {
+  return (s ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toUpperCase();
 }
 
-function showA() {
-  document.getElementById("a").textContent = "Answer: " + questions[i].a;
-  document.getElementById("a").style.display = "block";
+function nextQ() {
+  i = (i + 1) % questions.length;
+  document.getElementById("q").textContent = questions[i].q + "   [" + questions[i].topic + "]";
+  document.getElementById("ans").value = "";
+  document.getElementById("result").textContent = "—";
+  document.getElementById("result").className = "chip";
+  document.getElementById("explain").style.display = "none";
+  document.getElementById("ans").focus();
 }
+
+function check() {
+  if (i < 0) return;
+  const user = normalize(document.getElementById("ans").value);
+  const correct = normalize(questions[i].a);
+
+  const result = document.getElementById("result");
+  const explain = document.getElementById("explain");
+
+  if (user === correct) {
+    result.textContent = "✅ Correct";
+    result.className = "chip ok";
+    explain.style.display = "none";
+  } else {
+    result.textContent = "❌ Not quite";
+    result.className = "chip bad";
+    explain.style.display = "block";
+    explain.textContent = "Correct answer: " + questions[i].a;
+  }
+}
+
+function reveal() {
+  if (i < 0) return;
+  const explain = document.getElementById("explain");
+  explain.style.display = "block";
+  explain.textContent = "Correct answer: " + questions[i].a;
+}
+
+// Allow Enter key to submit
+document.getElementById("ans").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") check();
+});
 </script>
 
 </body>
