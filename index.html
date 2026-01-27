@@ -153,24 +153,6 @@ function normalize(s) {
     .toUpperCase();
 }
 
-function nextQ() {
-  i = (i + 1) % questions.length;
-
-  document.getElementById("ctx").textContent =
-    questions[i].ctx ? "Context: " + questions[i].ctx : "";
-
-  document.getElementById("goal").textContent =
-    questions[i].goal ? "Goal: " + questions[i].goal : "";
-
-  document.getElementById("q").textContent = questions[i].q;
-
-  document.getElementById("ans").value = "";
-  document.getElementById("result").textContent = "—";
-  document.getElementById("result").className = "chip";
-  document.getElementById("explain").style.display = "none";
-  document.getElementById("ans").focus();
-}
-
 function check() {
   if (i < 0) return;
   const user = normalize(document.getElementById("ans").value);
