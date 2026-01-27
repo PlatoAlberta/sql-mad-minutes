@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SQL Mad Minutes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; background:#111; color:#eee; padding:20px; }
+    button { padding:10px 14px; margin-right:6px; cursor:pointer; }
+    pre { background:#222; padding:14px; }
+  </style>
+</head>
+<body>
+
+<h1>SQL Mad Minutes</h1>
+<p>Intro SQL fill-in-the-blank practice (SQLite / DBeaver)</p>
+
+<button onclick="nextQ()">Next Question</button>
+<button onclick="showA()">Show Answer</button>
+
+<pre id="q">Click “Next Question” to begin…</pre>
+<pre id="a" style="display:none;"></pre>
+
+<script>
+const questions = [
+  { q: "____ * FROM customers;", a: "SELECT" },
+  { q: "SELECT ____ country FROM customers;", a: "DISTINCT" },
+  { q: "SELECT * FROM customers ____ country='Canada';", a: "WHERE" },
+  { q: "SELECT * FROM orders ORDER BY order_date ____;", a: "DESC" },
+  { q: "SELECT COUNT(*) ____ customers;", a: "FROM" }
+];
+
+let i = -1;
+
+function nextQ() {
+  i = (i + 1) % questions.length;
+  document.getElementById("q").textContent = questions[i].q;
+  document.getElementById("a").style.display = "none";
+}
+
+function showA() {
+  document.getElementById("a").textContent = "Answer: " + questions[i].a;
+  document.getElementById("a").style.display = "block";
+}
+</script>
+
+</body>
+</html>
