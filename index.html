@@ -7,7 +7,7 @@
   <style>
     body { font-family: Arial, sans-serif; background:#111; color:#eee; padding:20px; max-width: 900px; margin:0 auto; }
     button { padding:10px 14px; margin:6px 6px 6px 0; cursor:pointer; }
-    pre { background:#222; padding:14px; border-radius:8px; }
+    pre { background:#222; padding:14px; border-radius:8px; margin:10px 0; }
     input {
       padding:10px; width: min(520px, 95%);
       border-radius: 8px; border: 1px solid #444;
@@ -33,9 +33,10 @@
   <button onclick="reveal()">Reveal Answer</button>
 </div>
 
-<pre id="ctx" class="hint"></pre>
-<pre id="goal" class="hint"></pre>
-  
+<!-- Context / Goal: only show when a question provides them -->
+<pre id="ctx" class="hint" style="display:none;"></pre>
+<pre id="goal" class="hint" style="display:none;"></pre>
+
 <pre id="q">Click “Next Question” to begin…</pre>
 
 <div class="row">
@@ -51,21 +52,19 @@
 <pre id="explain" style="display:none;"></pre>
 
 <script>
-/*
-  For now: demo set (5 questions).
-  After you confirm the input works, we’ll drop in the full 75 SQLite-safe bank.
-*/
 const questions = [
   // ===== Round 1: Core =====
   { q: "____ * FROM customers;", a: "SELECT", topic: "R1 SELECT" },
   { q: "SELECT customer_name, ____ FROM customers;", a: "city", topic: "R1 Columns" },
-{
-  ctx: "customers(customer_id, customer_name, city, country, email)",
-  goal: "Return each country only once",
-  q: "SELECT ____ country FROM customers;",
-  a: "DISTINCT",
-  topic: "R1 DISTINCT"
-},
+
+  {
+    ctx: "customers(customer_id, customer_name, city, country, email)",
+    goal: "Return each country only once",
+    q: "SELECT ____ country FROM customers;",
+    a: "DISTINCT",
+    topic: "R1 DISTINCT"
+  },
+
   { q: "SELECT * FROM customers ____ country = 'Canada';", a: "WHERE", topic: "R1 WHERE" },
   { q: "SELECT * FROM customers WHERE country ____ 'Canada';", a: "=", topic: "R1 Operator" },
   { q: "SELECT * FROM customers WHERE country='Canada' ____ city='Calgary';", a: "AND", topic: "R1 AND" },
@@ -153,6 +152,41 @@ function normalize(s) {
     .toUpperCase();
 }
 
+function setCtxGoal(qObj) {
+  const ctxEl = document.getElementById("ctx");
+  const goalEl = document.getElementById("goal");
+
+  if (qObj.ctx) {
+    ctxEl.style.display = "block";
+    ctxEl.textContent = "Context: " + qObj.ctx;
+  } else {
+    ctxEl.style.display = "none";
+    ctxEl.textContent = "";
+  }
+
+  if (qObj.goal) {
+    goalEl.style.display = "block";
+    goalEl.textContent = "Goal: " + qObj.goal;
+  } else {
+    goalEl.style.display = "none";
+    goalEl.textContent = "";
+  }
+}
+
+function nextQ() {
+  i = (i + 1) % questions.length;
+
+  const qObj = questions[i];
+  document.getElementById("q").textContent = qObj.q;
+  setCtxGoal(qObj);
+
+  document.getElementById("ans").value = "";
+  document.getElementById("result").textContent = "—";
+  document.getElementById("result").className = "chip";
+  document.getElementById("explain").style.display = "none";
+  document.getElementById("ans").focus();
+}
+
 function check() {
   if (i < 0) return;
   const user = normalize(document.getElementById("ans").value);
@@ -165,6 +199,7 @@ function check() {
     result.textContent = "✅ Correct";
     result.className = "chip ok";
     explain.style.display = "none";
+    explain.textContent = "";
   } else {
     result.textContent = "❌ Not quite";
     result.className = "chip bad";
