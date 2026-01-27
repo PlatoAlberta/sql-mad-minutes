@@ -33,6 +33,9 @@
   <button onclick="reveal()">Reveal Answer</button>
 </div>
 
+<pre id="ctx" class="hint"></pre>
+<pre id="goal" class="hint"></pre>
+  
 <pre id="q">Click “Next Question” to begin…</pre>
 
 <div class="row">
@@ -56,7 +59,13 @@ const questions = [
   // ===== Round 1: Core =====
   { q: "____ * FROM customers;", a: "SELECT", topic: "R1 SELECT" },
   { q: "SELECT customer_name, ____ FROM customers;", a: "city", topic: "R1 Columns" },
-  { q: "SELECT ____ country FROM customers;", a: "DISTINCT", topic: "R1 DISTINCT" },
+{
+  ctx: "customers(customer_id, customer_name, city, country, email)",
+  goal: "Return each country only once",
+  q: "SELECT ____ country FROM customers;",
+  a: "DISTINCT",
+  topic: "R1 DISTINCT"
+},
   { q: "SELECT * FROM customers ____ country = 'Canada';", a: "WHERE", topic: "R1 WHERE" },
   { q: "SELECT * FROM customers WHERE country ____ 'Canada';", a: "=", topic: "R1 Operator" },
   { q: "SELECT * FROM customers WHERE country='Canada' ____ city='Calgary';", a: "AND", topic: "R1 AND" },
@@ -146,7 +155,15 @@ function normalize(s) {
 
 function nextQ() {
   i = (i + 1) % questions.length;
-  document.getElementById("q").textContent = questions[i].q + "   [" + questions[i].topic + "]";
+
+  document.getElementById("ctx").textContent =
+    questions[i].ctx ? "Context: " + questions[i].ctx : "";
+
+  document.getElementById("goal").textContent =
+    questions[i].goal ? "Goal: " + questions[i].goal : "";
+
+  document.getElementById("q").textContent = questions[i].q;
+
   document.getElementById("ans").value = "";
   document.getElementById("result").textContent = "—";
   document.getElementById("result").className = "chip";
