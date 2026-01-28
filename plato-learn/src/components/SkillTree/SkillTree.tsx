@@ -10,14 +10,26 @@ interface SkillTreeProps {
 
 /**
  * Skill tree component showing branching progression of rounds
+ * Now shows separate Lesson tiles (📖) before Practice tiles
  */
 export function SkillTree({ moduleId, questionData }: SkillTreeProps) {
     const navigate = useNavigate();
-    const { getRoundScore, isRoundUnlocked } = useGamification();
+    const { getRoundScore, isRoundUnlocked, isLessonComplete } = useGamification();
 
-    const handleNodeClick = (round: Round, roundIndex: number) => {
-        if (!isRoundUnlocked(moduleId, round.prerequisites)) return;
-        navigate(`/module/${moduleId}?round=${roundIndex}`);
+    // Handle clicking a practice node
+    const handlePracticeClick = (round: Round, roundIndex: number) => {
+        const unlocked = isRoundUnlocked(moduleId, round.prerequisites);
+        const lessonDone = !round.lesson || round.lesson.length === 0 || isLessonComplete(moduleId, round.id);
+
+        if (!unlocked || !lessonDone) return;
+        navigate(`/practice/${moduleId}?round=${roundIndex}`);
+    };
+
+    // Handle clicking a lesson node
+    const handleLessonClick = (round: Round) => {
+        const unlocked = isRoundUnlocked(moduleId, round.prerequisites);
+        if (!unlocked) return;
+        navigate(`/lesson/${moduleId}/${round.id}`);
     };
 
     // Group rounds by row
@@ -108,8 +120,6 @@ export function SkillTree({ moduleId, questionData }: SkillTreeProps) {
                                                 className={styles.lineToChild}
                                                 style={{
                                                     left: `${((col.col - sortedCols[0].col) / (sortedCols[sortedCols.length - 1].col - sortedCols[0].col + 1)) * 100 + (100 / (sortedCols.length * 2))}%`
-                                                    // Simplified: Just use absolute positioning relative to the grid cell?
-                                                    // Actually, mapping to grid columns is easier.
                                                 }}
                                             />
                                         ))}
@@ -156,12 +166,10 @@ export function SkillTree({ moduleId, questionData }: SkillTreeProps) {
                             {sortedCols.map(({ round, index: roundIndex, col }) => {
                                 const score = getRoundScore(moduleId, round.id);
                                 const unlocked = isRoundUnlocked(moduleId, round.prerequisites);
+                                const hasLesson = round.lesson && round.lesson.length > 0;
+                                const lessonDone = isLessonComplete(moduleId, round.id);
+                                const practiceUnlocked = unlocked && (!hasLesson || lessonDone);
                                 const passed = score.bestScore >= 60;
-
-                                // If single item in multi-col grid, assume it should center relative to its 'col'
-                                // or if it replaces the whole row (like root), maybe span all?
-                                // Based on screenshots and intent, root and merge nodes (single items) seem to be centered visually.
-                                // Our data has them at col 0. To center them in a 2-col grid, we force span.
                                 const shouldSpanCenter = roundsInRow.length === 1 && maxCols > 1;
 
                                 return (
@@ -172,41 +180,80 @@ export function SkillTree({ moduleId, questionData }: SkillTreeProps) {
                                             gridColumn: shouldSpanCenter ? `1 / -1` : col + 1,
                                         }}
                                     >
-                                        <div
-                                            className={`
-                        ${styles.nodeCard}
-                        ${!unlocked ? styles.locked : ''}
-                        ${passed ? styles.completed : ''}
-                      `}
-                                            onClick={() => handleNodeClick(round, roundIndex)}
-                                        >
-                                            {/* Lock badge etc... */}
-                                            {!unlocked && <div className={styles.lockBadge}>🔒</div>}
-                                            {unlocked && !score.completed && !round.prerequisites?.length && (
-                                                <div className={styles.startBadge}>Start Here</div>
-                                            )}
-
-                                            <div className={styles.nodeIcon}>R{roundIndex + 1}</div>
-                                            <div className={styles.nodeName}>{round.name}</div>
-                                            <div className={styles.nodeDesc}>{round.description}</div>
-
-                                            {unlocked && (
+                                        {/* Render Lesson + Practice pair */}
+                                        <div className={styles.nodePair}>
+                                            {/* LESSON TILE */}
+                                            {hasLesson && (
                                                 <>
-                                                    <div className={styles.scoreBar}>
-                                                        <div
-                                                            className={`${styles.scoreFill} ${passed ? styles.passed : ''}`}
-                                                            style={{ width: `${score.bestScore}%` }}
-                                                        />
+                                                    <div
+                                                        className={`
+                                                            ${styles.nodeCard}
+                                                            ${styles.lessonNode}
+                                                            ${!unlocked ? styles.locked : ''}
+                                                            ${lessonDone ? styles.completed : ''}
+                                                        `}
+                                                        onClick={() => handleLessonClick(round)}
+                                                    >
+                                                        {!unlocked && <div className={styles.lockBadge}>🔒</div>}
+                                                        {unlocked && !lessonDone && !round.prerequisites?.length && (
+                                                            <div className={styles.startBadge}>Start Here</div>
+                                                        )}
+                                                        <div className={styles.nodeIcon}>📖</div>
+                                                        <div className={styles.nodeName}>{round.name} Lesson</div>
+                                                        <div className={styles.nodeDesc}>Learn the concepts</div>
+                                                        {lessonDone && (
+                                                            <div className={styles.completedBadge}>✓ Complete</div>
+                                                        )}
+                                                        {!unlocked && (
+                                                            <div className={styles.scoreText}>{getPrereqMessage(round)}</div>
+                                                        )}
                                                     </div>
-                                                    <div className={`${styles.scoreText} ${passed ? styles.passed : ''}`}>
-                                                        {score.completed ? `Best: ${score.bestScore}%` : score.total > 0 ? `${score.correct}/${score.total}` : 'Not started'}
-                                                    </div>
+
+                                                    {/* Connector between lesson and practice */}
+                                                    <div className={`${styles.pairConnector} ${lessonDone ? styles.unlocked : ''}`} />
                                                 </>
                                             )}
 
-                                            {!unlocked && (
-                                                <div className={styles.scoreText}>{getPrereqMessage(round)}</div>
-                                            )}
+                                            {/* PRACTICE TILE */}
+                                            <div
+                                                className={`
+                                                    ${styles.nodeCard}
+                                                    ${!practiceUnlocked ? styles.locked : ''}
+                                                    ${passed ? styles.completed : ''}
+                                                `}
+                                                onClick={() => handlePracticeClick(round, roundIndex)}
+                                            >
+                                                {!practiceUnlocked && <div className={styles.lockBadge}>🔒</div>}
+                                                {practiceUnlocked && !score.completed && !hasLesson && !round.prerequisites?.length && (
+                                                    <div className={styles.startBadge}>Start Here</div>
+                                                )}
+
+                                                <div className={styles.nodeIcon}>R{roundIndex + 1}</div>
+                                                <div className={styles.nodeName}>{round.name}</div>
+                                                <div className={styles.nodeDesc}>{round.description}</div>
+
+                                                {practiceUnlocked && (
+                                                    <>
+                                                        <div className={styles.scoreBar}>
+                                                            <div
+                                                                className={`${styles.scoreFill} ${passed ? styles.passed : ''}`}
+                                                                style={{ width: `${score.bestScore}%` }}
+                                                            />
+                                                        </div>
+                                                        <div className={`${styles.scoreText} ${passed ? styles.passed : ''}`}>
+                                                            {score.completed ? `Best: ${score.bestScore}%` : score.total > 0 ? `${score.correct}/${score.total}` : 'Not started'}
+                                                        </div>
+                                                    </>
+                                                )}
+
+                                                {!practiceUnlocked && hasLesson && !lessonDone && (
+                                                    <div className={styles.scoreText}>Complete lesson first</div>
+                                                )}
+
+                                                {!practiceUnlocked && !hasLesson && (
+                                                    <div className={styles.scoreText}>{getPrereqMessage(round)}</div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 );

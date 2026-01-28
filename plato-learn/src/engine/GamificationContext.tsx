@@ -21,6 +21,7 @@ const defaultProgress: UserProgress = {
     lastActiveDate: new Date().toISOString().split('T')[0],
     moduleProgress: {},
     achievements: [],
+    lessonProgress: {},
 };
 
 /**
@@ -47,6 +48,8 @@ interface GamificationContextType {
     isRoundUnlocked: (moduleId: string, prerequisites?: string[]) => boolean;
     unlockAchievement: (achievementId: string) => void;
     resetRoundProgress: (moduleId: string, roundId: string) => void;
+    markLessonComplete: (moduleId: string, roundId: string) => void;
+    isLessonComplete: (moduleId: string, roundId: string) => boolean;
 }
 
 const GamificationContext = createContext<GamificationContextType | null>(null);
@@ -229,6 +232,27 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
         });
     };
 
+    /**
+     * Mark a lesson as complete
+     */
+    const markLessonComplete = (moduleId: string, roundId: string) => {
+        setProgress(prev => {
+            const lessonProgress = { ...prev.lessonProgress };
+            if (!lessonProgress[moduleId]) {
+                lessonProgress[moduleId] = {};
+            }
+            lessonProgress[moduleId][roundId] = true;
+            return { ...prev, lessonProgress };
+        });
+    };
+
+    /**
+     * Check if a lesson has been completed
+     */
+    const isLessonComplete = (moduleId: string, roundId: string): boolean => {
+        return progress.lessonProgress?.[moduleId]?.[roundId] === true;
+    };
+
     return (
         <GamificationContext.Provider
             value={{
@@ -242,6 +266,8 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
                 isRoundUnlocked,
                 unlockAchievement,
                 resetRoundProgress,
+                markLessonComplete,
+                isLessonComplete,
             }}
         >
             {children}

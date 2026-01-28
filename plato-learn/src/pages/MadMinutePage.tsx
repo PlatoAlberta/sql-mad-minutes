@@ -38,7 +38,7 @@ export function MadMinutePage() {
     // Game State
     const [timeLeft, setTimeLeft] = useState(60);
     const [score, setScore] = useState(0);
-    const [gameState, setGameState] = useState<'intro' | 'playing' | 'ended'>('intro');
+    const [gameState, setGameState] = useState<'intro' | 'playing' | 'ended' | 'lesson'>('intro');
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [feedback, setFeedback] = useState<'none' | 'correct' | 'incorrect'>('none');
@@ -244,7 +244,7 @@ export function MadMinutePage() {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <Button variant="secondary" size="sm" onClick={() => navigate('/')}>Exit</Button>
+                <Button variant="secondary" size="sm" onClick={() => navigate(`/course/${moduleId}`)}>Exit</Button>
                 <div className={`${styles.timer} ${timeLeft <= 10 ? styles.urgent : ''}`}>
                     {timeLeft}s
                 </div>
@@ -265,7 +265,59 @@ export function MadMinutePage() {
                         </div>
                     </div>
                     <div className={styles.actions}>
+                        <Button variant="secondary" size="lg" onClick={() => setGameState('lesson')}>📖 Read Lesson</Button>
                         <Button variant="primary" size="lg" onClick={startGame}>Start Timer</Button>
+                    </div>
+                </div>
+            )}
+
+            {gameState === 'lesson' && (
+                <div className={styles.resultContainer}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                        <h1>Lesson: {difficulty.toUpperCase()}</h1>
+                        <Button variant="primary" size="sm" onClick={() => setGameState('intro')}>Close</Button>
+                    </div>
+                    <div className={styles.lessonContent} style={{ textAlign: 'left', background: 'white', padding: '2rem', borderRadius: '12px', color: '#1e293b' }}>
+                        {(() => {
+                            let targetRounds: Round[] = [];
+                            switch (difficulty) {
+                                case 'easy': targetRounds = allRounds.slice(0, 2); break;
+                                case 'medium': targetRounds = allRounds.slice(2, 5); break;
+                                case 'hard': targetRounds = allRounds.slice(5); break;
+                                case 'all': default: targetRounds = allRounds; break;
+                            }
+                            return targetRounds.map(r => (
+                                <div key={r.id} style={{ marginBottom: '3rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '2rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                                        <span style={{ fontSize: '2rem' }}>{r.icon}</span>
+                                        <h2 style={{ margin: 0, color: '#0f172a' }}>{r.name}</h2>
+                                    </div>
+                                    {r.lesson && r.lesson.length > 0 ? (
+                                        <div style={{ lineHeight: '1.6' }}>
+                                            {(Array.isArray(r.lesson) ? r.lesson.map(s => `## ${s.title}\n${s.content}`).join('\n\n') : r.lesson).split('\n').map((line: string, i: number) => {
+                                                if (line.startsWith('## ')) return <h3 key={i} style={{ marginTop: '1.5rem', color: '#3b82f6' }}>{line.replace('## ', '')}</h3>;
+                                                if (line.startsWith('### ')) return <h4 key={i} style={{ marginTop: '1rem', color: '#475569' }}>{line.replace('### ', '')}</h4>;
+                                                if (line.startsWith('- ')) return (
+                                                    <div key={i} style={{ display: 'flex', gap: '8px', marginLeft: '1rem', marginBottom: '0.5rem' }}>
+                                                        <span style={{ color: '#3b82f6' }}>•</span>
+                                                        <span dangerouslySetInnerHTML={{
+                                                            __html: line.replace('- ', '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#f1f5f9; padding:2px 4px; border-radius:4px; font-family:monospace; color:#ef4444">$1</code>')
+                                                        }} />
+                                                    </div>
+                                                );
+                                                if (line.trim() === '') return <div key={i} style={{ height: '0.5rem' }} />;
+                                                return <p key={i} style={{ margin: '0.5rem 0' }}>{line}</p>;
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <p style={{ fontStyle: 'italic', opacity: 0.6 }}>No lesson content available for this round.</p>
+                                    )}
+                                </div>
+                            ));
+                        })()}
+                    </div>
+                    <div className={styles.actions} style={{ marginTop: '2rem' }}>
+                        <Button variant="primary" size="lg" onClick={startGame}>Start Practice</Button>
                     </div>
                 </div>
             )}
@@ -277,7 +329,7 @@ export function MadMinutePage() {
                         <div className={styles.finalScore}>{score} Points</div>
                         <div className={styles.actions} style={{ marginBottom: '3rem' }}>
                             <Button variant="primary" onClick={startGame}>Try Again</Button>
-                            <Button variant="secondary" onClick={() => navigate('/')}>Dashboard</Button>
+                            <Button variant="secondary" onClick={() => navigate(`/course/${moduleId}`)}>Back to Course</Button>
                         </div>
                     </div>
 

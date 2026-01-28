@@ -35,8 +35,12 @@
 }
 
 .button.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow:
+        8px 8px 16px var(--shadow-dark),
+        -8px -8px 16px var(--shadow-light),
+        0 0 20px rgba(37, 99, 235, 0.4),
+        0 0 40px rgba(37, 99, 235, 0.2);
 }
 
 .button.primary:active {

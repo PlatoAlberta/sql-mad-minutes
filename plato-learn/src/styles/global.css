@@ -8,51 +8,77 @@
 
 body {
     font-family: var(--font-sans);
-    font-family: var(--font-sans);
-    background: var(--bg-gradient);
+    background-color: #F8FAFC;
+    background-image:
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
     background-attachment: fixed;
-    /* Parallax feel */
-    color: var(--text-primary);
     color: var(--text-primary);
     min-height: 100vh;
-    line-height: 1.5;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* Global focus ring for accessibility */
+:focus-visible {
+    outline: 2px solid var(--royal);
+    outline-offset: 2px;
 }
 
 a {
     color: var(--royal);
     text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease;
 }
 
 a:hover {
-    text-decoration: underline;
+    color: var(--royal-dark);
 }
 
 code {
     font-family: var(--font-mono);
-    background: var(--bg-inset);
+    background-color: var(--bg-inset);
+    color: var(--text-primary);
     padding: 2px 6px;
     border-radius: var(--radius-sm);
     font-size: 0.9em;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Selection */
+::selection {
+    background: var(--royal);
+    color: white;
 }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg-inset);
-    border-radius: 4px;
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--slate);
-    border-radius: 4px;
+    background: #CBD5E1;
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--slate-dark);
+    background: #94A3B8;
+}
+
+/* Utility classes */
+.text-muted {
+    color: var(--text-muted);
+}
+
+.text-success {
+    color: var(--color-success);
 }

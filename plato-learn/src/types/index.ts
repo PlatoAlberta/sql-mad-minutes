@@ -21,6 +21,20 @@ export interface LearningModule {
 }
 
 /**
+ * A single slide in a lesson
+ */
+export interface LessonSlide {
+  /** Slide title */
+  title: string;
+  /** Main content (markdown supported) */
+  content: string;
+  /** Optional SQL code example */
+  codeExample?: string;
+  /** Optional explanation of the code */
+  codeExplanation?: string;
+}
+
+/**
  * A round within a module (e.g., "SQL Basics", "Aggregates")
  * Supports branching: multiple rounds can share prerequisites
  * and rounds can require multiple prerequisites to be completed
@@ -30,12 +44,15 @@ export interface Round {
   name: string;
   description: string;
   questions: Question[];
+  icon?: string;
   /** IDs of prerequisite rounds that must be completed (60%+) */
   prerequisites?: string[];
   /** Row position in skill tree (0 = top) */
   row?: number;
   /** Column position in skill tree (0 = left, allows multiple per row) */
   col?: number;
+  /** Multi-slide lesson content */
+  lesson?: LessonSlide[];
 }
 
 // ============================================
@@ -107,6 +124,17 @@ export interface UserProgress {
   lastActiveDate: string;
   moduleProgress: ModuleProgress;
   achievements: string[];
+  /** Tracks which lessons have been completed */
+  lessonProgress?: LessonProgress;
+}
+
+/**
+ * Tracks completed lessons by module and round
+ */
+export interface LessonProgress {
+  [moduleId: string]: {
+    [roundId: string]: boolean;
+  };
 }
 
 /**

@@ -16,13 +16,12 @@ import {
     MultiDragDrop
 } from '../components/Questions';
 import type { QuestionData, Question, Round, QuestionType } from '../types';
-import styles from './ModulePage.module.css';
+import styles from './PracticePage.module.css';
 
 /**
- * Module learning page with question flow
- * Supports multiple question types: fill-blank, multiple-choice, code-ordering, error-fix, multi-blank
+ * Practice session page with question flow
  */
-export function ModulePage() {
+export function PracticePage() {
     const { moduleId } = useParams<{ moduleId: string }>();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -174,10 +173,11 @@ export function ModulePage() {
     };
 
     const goToNextRound = () => {
+        if (!module) return;
         if (currentRoundIndex < (questionData?.rounds.length || 0) - 1) {
             setCurrentRoundIndex(prev => prev + 1);
         } else {
-            navigate('/');
+            navigate(`/course/${module.id}`);
         }
     };
 
@@ -195,7 +195,7 @@ export function ModulePage() {
         const keywords = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'NOT', 'ORDER BY', 'GROUP BY', 'HAVING', 'LIMIT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'ON', 'AS', 'IN', 'BETWEEN', 'LIKE', 'IS', 'NULL', 'ASC', 'DESC', 'DISTINCT', 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'WITH', 'OVER', 'PARTITION BY', 'ROW_NUMBER', 'RANK', 'DENSE_RANK', 'LEAD', 'LAG', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'EXISTS', 'COALESCE', 'NULLIF'];
         let result = sql;
         keywords.forEach(kw => {
-            const regex = new RegExp(`\\b(${kw}) \\b(?![^<]*>)`, 'gi');
+            const regex = new RegExp(`\\b(${kw})\\b(?![^<]*>)`, 'gi');
             result = result.replace(regex, `<span class="${styles.sqlKeyword}">$1</span>`);
         });
         result = result.replace(/'([^']+)'/g, `<span class="${styles.sqlString}">'$1'</span>`);
@@ -385,12 +385,12 @@ export function ModulePage() {
                         : 'You need 60% to unlock the next round. Try again!'}
                 </p>
                 <div className={styles.summaryActions}>
-                    <Button variant="secondary" onClick={() => navigate('/')}>Back to Tree</Button>
+                    <Button variant="secondary" onClick={() => navigate(`/course/${module.id}`)}>Back to Tree</Button>
                     {passed ? (
                         canContinue ? (
                             <Button onClick={goToNextRound}>Next Round</Button>
                         ) : (
-                            <Button onClick={() => navigate('/')}>All Done!</Button>
+                            <Button onClick={() => navigate(`/course/${module.id}`)}>All Done!</Button>
                         )
                     ) : (
                         <Button onClick={retryRound}>Try Again</Button>
@@ -405,7 +405,7 @@ export function ModulePage() {
             <div className={styles.error}>
                 <div className={styles.errorIcon}>!</div>
                 <h3>No Questions Available</h3>
-                <Button onClick={() => navigate('/')}>Back to Home</Button>
+                <Button onClick={() => navigate(`/course/${module.id}`)}>Back to Course</Button>
             </div>
         );
     }

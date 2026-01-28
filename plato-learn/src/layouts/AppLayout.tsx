@@ -36,7 +36,13 @@ export function AppLayout() {
                     className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
                     end
                 >
-                    Home
+                    Dashboard
+                </NavLink>
+                <NavLink
+                    to="/mad-minute/sql"
+                    className={({ isActive }) => `${styles.navLink} ${styles.madMinuteLink} ${isActive ? styles.active : ''}`}
+                >
+                    ⚡ Mad Minute
                 </NavLink>
                 <NavLink
                     to="/profile"

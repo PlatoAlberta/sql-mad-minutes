@@ -1,15 +1,17 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 /* Module Header */
 .moduleHeader {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 24px;
+    gap: 16px;
+    padding: 16px 20px;
     background: var(--bg-base);
     border-radius: var(--radius-lg);
     box-shadow: var(--neu-raised);
@@ -102,7 +104,7 @@
 }
 
 .questionContext {
-    padding: 20px 24px;
+    padding: 16px 20px;
     background: linear-gradient(135deg, var(--midnight), var(--midnight-soft));
     color: white;
 }
@@ -150,19 +152,21 @@
 }
 
 .questionCode {
-    padding: 28px 24px;
+    padding: 20px;
 }
 
 .sqlDisplay {
     background: var(--bg-inset);
     border-radius: var(--radius-md);
     box-shadow: var(--neu-inset);
-    padding: 24px;
+    padding: 20px 24px;
     font-family: var(--font-mono);
-    font-size: 16px;
-    line-height: 2;
+    font-size: 17px;
+    line-height: 1.8;
     color: var(--text-primary);
     word-wrap: break-word;
+    word-spacing: 0.15em;
+    letter-spacing: 0.02em;
 }
 
 /* Drop Zone */

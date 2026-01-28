@@ -12,6 +12,30 @@
       "name": "SQL Basics",
       "description": "Core SELECT, WHERE, and ORDER BY fundamentals",
       "icon": "📘",
+      "lesson": [
+        {
+          "title": "Welcome to SQL Basics",
+          "content": "In this lesson, you'll master the core commands for retrieving data from databases.\n\nSQL (Structured Query Language) is the standard language for managing and querying relational databases."
+        },
+        {
+          "title": "SELECT - Retrieving Data",
+          "content": "The **SELECT** statement is how you retrieve data from a database. Be specific! Only ask for the columns you need.",
+          "codeExample": "SELECT customer_name, email\nFROM customers;",
+          "codeExplanation": "This query retrieves **only** the `customer_name` and `email` columns, which is more efficient than using `SELECT *`."
+        },
+        {
+          "title": "WHERE - Filtering Rows",
+          "content": "The **WHERE** clause filters which rows are returned. Filter rows early to improve performance!",
+          "codeExample": "SELECT *\nFROM customers\nWHERE country = 'USA';",
+          "codeExplanation": "This returns only customers located in the USA. Always filter early when possible."
+        },
+        {
+          "title": "ORDER BY & LIMIT",
+          "content": "**ORDER BY** sorts your results (default is ASC - ascending).\n\n**LIMIT** restricts the number of rows returned - great for sampling data.",
+          "codeExample": "SELECT customer_name, city\nFROM customers\nORDER BY customer_name DESC\nLIMIT 10;",
+          "codeExplanation": "`DESC` means descending (Z to A). `LIMIT 10` returns only the first 10 results."
+        }
+      ],
       "row": 0,
       "col": 0,
       "prerequisites": [],
@@ -373,6 +397,24 @@
       "name": "Aggregates & Grouping",
       "description": "COUNT, SUM, AVG, GROUP BY, and HAVING",
       "icon": "📊",
+      "lesson": [
+        {
+          "title": "Aggregates: Summarizing Data",
+          "content": "Aggregate functions allow you to calculate a single value from multiple rows.\n\nKey functions:\n- **COUNT**: Counts rows\n- **SUM**: Adds distinct values\n- **AVG**: Calculates the average\n- **MIN/MAX**: Finds the lowest/highest value"
+        },
+        {
+          "title": "GROUP BY - Grouping Data",
+          "content": "**GROUP BY** splits your data into groups before applying aggregates. For example, to count customers **per country**, you group by country.",
+          "codeExample": "SELECT country, COUNT(*)\nFROM customers\nGROUP BY country;",
+          "codeExplanation": "This creates one row for each unique country, with the count of customers in that country."
+        },
+        {
+          "title": "The WHERE vs HAVING Rule",
+          "content": "A common point of confusion!\n\n- **WHERE** filters rows **BEFORE** grouping/aggregation.\n- **HAVING** filters groups **AFTER** grouping/aggregation.",
+          "codeExample": "SELECT country, COUNT(*)\nFROM customers\nGROUP BY country\nHAVING COUNT(*) > 5;",
+          "codeExplanation": "We can't use `WHERE count > 5`! Since the count happens during grouping, we must filter with `HAVING`."
+        }
+      ],
       "row": 1,
       "col": 0,
       "prerequisites": [
@@ -736,6 +778,24 @@
       "name": "JOINs",
       "description": "Combining data from multiple tables",
       "icon": "🔗",
+      "lesson": [
+        {
+          "title": "Welcome to JOINs",
+          "content": "JOINs allow you to combine data from multiple tables based on a related column (like IDs). This is the power of **Relational Databases**!"
+        },
+        {
+          "title": "INNER JOIN - The Strict Matcher",
+          "content": "**INNER JOIN** returns only rows that have matching values in **BOTH** tables. It's the most common join.",
+          "codeExample": "SELECT customers.name, orders.amount\nFROM customers\nINNER JOIN orders\n  ON customers.id = orders.customer_id;",
+          "codeExplanation": "This returns only customers who have placed an order."
+        },
+        {
+          "title": "LEFT JOIN - Keep Everything Left",
+          "content": "**LEFT JOIN** returns **ALL** rows from the left table, and matching rows from the right. If no match, the right side is NULL.",
+          "codeExample": "SELECT customers.name, orders.amount\nFROM customers\nLEFT JOIN orders\n  ON customers.id = orders.customer_id;",
+          "codeExplanation": "This returns all customers. If they haven't ordered, `amount` will be NULL."
+        }
+      ],
       "row": 1,
       "col": 1,
       "prerequisites": [
@@ -1124,6 +1184,30 @@
       "name": "Subqueries",
       "description": "Nested SELECT statements and correlated subqueries",
       "icon": "🔍",
+      "lesson": [
+        {
+          "title": "Subqueries - Queries within Queries",
+          "content": "A **Subquery** is a query nested inside another query. They are powerful tools to perform filtering or calculations dynamically."
+        },
+        {
+          "title": "Scalar Subqueries",
+          "content": "A scalar subquery returns a **single value** (like one number or string). It's commonly used in WHERE clauses with comparison operators.",
+          "codeExample": "SELECT product_name\nFROM products\nWHERE price > (SELECT AVG(price) FROM products);",
+          "codeExplanation": "This finds products simpler to calculate the average once and use it to filter."
+        },
+        {
+          "title": "IN and NOT IN",
+          "content": "Use subqueries with **IN** to filter against a list of results.",
+          "codeExample": "SELECT name\nFROM customers\nWHERE id IN (SELECT customer_id FROM orders);",
+          "codeExplanation": "Finds all customers who have placed at least one order. `NOT IN` does the opposite!"
+        },
+        {
+          "title": "Correlated Subqueries",
+          "content": "A **Correlated Subquery** depends on the outer query for its values. It runs once for *each row* processed by the outer query (powerful but can be slow!).",
+          "codeExample": "SELECT e.name\nFROM employees e\nWHERE e.salary > (\n  SELECT AVG(salary)\n  FROM employees\n  WHERE department = e.department\n);",
+          "codeExplanation": "Does this employee earn more than the average *for their specific department*?"
+        }
+      ],
       "row": 2,
       "col": 0,
       "prerequisites": [
@@ -1308,6 +1392,30 @@
       "name": "Window Functions",
       "description": "ROW_NUMBER, RANK, LEAD/LAG, PARTITION BY",
       "icon": "🪟",
+      "lesson": [
+        {
+          "title": "Window Functions",
+          "content": "**Window Functions** perform calculations across a set of table rows that are somehow related to the current row.\n\nUnlike `GROUP BY`, they **do not** collapse rows into a single output row."
+        },
+        {
+          "title": "OVER() - The Window",
+          "content": "The `OVER()` clause defines the \"window\" of rows the function operates on. You can leave it empty `OVER()` to include all rows, or filter it.",
+          "codeExample": "SELECT name, salary, AVG(salary) OVER()\nFROM employees;",
+          "codeExplanation": "This shows each employee's salary alongside the average salary of **all** employees."
+        },
+        {
+          "title": "PARTITION BY - Grouping Windows",
+          "content": "`PARTITION BY` divides the window into smaller windows (like GROUP BY, but keeps all rows).",
+          "codeExample": "SELECT name, dept, RANK() OVER(PARTITION BY dept ORDER BY salary DESC)\nFROM employees;",
+          "codeExplanation": "Ranks employees by salary **within their own department**."
+        },
+        {
+          "title": "LEAD and LAG",
+          "content": "`LEAD` accesses data from the next row. `LAG` accesses data from the previous row. Great for calculating changes over time.",
+          "codeExample": "SELECT date, revenue, LAG(revenue) OVER(ORDER BY date) as prev_revenue\nFROM daily_sales;",
+          "codeExplanation": "Shows today's revenue next to yesterday's revenue."
+        }
+      ],
       "row": 3,
       "col": 0,
       "prerequisites": [
@@ -1488,6 +1596,30 @@
       "name": "CTEs & Advanced",
       "description": "WITH clauses, CASE statements, COALESCE",
       "icon": "⚡",
+      "lesson": [
+        {
+          "title": "CTEs - Common Table Expressions",
+          "content": "**CTEs** (Common Table Expressions) make complex queries more readable by defining temporary named result sets at the start of your query."
+        },
+        {
+          "title": "WITH Clause",
+          "content": "Use `WITH` to define a CTE. It acts like a temporary table that exists just for that one query.",
+          "codeExample": "WITH high_value_orders AS (\n  SELECT * FROM orders WHERE amount > 1000\n)\nSELECT * FROM high_value_orders;",
+          "codeExplanation": "This defines `high_value_orders` first, making the main SELECT cleaner."
+        },
+        {
+          "title": "CASE - Conditional Logic",
+          "content": "**CASE** statements add IF/THEN logic to your SQL queries. They are used inside SELECT columns.",
+          "codeExample": "SELECT name,\n  CASE \n    WHEN age < 18 THEN 'Minor'\n    ELSE 'Adult'\n  END as age_group\nFROM users;",
+          "codeExplanation": "Transforms data dynamically based on conditions."
+        },
+        {
+          "title": "Handling NULLs",
+          "content": "- **COALESCE(val, default)**: Returns the first non-NULL value.\n- **NULLIF(val1, val2)**: Returns NULL if values are equal (great for avoiding divide-by-zero).",
+          "codeExample": "SELECT COALESCE(phone, 'No Phone') FROM users;",
+          "codeExplanation": "If `phone` is NULL, returns 'No Phone'. Otherwise returns the phone number."
+        }
+      ],
       "row": 3,
       "col": 1,
       "prerequisites": [
@@ -1684,6 +1816,20 @@
       "name": "SQL Mastery",
       "description": "Complex queries combining all techniques",
       "icon": "🏆",
+      "lesson": [
+        {
+          "title": "SQL Mastery - The Final Challenge",
+          "content": "Congratulations! You've made it to the final challenge. Here you'll combine **everything** you've learned to solve complex problems."
+        },
+        {
+          "title": "Topic Recap",
+          "content": "- **SELECT, WHERE, ORDER BY**: Fundamentals\n- **Aggregates** (COUNT, SUM) & **GROUP BY**: Summarizing\n- **JOINs**: Combining tables\n- **Subqueries & CTEs**: Complex logic\n- **Window Functions**: Advanced analytics\n\nNow put it all together!"
+        },
+        {
+          "title": "Pro Tip: Order of Execution",
+          "content": "Remember the Logical Order of Operations in SQL:\n\n1. `FROM` / `JOIN`\n2. `WHERE`\n3. `GROUP BY`\n4. `HAVING`\n5. `SELECT`\n6. `ORDER BY`\n7. `LIMIT`"
+        }
+      ],
       "row": 4,
       "col": 0,
       "prerequisites": [
