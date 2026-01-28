@@ -1,0 +1,349 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: var(--text-primary);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.timer {
+    font-size: 2.5rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent-pink);
+    text-shadow: 0 0 20px rgba(255, 65, 108, 0.4);
+}
+
+.timer.urgent {
+    animation: pulse 0.5s infinite;
+    color: #ff0000;
+}
+
+.score {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.questionContainer {
+    background: var(--surface-light);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Flash overlays for feedback */
+.feedbackOverlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.feedbackOverlay.correct {
+    background: rgba(0, 255, 128, 0.1);
+    box-shadow: inset 0 0 50px rgba(0, 255, 128, 0.3);
+    opacity: 1;
+}
+
+.feedbackOverlay.incorrect {
+    background: rgba(255, 65, 108, 0.1);
+    box-shadow: inset 0 0 50px rgba(255, 65, 108, 0.3);
+    opacity: 1;
+}
+
+.resultContainer {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.finalScore {
+    font-size: 4rem;
+    font-weight: 900;
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 1rem 0;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Code Block */
+.codeBlock {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+    font-size: 1rem;
+    line-height: 1.5;
+    text-align: left;
+    margin: 0.5rem 0;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* History Summary - Grid */
+.summaryGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    text-align: left;
+    align-items: start;
+    /* Important for flow */
+}
+
+.summaryGroup {
+    margin-bottom: 3rem;
+    text-align: left;
+}
+
+.groupTitle {
+    color: var(--slate);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+}
+
+/* Base Tile Style */
+.summaryTile {
+    background: rgba(255, 255, 255, 0.95);
+    color: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.summaryTile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--royal);
+    z-index: 5;
+}
+
+/* Expanded State */
+.summaryTile.expanded {
+    grid-row: span 8;
+    /* Encourage grid to make space */
+    background: #ffffff;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    border-color: var(--royal);
+    z-index: 10;
+    transform: scale(1.02);
+    /* Slight pop */
+}
+
+.tileHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.tileStatus {
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tileStatus.correct {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.tileStatus.incorrect {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.tileGoal {
+    font-weight: 600;
+    line-height: 1.5;
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+/* Content Revealed on Expansion */
+.tileContent {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    animation: slideDown 0.3s ease-out;
+    cursor: default;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Comparison Box (You vs Correct) */
+.comparisonBox {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+}
+
+.compRow {
+    margin-bottom: 0.8rem;
+}
+
+.compRow:last-child {
+    margin-bottom: 0;
+}
+
+.compLabel {
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+}
+
+.compValue {
+    font-size: 1rem;
+    font-weight: 500;
+    word-break: break-word;
+    font-family: var(--font-mono);
+}
+
+.compValue.wrong {
+    color: #ef4444;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.compValue.right {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+/* Use for correct answers too */
+.correctInfo {
+    margin-bottom: 1.5rem;
+}
+
+/* Detailed Explanations */
+.detailLabel {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+/* Hint Section inside Tile */
+.hintSection {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    padding: 1rem;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 1.5rem;
+}
+
+.hintHeader {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #d97706;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.hintBody {
+    color: #92400e;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Simulated Table */
+.simTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.simTable th {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.8rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.simTable td {
+    padding: 0.8rem;
+    color: #334155;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+}

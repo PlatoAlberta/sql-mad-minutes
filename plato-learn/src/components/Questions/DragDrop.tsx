@@ -4,7 +4,7 @@ import styles from './DragDrop.module.css';
 
 interface DragDropProps {
     question: Question;
-    onAnswer: (isCorrect: boolean) => void;
+    onAnswer: (isCorrect: boolean, answer?: string) => void;
     answerState: 'pending' | 'correct' | 'incorrect';
 }
 
@@ -61,9 +61,7 @@ export function DragDrop({ question, onAnswer, answerState }: DragDropProps) {
         const chip = e.dataTransfer.getData('text/plain');
         if (chip && answerState === 'pending') {
             setSelectedAnswer(chip);
-            // Auto-validate on drop
-            const isCorrect = chip.toUpperCase() === correctAnswer.toUpperCase();
-            onAnswer(isCorrect);
+            // Removed auto-validate to allow re-dragging/correction
         }
         setDragOver(false);
         setDraggingChip(null);
@@ -74,6 +72,12 @@ export function DragDrop({ question, onAnswer, answerState }: DragDropProps) {
         if (answerState === 'pending' && selectedAnswer) {
             setSelectedAnswer(null);
         }
+    };
+
+    const checkAnswer = () => {
+        if (!selectedAnswer) return;
+        const isCorrect = selectedAnswer.toUpperCase() === correctAnswer.toUpperCase();
+        onAnswer(isCorrect, selectedAnswer);
     };
 
     // Build SQL display with drop zone
@@ -137,6 +141,26 @@ export function DragDrop({ question, onAnswer, answerState }: DragDropProps) {
                     </div>
                 ))}
             </div>
+
+            {/* Manual Check Button */}
+            {selectedAnswer && answerState === 'pending' && (
+                <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
+                    <button
+                        onClick={checkAnswer}
+                        style={{
+                            padding: '0.8rem 2rem',
+                            background: 'var(--accent-blue)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Check Answer
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

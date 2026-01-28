@@ -5,7 +5,7 @@ import { Button } from '../Button';
 
 interface CodeOrderingProps {
     question: Question;
-    onAnswer: (isCorrect: boolean) => void;
+    onAnswer: (isCorrect: boolean, answer?: string) => void;
     answerState: 'pending' | 'correct' | 'incorrect';
 }
 
@@ -51,7 +51,8 @@ export function CodeOrdering({ question, onAnswer, answerState }: CodeOrderingPr
         const isCorrect = items.every((item, idx) =>
             item.toUpperCase() === correctOrder[idx].toUpperCase()
         );
-        onAnswer(isCorrect);
+        // Pass the user's order as a string for display
+        onAnswer(isCorrect, items.join('\n'));
     };
 
     const getItemClass = (item: string, idx: number) => {
@@ -77,7 +78,7 @@ export function CodeOrdering({ question, onAnswer, answerState }: CodeOrderingPr
             <div className={styles.hint}>Drag to reorder the SQL clauses</div>
             {items.map((item, idx) => (
                 <div
-                    key={`${item}-${idx}`}
+                    key={item} // Stable key based on content
                     className={getItemClass(item, idx)}
                     draggable={answerState === 'pending'}
                     onDragStart={() => handleDragStart(idx)}

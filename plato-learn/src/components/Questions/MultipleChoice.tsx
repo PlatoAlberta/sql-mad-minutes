@@ -4,7 +4,7 @@ import styles from './MultipleChoice.module.css';
 
 interface MultipleChoiceProps {
     question: Question;
-    onAnswer: (isCorrect: boolean) => void;
+    onAnswer: (isCorrect: boolean, answer?: string) => void;
     answerState: 'pending' | 'correct' | 'incorrect';
 }
 
@@ -34,7 +34,7 @@ export function MultipleChoice({ question, onAnswer, answerState }: MultipleChoi
         // Auto-submit on selection for multiple choice
         const correctAnswer = Array.isArray(question.a) ? question.a[0] : question.a;
         const isCorrect = option.toUpperCase() === correctAnswer.toUpperCase();
-        onAnswer(isCorrect);
+        onAnswer(isCorrect, option);
     };
 
     const getOptionClass = (option: string) => {

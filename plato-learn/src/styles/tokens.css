@@ -4,17 +4,31 @@
    ============================================ */
 
 :root {
-  /* Primary Palette */
+  /* Vibrant Palette */
   --chalk: #FFFFFF;
-  --chalk-soft: #E6E8F1;
-  --slate: #A3B5CB;
-  --slate-dark: #6C828D;
-  --midnight: #000B68;
-  --midnight-soft: #1A2258;
-  --royal: #0059E8;
-  --royal-soft: #63F8B5;
-  --flare: #FF1A14;
-  --flare-soft: #FF6B52;
+  --chalk-soft: #F5F7FA;
+  --slate: #94A3B8;
+  --slate-dark: #64748B;
+  --midnight: #0F172A;
+  --midnight-soft: #1E293B;
+
+  /* Brand Colors */
+  --royal: #2563EB;
+  /* Brighter Blue */
+  --royal-soft: #3B82F6;
+  --indigo: #4F46E5;
+  --purple: #7C3AED;
+  --teal: #0D9488;
+
+  --gradient-primary: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
+  --gradient-success: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  --gradient-royal: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+
+  /* Backgrounds */
+  --bg-base: #F8FAFC;
+  /* Less gray, more cool white */
+  --bg-gradient: linear-gradient(135deg, #F0F9FF 0%, #E0E7FF 100%);
+  /* Suburban Light */
 
   /* Neumorphic Base */
   --bg-base: #E6E8F1;

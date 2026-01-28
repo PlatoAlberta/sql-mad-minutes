@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAllModules } from '../modules';
 import { loadModuleQuestions } from '../engine';
-import { SkillTree } from '../components';
+import { SkillTree, Button } from '../components';
 import type { QuestionData } from '../types';
 import styles from './Home.module.css';
 
@@ -10,6 +11,7 @@ import styles from './Home.module.css';
  */
 export function Home() {
     const modules = getAllModules();
+    const navigate = useNavigate();
     const [questionData, setQuestionData] = useState<{ [moduleId: string]: QuestionData }>({});
     const [loading, setLoading] = useState(true);
 
@@ -62,6 +64,11 @@ export function Home() {
                         <div>
                             <h3 className={styles.moduleName}>{module.name}</h3>
                             <p className={styles.moduleDesc}>{module.description}</p>
+                            <div style={{ marginTop: '0.5rem' }}>
+                                <Button size="sm" variant="secondary" onClick={() => navigate(`/mad-minute/${module.id}`)}>
+                                    ⚡ Mad Minute
+                                </Button>
+                            </div>
                         </div>
                     </div>
 

@@ -15,7 +15,7 @@ import {
     WordProblem,
     MultiDragDrop
 } from '../components/Questions';
-import type { QuestionData, Question, Round, QuestionType, QuestionComponentProps } from '../types';
+import type { QuestionData, Question, Round, QuestionType } from '../types';
 import styles from './ModulePage.module.css';
 
 /**
@@ -195,10 +195,10 @@ export function ModulePage() {
         const keywords = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'NOT', 'ORDER BY', 'GROUP BY', 'HAVING', 'LIMIT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'ON', 'AS', 'IN', 'BETWEEN', 'LIKE', 'IS', 'NULL', 'ASC', 'DESC', 'DISTINCT', 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'WITH', 'OVER', 'PARTITION BY', 'ROW_NUMBER', 'RANK', 'DENSE_RANK', 'LEAD', 'LAG', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'EXISTS', 'COALESCE', 'NULLIF'];
         let result = sql;
         keywords.forEach(kw => {
-            const regex = new RegExp(`\\b(${kw}) \\b(?![^<] *>)`, 'gi');
-            result = result.replace(regex, `< span class="${styles.sqlKeyword}" > $1</span > `);
+            const regex = new RegExp(`\\b(${kw}) \\b(?![^<]*>)`, 'gi');
+            result = result.replace(regex, `<span class="${styles.sqlKeyword}">$1</span>`);
         });
-        result = result.replace(/'([^']+)'/g, `< span class="${styles.sqlString}" > '$1'</span > `);
+        result = result.replace(/'([^']+)'/g, `<span class="${styles.sqlString}">'$1'</span>`);
         return result;
     };
 
@@ -302,7 +302,7 @@ export function ModulePage() {
                 const dropZoneState = answerState === 'correct' ? styles.correct : answerState === 'incorrect' ? styles.incorrect : selectedAnswer ? styles.filled : '';
                 const sqlWithBlank = currentQuestion.q.replace(
                     /____/g,
-                    `< span class="${styles.dropZone} ${dropZoneState}" id = "drop-zone" > ${selectedAnswer || ''}</span > `
+                    `<span class="${styles.dropZone} ${dropZoneState}" id="drop-zone">${selectedAnswer || ''}</span>`
                 );
                 return (
                     <div
