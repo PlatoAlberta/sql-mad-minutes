@@ -7,25 +7,25 @@
   <style>
     body { font-family: Arial, sans-serif; background:#111; color:#eee; padding:20px; max-width: 900px; margin:0 auto; }
     button { padding:10px 14px; margin:6px 6px 6px 0; cursor:pointer; }
-    pre { background:#222; padding:14px; border-radius:8px; margin:10px 0; }
+    pre { background:#222; padding:14px; border-radius:8px; white-space:pre-wrap; }
     input {
       padding:10px; width: min(520px, 95%);
       border-radius: 8px; border: 1px solid #444;
       background:#181818; color:#eee; font-size: 15px;
     }
     .row { margin: 10px 0; }
-    .hint { opacity:0.85; font-size: 13px; }
+    .hint { opacity:0.9; font-size: 13px; }
     .ok { color: #7CFC9A; font-weight: bold; }
     .bad { color: #FF7C7C; font-weight: bold; }
-    .chip { display:inline-block; padding:4px 10px; border:1px solid #444; border-radius:999px; margin-left:8px; font-size:12px; opacity:.9;}
+    .chip { display:inline-block; padding:4px 10px; border:1px solid #444; border-radius:999px; margin-left:8px; font-size:12px; opacity:.95;}
+    .muted { opacity:.75; }
   </style>
 </head>
 <body>
 
 <h1>SQL Mad Minutes</h1>
 <p class="hint">
-  Type the missing syntax for the <b>____</b> blank, then click <b>Check Answer</b>.
-  (SQLite / DBeaver aligned)
+  Fill the <b>____</b> blank, then click <b>Check Answer</b>. (SQLite / DBeaver aligned)
 </p>
 
 <div class="row">
@@ -33,9 +33,8 @@
   <button onclick="reveal()">Reveal Answer</button>
 </div>
 
-<!-- Context / Goal: only show when a question provides them -->
-<pre id="ctx" class="hint" style="display:none;"></pre>
-<pre id="goal" class="hint" style="display:none;"></pre>
+<pre id="ctx" class="hint muted">Context: (click “Next Question” to begin…)</pre>
+<pre id="goal" class="hint muted">Goal: —</pre>
 
 <pre id="q">Click “Next Question” to begin…</pre>
 
@@ -52,95 +51,104 @@
 <pre id="explain" style="display:none;"></pre>
 
 <script>
+/*
+  RULE: Every question must be unambiguous.
+  So each question includes:
+  - ctx: mini schema line (what columns exist)
+  - goal: what the query is trying to do
+  - q: prompt with ____ blank
+  - a: single expected answer (string compare)
+*/
+
+const SCHEMA = {
+  customers: "customers(customer_id, customer_name, city, country, email)",
+  orders: "orders(order_id, customer_id, order_date, status, total_amount)",
+  products: "products(product_id, product_name, price, stock_quantity)",
+  order_items: "order_items(order_item_id, order_id, product_id, quantity, discount_percent)",
+  reviews: "reviews(review_id, product_id, rating)"
+};
+
 const questions = [
-  // ===== Round 1: Core =====
-  { q: "____ * FROM customers;", a: "SELECT", topic: "R1 SELECT" },
-  { q: "SELECT customer_name, ____ FROM customers;", a: "city", topic: "R1 Columns" },
+  // ===== Round 1: Core (25) =====
+  { ctx: SCHEMA.customers, goal: "Return all customer rows (all columns).", q: "____ * FROM customers;", a: "SELECT", topic: "R1 SELECT" },
+  { ctx: SCHEMA.customers, goal: "Return each customer's name and their city.", q: "SELECT customer_name, ____ FROM customers;", a: "city", topic: "R1 Columns" },
+  { ctx: SCHEMA.customers, goal: "Return each country only once (unique list).", q: "SELECT ____ country FROM customers;", a: "DISTINCT", topic: "R1 DISTINCT" },
+  { ctx: SCHEMA.customers, goal: "Filter customers to only those in Canada.", q: "SELECT * FROM customers ____ country = 'Canada';", a: "WHERE", topic: "R1 WHERE" },
+  { ctx: SCHEMA.customers, goal: "Use the equals operator for an exact match.", q: "SELECT * FROM customers WHERE country ____ 'Canada';", a: "=", topic: "R1 Operator" },
+  { ctx: SCHEMA.customers, goal: "Require BOTH conditions (Canada AND Calgary).", q: "SELECT * FROM customers WHERE country='Canada' ____ city='Calgary';", a: "AND", topic: "R1 AND" },
+  { ctx: SCHEMA.customers, goal: "Match EITHER country (Canada OR USA).", q: "SELECT * FROM customers WHERE country='Canada' ____ country='USA';", a: "OR", topic: "R1 OR" },
+  { ctx: SCHEMA.customers, goal: "Negate the condition (NOT Canada).", q: "SELECT * FROM customers WHERE ____ country='Canada';", a: "NOT", topic: "R1 NOT" },
+  { ctx: SCHEMA.customers, goal: "Sort city A→Z.", q: "SELECT * FROM customers ORDER BY city ____;", a: "ASC", topic: "R1 ORDER BY" },
+  { ctx: SCHEMA.customers, goal: "Sort city Z→A.", q: "SELECT * FROM customers ORDER BY city ____;", a: "DESC", topic: "R1 ORDER BY" },
+  { ctx: SCHEMA.orders, goal: "Return only the first 10 orders.", q: "SELECT * FROM orders ____ 10;", a: "LIMIT", topic: "R1 LIMIT" },
+  { ctx: SCHEMA.customers, goal: "Check for NULL emails (missing value).", q: "SELECT * FROM customers WHERE email ____ NULL;", a: "IS", topic: "R1 NULL" },
+  { ctx: SCHEMA.customers, goal: "Check for NOT NULL emails (present value).", q: "SELECT * FROM customers WHERE email IS ____ NULL;", a: "NOT", topic: "R1 NULL" },
+  { ctx: SCHEMA.customers, goal: "Find cities starting with letter A.", q: "SELECT * FROM customers WHERE city ____ 'A%';", a: "LIKE", topic: "R1 LIKE" },
+  { ctx: SCHEMA.customers, goal: "Filter to customers in a set of countries.", q: "SELECT * FROM customers WHERE country ____ ('Canada','USA');", a: "IN", topic: "R1 IN" },
+  { ctx: SCHEMA.products, goal: "Filter prices within a numeric range (10 to 20).", q: "SELECT * FROM products WHERE price ____ 10 AND 20;", a: "BETWEEN", topic: "R1 BETWEEN" },
+  { ctx: SCHEMA.customers, goal: "Exclude TWO cities using two comparisons (both must be true).", q: "SELECT * FROM customers WHERE city <> 'Calgary' ____ city <> 'Edmonton';", a: "AND", topic: "R1 Logic" },
+  { ctx: SCHEMA.products, goal: "Keep prices between 100 and 200 using two comparisons.", q: "SELECT * FROM products WHERE price >= 100 ____ price <= 200;", a: "AND", topic: "R1 Comparisons" },
+  { ctx: SCHEMA.orders, goal: "Keep orders after 2025-01-01.", q: "SELECT * FROM orders WHERE order_date ____ '2025-01-01';", a: ">", topic: "R1 Date Compare" },
+  { ctx: SCHEMA.orders, goal: "Keep orders before 2025-01-01.", q: "SELECT * FROM orders WHERE order_date ____ '2025-01-01';", a: "<", topic: "R1 Date Compare" },
+  { ctx: SCHEMA.customers, goal: "Rename a column in the output (alias).", q: "SELECT customer_name ____ name FROM customers;", a: "AS", topic: "R1 Alias" },
+  { ctx: SCHEMA.customers, goal: "Use a LIKE wildcard for any tail characters.", q: "SELECT * FROM customers WHERE city LIKE 'S____';", a: "%", topic: "R1 LIKE %" },
+  { ctx: SCHEMA.products, goal: "Return rows either outside range OR missing price.", q: "SELECT * FROM products WHERE price NOT BETWEEN 10 AND 20 ____ price IS NULL;", a: "OR", topic: "R1 NOT BETWEEN" },
+  { ctx: SCHEMA.customers, goal: "Group OR conditions with parentheses.", q: "SELECT * FROM customers WHERE (city='Calgary' ____ city='Edmonton') AND country='Canada';", a: "OR", topic: "R1 Parentheses" },
+  { ctx: SCHEMA.customers, goal: "Sort by country then city, both ascending.", q: "SELECT * FROM customers ORDER BY country ASC, city ____;", a: "ASC", topic: "R1 Multi-ORDER" },
 
-  {
-    ctx: "customers(customer_id, customer_name, city, country, email)",
-    goal: "Return each country only once",
-    q: "SELECT ____ country FROM customers;",
-    a: "DISTINCT",
-    topic: "R1 DISTINCT"
-  },
+  // ===== Round 2: Aggregates & Grouping (25) =====
+  { ctx: SCHEMA.customers, goal: "Count how many customer rows exist.", q: "SELECT ____ (*) FROM customers;", a: "COUNT", topic: "R2 COUNT" },
+  { ctx: SCHEMA.products, goal: "Find the lowest product price.", q: "SELECT ____ (price) FROM products;", a: "MIN", topic: "R2 MIN" },
+  { ctx: SCHEMA.products, goal: "Find the highest product price.", q: "SELECT ____ (price) FROM products;", a: "MAX", topic: "R2 MAX" },
+  { ctx: SCHEMA.products, goal: "Find the average product price.", q: "SELECT ____ (price) FROM products;", a: "AVG", topic: "R2 AVG" },
+  { ctx: SCHEMA.products, goal: "Find the total of all product prices (sum).", q: "SELECT ____ (price) FROM products;", a: "SUM", topic: "R2 SUM" },
+  { ctx: SCHEMA.customers, goal: "Count customers per country.", q: "SELECT country, COUNT(*) FROM customers GROUP BY ____;", a: "country", topic: "R2 GROUP BY" },
+  { ctx: SCHEMA.customers, goal: "Keep only cities with 2+ customers.", q: "SELECT city, COUNT(*) FROM customers GROUP BY city HAVING COUNT(*) ____ 2;", a: ">=", topic: "R2 HAVING" },
+  { ctx: SCHEMA.orders, goal: "Keep only customers with more than 1 order.", q: "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) ____ 1;", a: ">", topic: "R2 Duplicates" },
+  { ctx: SCHEMA.reviews, goal: "Keep products with average rating 4 or higher.", q: "SELECT product_id, AVG(rating) FROM reviews GROUP BY product_id HAVING AVG(rating) ____ 4;", a: ">=", topic: "R2 HAVING AVG" },
+  { ctx: SCHEMA.orders, goal: "Keep customers whose total spend is 500 or more.", q: "SELECT customer_id, SUM(total_amount) FROM orders GROUP BY customer_id HAVING SUM(total_amount) ____ 500;", a: ">=", topic: "R2 HAVING SUM" },
+  { ctx: SCHEMA.customers, goal: "Sort countries by customer count (largest first).", q: "SELECT country, COUNT(*) FROM customers GROUP BY country ORDER BY COUNT(*) ____;", a: "DESC", topic: "R2 ORDER BY agg" },
+  { ctx: SCHEMA.customers, goal: "Filter to customers who DO have an email.", q: "SELECT * FROM customers WHERE email IS ____ NULL;", a: "NOT", topic: "R2 NULL" },
+  { ctx: SCHEMA.customers, goal: "Match names ending with son OR sen.", q: "SELECT * FROM customers WHERE customer_name LIKE '%son' ____ customer_name LIKE '%sen';", a: "OR", topic: "R2 LIKE OR" },
+  { ctx: SCHEMA.customers, goal: "Wildcard for any-length in LIKE patterns.", q: "SELECT * FROM customers WHERE city LIKE 'A%'; -- wildcard for any length is ____", a: "%", topic: "R2 LIKE %" },
+  { ctx: SCHEMA.customers, goal: "Require Canada AND one of the listed cities.", q: "SELECT * FROM customers WHERE country='Canada' ____ city IN ('Calgary','Edmonton');", a: "AND", topic: "R2 AND + IN" },
+  { ctx: SCHEMA.orders, goal: "Not equal operator (status is NOT Cancelled).", q: "SELECT * FROM orders WHERE status ____ 'Cancelled';", a: "<>", topic: "R2 Not equal" },
+  { ctx: SCHEMA.products, goal: "Sort the between-range results by price low→high.", q: "SELECT * FROM products WHERE price BETWEEN 10 AND 20 ORDER BY price ____;", a: "ASC", topic: "R2 BETWEEN" },
+  { ctx: SCHEMA.orders, goal: "Count orders that are shipped OR delivered.", q: "SELECT COUNT(*) FROM orders WHERE status='Shipped' ____ status='Delivered';", a: "OR", topic: "R2 COUNT filter" },
+  { ctx: SCHEMA.orders, goal: "Delivered orders within the 2025 date range.", q: "SELECT * FROM orders WHERE order_date BETWEEN '2025-01-01' AND '2025-12-31' ____ status='Delivered';", a: "AND", topic: "R2 Date range" },
+  { ctx: SCHEMA.customers, goal: "Cities with 2–5 customers, shown most-to-least.", q: "SELECT city, COUNT(*) FROM customers GROUP BY city HAVING COUNT(*) BETWEEN 2 AND 5 ORDER BY COUNT(*) ____;", a: "DESC", topic: "R2 HAVING BETWEEN" },
+  { ctx: SCHEMA.products, goal: "Show top 5 products priced above the average price.", q: "SELECT * FROM products WHERE price > (SELECT AVG(price) FROM products) ORDER BY price DESC ____ 5;", a: "LIMIT", topic: "R2 Subquery" },
+  { ctx: SCHEMA.orders, goal: "Sort customer_id ascending after grouping.", q: "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) <> 0 ORDER BY customer_id ____;", a: "ASC", topic: "R2 Sort" },
+  { ctx: SCHEMA.customers, goal: "Sort by country ascending.", q: "SELECT * FROM customers WHERE country IN ('Canada','USA') ORDER BY country ____;", a: "ASC", topic: "R2 ORDER BY" },
+  { ctx: SCHEMA.customers, goal: "Exclude Calgary/Edmonton and take first 5 by city.", q: "SELECT * FROM customers WHERE city NOT IN ('Calgary','Edmonton') ORDER BY city ASC ____ 5;", a: "LIMIT", topic: "R2 NOT IN" },
+  { ctx: SCHEMA.customers, goal: "Use an alias in HAVING to filter totals above 10.", q: "SELECT country, COUNT(*) AS total FROM customers GROUP BY country HAVING total ____ 10;", a: ">", topic: "R2 HAVING alias" },
 
-  { q: "SELECT * FROM customers ____ country = 'Canada';", a: "WHERE", topic: "R1 WHERE" },
-  { q: "SELECT * FROM customers WHERE country ____ 'Canada';", a: "=", topic: "R1 Operator" },
-  { q: "SELECT * FROM customers WHERE country='Canada' ____ city='Calgary';", a: "AND", topic: "R1 AND" },
-  { q: "SELECT * FROM customers WHERE country='Canada' ____ country='USA';", a: "OR", topic: "R1 OR" },
-  { q: "SELECT * FROM customers WHERE ____ country='Canada';", a: "NOT", topic: "R1 NOT" },
-  { q: "SELECT * FROM customers ORDER BY city ____;", a: "ASC", topic: "R1 ORDER BY" },
-  { q: "SELECT * FROM customers ORDER BY city ____;", a: "DESC", topic: "R1 ORDER BY" },
-  { q: "SELECT * FROM orders ____ 10;", a: "LIMIT", topic: "R1 LIMIT" },
-  { q: "SELECT * FROM customers WHERE email ____ NULL;", a: "IS", topic: "R1 NULL" },
-  { q: "SELECT * FROM customers WHERE email IS ____ NULL;", a: "NOT", topic: "R1 NULL" },
-  { q: "SELECT * FROM customers WHERE city ____ 'A%';", a: "LIKE", topic: "R1 LIKE" },
-  { q: "SELECT * FROM customers WHERE country ____ ('Canada','USA');", a: "IN", topic: "R1 IN" },
-  { q: "SELECT * FROM products WHERE price ____ 10 AND 20;", a: "BETWEEN", topic: "R1 BETWEEN" },
-  { q: "SELECT * FROM customers WHERE city <> 'Calgary' ____ city <> 'Edmonton';", a: "AND", topic: "R1 Logic" },
-  { q: "SELECT * FROM products WHERE price >= 100 ____ price <= 200;", a: "AND", topic: "R1 Comparisons" },
-  { q: "SELECT * FROM orders WHERE order_date ____ '2025-01-01';", a: ">", topic: "R1 Date Compare" },
-  { q: "SELECT * FROM orders WHERE order_date ____ '2025-01-01';", a: "<", topic: "R1 Date Compare" },
-  { q: "SELECT customer_name ____ name FROM customers;", a: "AS", topic: "R1 Alias" },
-  { q: "SELECT * FROM customers WHERE city LIKE 'S____';", a: "%", topic: "R1 LIKE %" },
-  { q: "SELECT * FROM products WHERE price NOT BETWEEN 10 AND 20 ____ price IS NULL;", a: "OR", topic: "R1 NOT BETWEEN" },
-  { q: "SELECT * FROM customers WHERE (city='Calgary' ____ city='Edmonton') AND country='Canada';", a: "OR", topic: "R1 Parentheses" },
-  { q: "SELECT * FROM customers ORDER BY country ASC, city ____;", a: "ASC", topic: "R1 Multi-ORDER" },
-
-  // ===== Round 2: Aggregates & Grouping =====
-  { q: "SELECT ____ (*) FROM customers;", a: "COUNT", topic: "R2 COUNT" },
-  { q: "SELECT ____ (price) FROM products;", a: "MIN", topic: "R2 MIN" },
-  { q: "SELECT ____ (price) FROM products;", a: "MAX", topic: "R2 MAX" },
-  { q: "SELECT ____ (price) FROM products;", a: "AVG", topic: "R2 AVG" },
-  { q: "SELECT ____ (price) FROM products;", a: "SUM", topic: "R2 SUM" },
-  { q: "SELECT country, COUNT(*) FROM customers GROUP BY ____;", a: "country", topic: "R2 GROUP BY" },
-  { q: "SELECT city, COUNT(*) FROM customers GROUP BY city HAVING COUNT(*) ____ 2;", a: ">=", topic: "R2 HAVING" },
-  { q: "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) ____ 1;", a: ">", topic: "R2 Duplicates" },
-  { q: "SELECT product_id, AVG(rating) FROM reviews GROUP BY product_id HAVING AVG(rating) ____ 4;", a: ">=", topic: "R2 HAVING AVG" },
-  { q: "SELECT customer_id, SUM(total_amount) FROM orders GROUP BY customer_id HAVING SUM(total_amount) ____ 500;", a: ">=", topic: "R2 HAVING SUM" },
-  { q: "SELECT country, COUNT(*) FROM customers GROUP BY country ORDER BY COUNT(*) ____;", a: "DESC", topic: "R2 ORDER BY agg" },
-  { q: "SELECT * FROM customers WHERE email IS ____ NULL;", a: "NOT", topic: "R2 NULL" },
-  { q: "SELECT * FROM customers WHERE customer_name LIKE '%son' ____ customer_name LIKE '%sen';", a: "OR", topic: "R2 LIKE OR" },
-  { q: "SELECT * FROM customers WHERE city LIKE 'A%'; -- wildcard for any length is ____", a: "%", topic: "R2 LIKE %" },
-  { q: "SELECT * FROM customers WHERE country='Canada' ____ city IN ('Calgary','Edmonton');", a: "AND", topic: "R2 AND + IN" },
-  { q: "SELECT * FROM orders WHERE status ____ 'Cancelled';", a: "<>", topic: "R2 Not equal" },
-  { q: "SELECT * FROM products WHERE price BETWEEN 10 AND 20 ORDER BY price ____;", a: "ASC", topic: "R2 BETWEEN" },
-  { q: "SELECT COUNT(*) FROM orders WHERE status='Shipped' ____ status='Delivered';", a: "OR", topic: "R2 COUNT filter" },
-  { q: "SELECT * FROM orders WHERE order_date BETWEEN '2025-01-01' AND '2025-12-31' ____ status='Delivered';", a: "AND", topic: "R2 Date range" },
-  { q: "SELECT city, COUNT(*) FROM customers GROUP BY city HAVING COUNT(*) BETWEEN 2 AND 5 ORDER BY COUNT(*) ____;", a: "DESC", topic: "R2 HAVING BETWEEN" },
-  { q: "SELECT * FROM products WHERE price > (SELECT AVG(price) FROM products) ORDER BY price DESC ____ 5;", a: "LIMIT", topic: "R2 Subquery" },
-  { q: "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) <> 0 ORDER BY customer_id ____;", a: "ASC", topic: "R2 Sort" },
-  { q: "SELECT * FROM customers WHERE country IN ('Canada','USA') ORDER BY country ____;", a: "ASC", topic: "R2 ORDER BY" },
-  { q: "SELECT * FROM customers WHERE city NOT IN ('Calgary','Edmonton') ORDER BY city ASC ____ 5;", a: "LIMIT", topic: "R2 NOT IN" },
-  { q: "SELECT country, COUNT(*) AS total FROM customers GROUP BY country HAVING total ____ 10;", a: ">", topic: "R2 HAVING alias" },
-
-  // ===== Round 3: JOINs (SQLite-safe) =====
-  { q: "SELECT * FROM orders o ____ JOIN customers c ON o.customer_id = c.customer_id;", a: "INNER", topic: "R3 INNER JOIN" },
-  { q: "SELECT * FROM customers c ____ JOIN orders o ON c.customer_id = o.customer_id;", a: "LEFT", topic: "R3 LEFT JOIN" },
-  { q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ____ o.customer_id = c.customer_id;", a: "ON", topic: "R3 ON" },
-  { q: "SELECT oi.order_id, p.product_name FROM order_items oi INNER JOIN products p ON oi.product_id = p.product_id ____ oi.quantity > 1;", a: "WHERE", topic: "R3 JOIN + WHERE" },
-  { q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id ORDER BY o.order_id ____;", a: "ASC", topic: "R3 ORDER BY" },
-  { q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS ____ NULL;", a: "NOT", topic: "R3 NULL filter" },
-  { q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NULL;", a: "IS", topic: "R3 Unmatched" },
-  { q: "SELECT o.order_id, oi.quantity FROM orders o INNER JOIN order_items oi ON o.order_id = oi.order_id WHERE oi.quantity ____ 0;", a: ">", topic: "R3 Comparison" },
-  { q: "SELECT p.product_name, oi.quantity FROM products p INNER JOIN order_items oi ON p.product_id=oi.product_id ORDER BY oi.quantity ____;", a: "DESC", topic: "R3 Sort" },
-  { q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.country = 'Canada' ____ o.status='Delivered';", a: "AND", topic: "R3 AND" },
-  { q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.country='Canada' ____ c.country='USA';", a: "OR", topic: "R3 OR" },
-  { q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE NOT c.country='Canada';", a: "NOT", topic: "R3 NOT" },
-  { q: "SELECT c.customer_name, COUNT(o.order_id) FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id GROUP BY c.customer_name HAVING COUNT(o.order_id) ____ 1;", a: ">", topic: "R3 GROUP + HAVING" },
-  { q: "SELECT c.customer_name, COUNT(o.order_id) AS total FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id GROUP BY c.customer_name ORDER BY total ____;", a: "DESC", topic: "R3 ORDER BY alias" },
-  { q: "SELECT o.order_id, SUM(oi.quantity) FROM orders o INNER JOIN order_items oi ON o.order_id=oi.order_id GROUP BY o.order_id HAVING SUM(oi.quantity) ____ 3;", a: ">=", topic: "R3 HAVING SUM" },
-  { q: "SELECT p.product_name, AVG(r.rating) FROM products p INNER JOIN reviews r ON p.product_id=r.product_id GROUP BY p.product_name HAVING AVG(r.rating) ____ 4;", a: ">=", topic: "R3 AVG" },
-  { q: "SELECT p.product_name, r.rating FROM products p INNER JOIN reviews r ON p.product_id=r.product_id WHERE r.rating ____ 5;", a: "=", topic: "R3 Filter" },
-  { q: "SELECT p.product_name, r.rating FROM products p INNER JOIN reviews r ON p.product_id=r.product_id WHERE r.rating BETWEEN 3 AND 5 ORDER BY r.rating ____;", a: "DESC", topic: "R3 BETWEEN" },
-  { q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id ____ o.order_id > 100;", a: "WHERE", topic: "R3 WHERE position" },
-  { q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id ORDER BY c.customer_name ASC ____ 10;", a: "LIMIT", topic: "R3 LIMIT" },
-  { q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.customer_name LIKE 'A____';", a: "%", topic: "R3 LIKE %" },
-  { q: "SELECT oi.order_id, p.product_name FROM order_items oi INNER JOIN products p ON oi.product_id=p.product_id WHERE p.product_name LIKE '%phone%' ____ p.product_name LIKE '%tablet%';", a: "OR", topic: "R3 LIKE OR" },
-  { q: "SELECT o.order_id, SUM(oi.quantity) AS qty FROM orders o INNER JOIN order_items oi ON o.order_id=oi.order_id GROUP BY o.order_id ORDER BY qty ____;", a: "DESC", topic: "R3 Aggregate sort" },
-  { q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NULL ORDER BY c.customer_name ____;", a: "ASC", topic: "R3 Unmatched sort" },
-  { q: "SELECT p.product_name, COUNT(r.review_id) FROM products p LEFT JOIN reviews r ON p.product_id=r.product_id GROUP BY p.product_name HAVING COUNT(r.review_id) ____ 0;", a: ">", topic: "R3 LEFT + COUNT" }
+  // ===== Round 3: JOINs (25) =====
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Match orders to their customer (only matches).", q: "SELECT * FROM orders o ____ JOIN customers c ON o.customer_id = c.customer_id;", a: "INNER", topic: "R3 INNER JOIN" },
+  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Keep all customers even if they have no orders.", q: "SELECT * FROM customers c ____ JOIN orders o ON c.customer_id = o.customer_id;", a: "LEFT", topic: "R3 LEFT JOIN" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "JOIN needs the keyword that defines the join condition line.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ____ o.customer_id = c.customer_id;", a: "ON", topic: "R3 ON" },
+  { ctx: `${SCHEMA.order_items}\n${SCHEMA.products}`, goal: "Filter joined rows to quantity > 1.", q: "SELECT oi.order_id, p.product_name FROM order_items oi INNER JOIN products p ON oi.product_id = p.product_id ____ oi.quantity > 1;", a: "WHERE", topic: "R3 JOIN + WHERE" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Sort results by order_id ascending.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id ORDER BY o.order_id ____;", a: "ASC", topic: "R3 ORDER BY" },
+  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Keep only customers WITH orders (order_id not null).", q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS ____ NULL;", a: "NOT", topic: "R3 NULL filter" },
+  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Find customers with NO orders (unmatched rows).", q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NULL;", a: "IS", topic: "R3 Unmatched" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.order_items}`, goal: "Filter to positive quantities.", q: "SELECT o.order_id, oi.quantity FROM orders o INNER JOIN order_items oi ON o.order_id = oi.order_id WHERE oi.quantity ____ 0;", a: ">", topic: "R3 Comparison" },
+  { ctx: `${SCHEMA.products}\n${SCHEMA.order_items}`, goal: "Show highest quantities first.", q: "SELECT p.product_name, oi.quantity FROM products p INNER JOIN order_items oi ON p.product_id=oi.product_id ORDER BY oi.quantity ____;", a: "DESC", topic: "R3 Sort" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Canada customers AND delivered orders.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.country = 'Canada' ____ o.status='Delivered';", a: "AND", topic: "R3 AND" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Orders for Canada OR USA customers.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.country='Canada' ____ c.country='USA';", a: "OR", topic: "R3 OR" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Negate the country condition in a join filter.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE ____ c.country='Canada';", a: "NOT", topic: "R3 NOT" },
+  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Customers with more than 1 order.", q: "SELECT c.customer_name, COUNT(o.order_id) FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id GROUP BY c.customer_name HAVING COUNT(o.order_id) ____ 1;", a: ">", topic: "R3 GROUP + HAVING" },
+  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Sort by alias total (largest first).", q: "SELECT c.customer_name, COUNT(o.order_id) AS total FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id GROUP BY c.customer_name ORDER BY total ____;", a: "DESC", topic: "R3 ORDER BY alias" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.order_items}`, goal: "Orders where total item quantity is 3 or more.", q: "SELECT o.order_id, SUM(oi.quantity) FROM orders o INNER JOIN order_items oi ON o.order_id=oi.order_id GROUP BY o.order_id HAVING SUM(oi.quantity) ____ 3;", a: ">=", topic: "R3 HAVING SUM" },
+  { ctx: `${SCHEMA.products}\n${SCHEMA.reviews}`, goal: "Products with average rating 4 or more.", q: "SELECT p.product_name, AVG(r.rating) FROM products p INNER JOIN reviews r ON p.product_id=r.product_id GROUP BY p.product_name HAVING AVG(r.rating) ____ 4;", a: ">=", topic: "R3 AVG" },
+  { ctx: `${SCHEMA.products}\n${SCHEMA.reviews}`, goal: "Filter to rows where rating equals 5.", q: "SELECT p.product_name, r.rating FROM products p INNER JOIN reviews r ON p.product_id=r.product_id WHERE r.rating ____ 5;", a: "=", topic: "R3 Filter" },
+  { ctx: `${SCHEMA.products}\n${SCHEMA.reviews}`, goal: "Sort ratings high-to-low within the range.", q: "SELECT p.product_name, r.rating FROM products p INNER JOIN reviews r ON p.product_id=r.product_id WHERE r.rating BETWEEN 3 AND 5 ORDER BY r.rating ____;", a: "DESC", topic: "R3 BETWEEN" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "WHERE clause belongs after FROM/JOIN section.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id ____ o.order_id > 100;", a: "WHERE", topic: "R3 WHERE position" },
+  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Limit to the first 10 rows after sorting.", q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id ORDER BY c.customer_name ASC ____ 10;", a: "LIMIT", topic: "R3 LIMIT" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Use LIKE wildcard after A (any characters).", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.customer_name LIKE 'A____';", a: "%", topic: "R3 LIKE %" },
+  { ctx: `${SCHEMA.order_items}\n${SCHEMA.products}`, goal: "Match either of two product-name patterns.", q: "SELECT oi.order_id, p.product_name FROM order_items oi INNER JOIN products p ON oi.product_id=p.product_id WHERE p.product_name LIKE '%phone%' ____ p.product_name LIKE '%tablet%';", a: "OR", topic: "R3 LIKE OR" },
+  { ctx: `${SCHEMA.orders}\n${SCHEMA.order_items}`, goal: "Sort by total quantity descending using alias qty.", q: "SELECT o.order_id, SUM(oi.quantity) AS qty FROM orders o INNER JOIN order_items oi ON o.order_id=oi.order_id GROUP BY o.order_id ORDER BY qty ____;", a: "DESC", topic: "R3 Aggregate sort" },
+  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Unmatched (no orders) customers sorted A→Z.", q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NULL ORDER BY c.customer_name ____;", a: "ASC", topic: "R3 Unmatched sort" },
+  { ctx: `${SCHEMA.products}\n${SCHEMA.reviews}`, goal: "Products that have at least 1 review (count > 0).", q: "SELECT p.product_name, COUNT(r.review_id) FROM products p LEFT JOIN reviews r ON p.product_id=r.product_id GROUP BY p.product_name HAVING COUNT(r.review_id) ____ 0;", a: ">", topic: "R3 LEFT + COUNT" }
 ];
 
 let i = -1;
@@ -152,33 +160,14 @@ function normalize(s) {
     .toUpperCase();
 }
 
-function setCtxGoal(qObj) {
-  const ctxEl = document.getElementById("ctx");
-  const goalEl = document.getElementById("goal");
-
-  if (qObj.ctx) {
-    ctxEl.style.display = "block";
-    ctxEl.textContent = "Context: " + qObj.ctx;
-  } else {
-    ctxEl.style.display = "none";
-    ctxEl.textContent = "";
-  }
-
-  if (qObj.goal) {
-    goalEl.style.display = "block";
-    goalEl.textContent = "Goal: " + qObj.goal;
-  } else {
-    goalEl.style.display = "none";
-    goalEl.textContent = "";
-  }
-}
-
 function nextQ() {
   i = (i + 1) % questions.length;
+  const item = questions[i];
 
-  const qObj = questions[i];
-  document.getElementById("q").textContent = qObj.q;
-  setCtxGoal(qObj);
+  document.getElementById("ctx").textContent = "Context: " + (item.ctx ?? "—");
+  document.getElementById("goal").textContent = "Goal: " + (item.goal ?? "—");
+
+  document.getElementById("q").textContent = item.q;
 
   document.getElementById("ans").value = "";
   document.getElementById("result").textContent = "—";
@@ -189,6 +178,7 @@ function nextQ() {
 
 function check() {
   if (i < 0) return;
+
   const user = normalize(document.getElementById("ans").value);
   const correct = normalize(questions[i].a);
 
@@ -199,7 +189,6 @@ function check() {
     result.textContent = "✅ Correct";
     result.className = "chip ok";
     explain.style.display = "none";
-    explain.textContent = "";
   } else {
     result.textContent = "❌ Not quite";
     result.className = "chip bad";
