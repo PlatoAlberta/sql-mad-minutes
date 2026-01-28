@@ -1,0 +1,96 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.codeBlock {
+    background: var(--bg-inset);
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-inset);
+    padding: 20px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 2;
+}
+
+.blank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    height: 32px;
+    padding: 0 12px;
+    background: var(--bg-base);
+    border: 2px dashed var(--slate);
+    border-radius: var(--radius-sm);
+    margin: 0 4px;
+    vertical-align: middle;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.blank.active {
+    border-color: var(--royal);
+    background: rgba(0, 89, 232, 0.05);
+}
+
+.blank.filled {
+    background: linear-gradient(135deg, var(--midnight), var(--royal));
+    border-style: solid;
+    border-color: transparent;
+    color: white;
+}
+
+.blank.correct {
+    background: linear-gradient(135deg, #1a8754, var(--color-success));
+}
+
+.blank.incorrect {
+    background: linear-gradient(135deg, #cc1510, var(--flare));
+}
+
+.chipPool {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px;
+    background: var(--bg-base);
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-raised);
+}
+
+.chip {
+    padding: 10px 18px;
+    background: var(--bg-base);
+    border: none;
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-subtle);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--midnight);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chip:hover {
+    transform: translateY(-2px);
+    color: var(--royal);
+}
+
+.chip.used {
+    opacity: 0.35;
+    pointer-events: none;
+    box-shadow: var(--neu-inset);
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}

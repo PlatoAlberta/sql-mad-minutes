@@ -1,214 +1,1406 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>SQL Mad Minutes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learn SQL with interactive drag-and-drop challenges">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; background:#111; color:#eee; padding:20px; max-width: 900px; margin:0 auto; }
-    button { padding:10px 14px; margin:6px 6px 6px 0; cursor:pointer; }
-    pre { background:#222; padding:14px; border-radius:8px; white-space:pre-wrap; }
-    input {
-      padding:10px; width: min(520px, 95%);
-      border-radius: 8px; border: 1px solid #444;
-      background:#181818; color:#eee; font-size: 15px;
+    /* ============================================
+       NEUMORPHIC DESIGN SYSTEM
+       Color Palette: Chalk, Slate, Midnight, Royal, Flare
+       ============================================ */
+    :root {
+      /* Primary Palette */
+      --chalk: #FFFFFF;
+      --chalk-soft: #E6E8F1;
+      --slate: #A3B5CB;
+      --slate-dark: #6C828D;
+      --midnight: #000B68;
+      --midnight-soft: #1A2258;
+      --royal: #0059E8;
+      --royal-soft: #63F8B5;
+      --flare: #FF1A14;
+      --flare-soft: #FF6B52;
+
+      /* Neumorphic Base */
+      --bg-base: #E6E8F1;
+      --bg-raised: #F0F2F8;
+      --bg-inset: #D8DBE6;
+
+      /* Shadows for neumorphism */
+      --shadow-light: rgba(255, 255, 255, 0.8);
+      --shadow-dark: rgba(166, 180, 200, 0.5);
+      --neu-raised: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+      --neu-inset: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+      --neu-subtle: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
+
+      /* Text */
+      --text-primary: #1A2258;
+      --text-secondary: #6C828D;
+      --text-muted: #A3B5CB;
+
+      /* Semantic */
+      --color-success: #22A06B;
+      --color-error: #FF1A14;
+
+      /* Spacing */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
     }
-    .row { margin: 10px 0; }
-    .hint { opacity:0.9; font-size: 13px; }
-    .ok { color: #7CFC9A; font-weight: bold; }
-    .bad { color: #FF7C7C; font-weight: bold; }
-    .chip { display:inline-block; padding:4px 10px; border:1px solid #444; border-radius:999px; margin-left:8px; font-size:12px; opacity:.95;}
-    .muted { opacity:.75; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       LAYOUT
+       ============================================ */
+    .app-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding: 20px 24px;
+      background: var(--bg-base);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--neu-raised);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--midnight), var(--royal));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--midnight);
+    }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--bg-base);
+      border-radius: var(--radius-md);
+      box-shadow: var(--neu-subtle);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .stat-icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--royal), var(--midnight));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stat-value {
+      color: var(--royal);
+      font-weight: 700;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+    }
+
+    /* ============================================
+       ROUND SELECTOR
+       ============================================ */
+    .round-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .round-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      background: var(--bg-base);
+      border: none;
+      border-radius: var(--radius-md);
+      box-shadow: var(--neu-raised);
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .round-btn:hover {
+      color: var(--midnight);
+      transform: translateY(-2px);
+    }
+
+    .round-btn:active {
+      box-shadow: var(--neu-inset);
+      transform: translateY(0);
+    }
+
+    .round-btn.active {
+      background: linear-gradient(135deg, var(--midnight), var(--royal));
+      color: white;
+      box-shadow: var(--neu-raised);
+    }
+
+    .round-icon {
+      width: 28px;
+      height: 28px;
+      background: rgba(0, 11, 104, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .round-btn.active .round-icon {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    /* ============================================
+       PROGRESS BAR
+       ============================================ */
+    .progress-container {
+      margin-bottom: 20px;
+      padding: 16px 20px;
+      background: var(--bg-base);
+      border-radius: var(--radius-md);
+      box-shadow: var(--neu-raised);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .progress-label {
+      color: var(--text-secondary);
+    }
+
+    .progress-percent {
+      color: var(--royal);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--bg-inset);
+      border-radius: 4px;
+      box-shadow: var(--neu-inset);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--midnight), var(--royal));
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    /* ============================================
+       QUESTION CARD
+       ============================================ */
+    .question-card {
+      background: var(--bg-base);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--neu-raised);
+      overflow: hidden;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Context Section */
+    .context-section {
+      padding: 20px 24px;
+      background: linear-gradient(135deg, var(--midnight), var(--midnight-soft));
+      color: white;
+    }
+
+    .topic-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .schema-box {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+
+    .schema-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      opacity: 0.8;
+    }
+
+    .schema-icon {
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .schema-tables {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 13px;
+      color: #63F8B5;
+      line-height: 1.6;
+    }
+
+    .goal-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .goal-icon {
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .goal-text {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    /* Code Section */
+    .code-section {
+      padding: 28px 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .sql-display {
+      background: var(--bg-inset);
+      border-radius: var(--radius-md);
+      box-shadow: var(--neu-inset);
+      padding: 24px;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 16px;
+      line-height: 2;
+      color: var(--text-primary);
+      word-wrap: break-word;
+    }
+
+    /* Drop Zone */
+    .drop-zone {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 90px;
+      height: 36px;
+      padding: 0 14px;
+      background: var(--bg-base);
+      border: 2px dashed var(--slate);
+      border-radius: var(--radius-sm);
+      margin: 0 6px;
+      vertical-align: middle;
+      transition: all 0.2s ease;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .drop-zone.drag-over {
+      background: rgba(0, 89, 232, 0.1);
+      border-color: var(--royal);
+      transform: scale(1.05);
+    }
+
+    .drop-zone.filled {
+      background: linear-gradient(135deg, var(--midnight), var(--royal));
+      border-style: solid;
+      border-color: transparent;
+      color: white;
+      cursor: pointer;
+    }
+
+    .drop-zone.correct {
+      background: linear-gradient(135deg, #1a8754, var(--color-success));
+    }
+
+    .drop-zone.incorrect {
+      background: linear-gradient(135deg, #cc1510, var(--flare));
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-8px);
+      }
+
+      50% {
+        transform: translateX(8px);
+      }
+
+      75% {
+        transform: translateX(-4px);
+      }
+    }
+
+    /* SQL Syntax Highlighting */
+    .sql-keyword {
+      color: var(--midnight);
+      font-weight: 600;
+    }
+
+    .sql-function {
+      color: var(--royal);
+    }
+
+    .sql-string {
+      color: #22A06B;
+    }
+
+    .sql-number {
+      color: #E65100;
+    }
+
+    .sql-operator {
+      color: var(--flare);
+    }
+
+    /* Hint Section */
+    .hint-section {
+      padding: 16px 24px;
+      border-top: 1px solid var(--bg-inset);
+    }
+
+    .hint-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .hint-toggle:hover {
+      color: var(--royal);
+    }
+
+    .hint-icon {
+      width: 20px;
+      height: 20px;
+      background: var(--bg-inset);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .hint-content {
+      display: none;
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: var(--bg-inset);
+      border-left: 3px solid var(--royal);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      box-shadow: var(--neu-inset);
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .hint-content.visible {
+      display: block;
+    }
+
+    /* ============================================
+       ANSWER TRAY (Bottom Dock)
+       ============================================ */
+    .answer-tray {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-base);
+      padding: 20px;
+      box-shadow: 0 -8px 24px rgba(0, 11, 104, 0.1);
+    }
+
+    .tray-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .answer-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .answer-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 22px;
+      background: var(--bg-base);
+      border: none;
+      border-radius: var(--radius-md);
+      box-shadow: var(--neu-raised);
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--midnight);
+      cursor: grab;
+      transition: all 0.2s ease;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    .answer-chip:hover {
+      color: var(--royal);
+      transform: translateY(-3px);
+      box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+    }
+
+    .answer-chip:active,
+    .answer-chip.dragging {
+      cursor: grabbing;
+      box-shadow: var(--neu-inset);
+      transform: scale(0.98);
+    }
+
+    .answer-chip.used {
+      opacity: 0.35;
+      pointer-events: none;
+      box-shadow: var(--neu-inset);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--midnight), var(--royal));
+      color: white;
+      box-shadow: var(--neu-raised);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: var(--neu-subtle);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: var(--bg-base);
+      box-shadow: var(--neu-raised);
+      color: var(--text-secondary);
+    }
+
+    .btn-secondary:hover {
+      color: var(--midnight);
+    }
+
+    .btn-secondary:active {
+      box-shadow: var(--neu-inset);
+    }
+
+    /* ============================================
+       RESULT FEEDBACK
+       ============================================ */
+    .result-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 11, 104, 0.6);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .result-overlay.visible {
+      display: flex;
+    }
+
+    .result-card {
+      background: var(--bg-base);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--neu-raised);
+      padding: 36px;
+      text-align: center;
+      max-width: 440px;
+      margin: 20px;
+      animation: popIn 0.3s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .result-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .result-icon.success {
+      background: linear-gradient(135deg, #1a8754, var(--color-success));
+    }
+
+    .result-icon.error {
+      background: linear-gradient(135deg, #cc1510, var(--flare));
+    }
+
+    .result-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .result-title.success {
+      color: var(--color-success);
+    }
+
+    .result-title.error {
+      color: var(--flare);
+    }
+
+    .result-message {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .result-correct-answer {
+      padding: 12px 16px;
+      background: var(--bg-inset);
+      border-radius: var(--radius-md);
+      box-shadow: var(--neu-inset);
+      margin-bottom: 16px;
+    }
+
+    .result-correct-answer .label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .result-correct-answer .answer {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-success);
+    }
+
+    .result-explanation {
+      padding: 14px 16px;
+      background: rgba(0, 89, 232, 0.08);
+      border-left: 3px solid var(--royal);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .result-explanation .label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--royal);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .result-explanation .text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .result-xp {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(34, 160, 107, 0.15);
+      border-radius: var(--radius-md);
+      color: var(--color-success);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    /* ============================================
+       WELCOME SCREEN
+       ============================================ */
+    .welcome-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .welcome-icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, var(--midnight), var(--royal));
+      border-radius: var(--radius-xl);
+      box-shadow: var(--neu-raised);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      color: white;
+      font-size: 40px;
+      font-weight: 700;
+    }
+
+    .welcome-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--midnight);
+    }
+
+    .welcome-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+
+    .start-btn {
+      padding: 16px 40px;
+      font-size: 16px;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 600px) {
+      .header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      .stats {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .round-btn .round-name {
+        display: none;
+      }
+
+      .sql-display {
+        font-size: 14px;
+        padding: 18px;
+      }
+
+      .answer-chip {
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+    }
+
+    /* Bottom padding for answer tray */
+    .app-container {
+      padding-bottom: 180px;
+    }
   </style>
 </head>
+
 <body>
 
-<h1>SQL Mad Minutes</h1>
-<p class="hint">
-  Fill the <b>____</b> blank, then click <b>Check Answer</b>. (SQLite / DBeaver aligned)
-</p>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo-icon">SQL</div>
+        <h1>SQL Mad Minutes</h1>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-icon">XP</div>
+          <span class="stat-value" id="xp-display">0</span>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">S</div>
+          <span class="stat-value" id="streak-display">0</span>
+          <span class="stat-label">Streak</span>
+        </div>
+      </div>
+    </header>
 
-<div class="row">
-  <button onclick="nextQ()">Next Question</button>
-  <button onclick="reveal()">Reveal Answer</button>
-</div>
+    <!-- Round Selector -->
+    <div class="round-selector" id="round-selector"></div>
 
-<pre id="ctx" class="hint muted">Context: (click “Next Question” to begin…)</pre>
-<pre id="goal" class="hint muted">Goal: —</pre>
+    <!-- Progress Bar -->
+    <div class="progress-container" id="progress-container" style="display: none;">
+      <div class="progress-header">
+        <span class="progress-label" id="progress-label">Question 1 of 25</span>
+        <span class="progress-percent" id="progress-percent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
 
-<pre id="q">Click “Next Question” to begin…</pre>
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcome-screen">
+      <div class="welcome-icon">SQL</div>
+      <h2 class="welcome-title">Master SQL Queries</h2>
+      <p class="welcome-subtitle">Drag and drop the correct keywords to complete SQL queries. Choose a round above to
+        begin your learning journey.</p>
+    </div>
 
-<div class="row">
-  <label for="ans"><b>Your answer:</b></label><br>
-  <input id="ans" type="text" placeholder="Type the missing keyword/operator… (e.g., WHERE)" autocomplete="off">
-</div>
+    <!-- Question Card (hidden initially) -->
+    <div class="question-card" id="question-card" style="display: none;">
+      <!-- Context Section -->
+      <div class="context-section">
+        <div class="topic-badge" id="topic-badge">
+          <span>R1</span>
+          <span>SQL Basics</span>
+        </div>
 
-<div class="row">
-  <button onclick="check()">Check Answer</button>
-  <span id="result" class="chip">—</span>
-</div>
+        <div class="schema-box">
+          <div class="schema-label">
+            <div class="schema-icon">T</div>
+            <span>Schema</span>
+          </div>
+          <div class="schema-tables" id="schema-display"></div>
+        </div>
 
-<pre id="explain" style="display:none;"></pre>
+        <div class="goal-box">
+          <div class="goal-icon">?</div>
+          <span class="goal-text" id="goal-display"></span>
+        </div>
+      </div>
 
-<script>
-/*
-  RULE: Every question must be unambiguous.
-  So each question includes:
-  - ctx: mini schema line (what columns exist)
-  - goal: what the query is trying to do
-  - q: prompt with ____ blank
-  - a: single expected answer (string compare)
-*/
+      <!-- Code Section -->
+      <div class="code-section">
+        <div class="sql-display" id="sql-display"></div>
+      </div>
 
-const SCHEMA = {
-  customers: "customers(customer_id, customer_name, city, country, email)",
-  orders: "orders(order_id, customer_id, order_date, status, total_amount)",
-  products: "products(product_id, product_name, price, stock_quantity)",
-  order_items: "order_items(order_item_id, order_id, product_id, quantity, discount_percent)",
-  reviews: "reviews(review_id, product_id, rating)"
-};
+      <!-- Hint Section -->
+      <div class="hint-section">
+        <button class="hint-toggle" onclick="toggleHint()">
+          <div class="hint-icon">?</div>
+          <span>Show Hint</span>
+        </button>
+        <div class="hint-content" id="hint-content"></div>
+      </div>
+    </div>
+  </div>
 
-const questions = [
-  // ===== Round 1: Core (25) =====
-  { ctx: SCHEMA.customers, goal: "Return all customer rows (all columns).", q: "____ * FROM customers;", a: "SELECT", topic: "R1 SELECT" },
-  { ctx: SCHEMA.customers, goal: "Return each customer's name and their city.", q: "SELECT customer_name, ____ FROM customers;", a: "city", topic: "R1 Columns" },
-  { ctx: SCHEMA.customers, goal: "Return each country only once (unique list).", q: "SELECT ____ country FROM customers;", a: "DISTINCT", topic: "R1 DISTINCT" },
-  { ctx: SCHEMA.customers, goal: "Filter customers to only those in Canada.", q: "SELECT * FROM customers ____ country = 'Canada';", a: "WHERE", topic: "R1 WHERE" },
-  { ctx: SCHEMA.customers, goal: "Use the equals operator for an exact match.", q: "SELECT * FROM customers WHERE country ____ 'Canada';", a: "=", topic: "R1 Operator" },
-  { ctx: SCHEMA.customers, goal: "Require BOTH conditions (Canada AND Calgary).", q: "SELECT * FROM customers WHERE country='Canada' ____ city='Calgary';", a: "AND", topic: "R1 AND" },
-  { ctx: SCHEMA.customers, goal: "Match EITHER country (Canada OR USA).", q: "SELECT * FROM customers WHERE country='Canada' ____ country='USA';", a: "OR", topic: "R1 OR" },
-  { ctx: SCHEMA.customers, goal: "Negate the condition (NOT Canada).", q: "SELECT * FROM customers WHERE ____ country='Canada';", a: "NOT", topic: "R1 NOT" },
-  { ctx: SCHEMA.customers, goal: "Sort city A→Z.", q: "SELECT * FROM customers ORDER BY city ____;", a: "ASC", topic: "R1 ORDER BY" },
-  { ctx: SCHEMA.customers, goal: "Sort city Z→A.", q: "SELECT * FROM customers ORDER BY city ____;", a: "DESC", topic: "R1 ORDER BY" },
-  { ctx: SCHEMA.orders, goal: "Return only the first 10 orders.", q: "SELECT * FROM orders ____ 10;", a: "LIMIT", topic: "R1 LIMIT" },
-  { ctx: SCHEMA.customers, goal: "Check for NULL emails (missing value).", q: "SELECT * FROM customers WHERE email ____ NULL;", a: "IS", topic: "R1 NULL" },
-  { ctx: SCHEMA.customers, goal: "Check for NOT NULL emails (present value).", q: "SELECT * FROM customers WHERE email IS ____ NULL;", a: "NOT", topic: "R1 NULL" },
-  { ctx: SCHEMA.customers, goal: "Find cities starting with letter A.", q: "SELECT * FROM customers WHERE city ____ 'A%';", a: "LIKE", topic: "R1 LIKE" },
-  { ctx: SCHEMA.customers, goal: "Filter to customers in a set of countries.", q: "SELECT * FROM customers WHERE country ____ ('Canada','USA');", a: "IN", topic: "R1 IN" },
-  { ctx: SCHEMA.products, goal: "Filter prices within a numeric range (10 to 20).", q: "SELECT * FROM products WHERE price ____ 10 AND 20;", a: "BETWEEN", topic: "R1 BETWEEN" },
-  { ctx: SCHEMA.customers, goal: "Exclude TWO cities using two comparisons (both must be true).", q: "SELECT * FROM customers WHERE city <> 'Calgary' ____ city <> 'Edmonton';", a: "AND", topic: "R1 Logic" },
-  { ctx: SCHEMA.products, goal: "Keep prices between 100 and 200 using two comparisons.", q: "SELECT * FROM products WHERE price >= 100 ____ price <= 200;", a: "AND", topic: "R1 Comparisons" },
-  { ctx: SCHEMA.orders, goal: "Keep orders after 2025-01-01.", q: "SELECT * FROM orders WHERE order_date ____ '2025-01-01';", a: ">", topic: "R1 Date Compare" },
-  { ctx: SCHEMA.orders, goal: "Keep orders before 2025-01-01.", q: "SELECT * FROM orders WHERE order_date ____ '2025-01-01';", a: "<", topic: "R1 Date Compare" },
-  { ctx: SCHEMA.customers, goal: "Rename a column in the output (alias).", q: "SELECT customer_name ____ name FROM customers;", a: "AS", topic: "R1 Alias" },
-  { ctx: SCHEMA.customers, goal: "Use a LIKE wildcard for any tail characters.", q: "SELECT * FROM customers WHERE city LIKE 'S____';", a: "%", topic: "R1 LIKE %" },
-  { ctx: SCHEMA.products, goal: "Return rows either outside range OR missing price.", q: "SELECT * FROM products WHERE price NOT BETWEEN 10 AND 20 ____ price IS NULL;", a: "OR", topic: "R1 NOT BETWEEN" },
-  { ctx: SCHEMA.customers, goal: "Group OR conditions with parentheses.", q: "SELECT * FROM customers WHERE (city='Calgary' ____ city='Edmonton') AND country='Canada';", a: "OR", topic: "R1 Parentheses" },
-  { ctx: SCHEMA.customers, goal: "Sort by country then city, both ascending.", q: "SELECT * FROM customers ORDER BY country ASC, city ____;", a: "ASC", topic: "R1 Multi-ORDER" },
+  <!-- Answer Tray (Fixed at bottom) -->
+  <div class="answer-tray" id="answer-tray" style="display: none;">
+    <div class="tray-label">Drag an answer to the blank</div>
+    <div class="answer-chips" id="answer-chips"></div>
+    <div class="action-buttons">
+      <button class="btn btn-secondary" onclick="skipQuestion()">Skip</button>
+      <button class="btn btn-primary" id="check-btn" onclick="checkAnswer()" disabled>Check Answer</button>
+      <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" style="display: none;">Next</button>
+    </div>
+  </div>
 
-  // ===== Round 2: Aggregates & Grouping (25) =====
-  { ctx: SCHEMA.customers, goal: "Count how many customer rows exist.", q: "SELECT ____ (*) FROM customers;", a: "COUNT", topic: "R2 COUNT" },
-  { ctx: SCHEMA.products, goal: "Find the lowest product price.", q: "SELECT ____ (price) FROM products;", a: "MIN", topic: "R2 MIN" },
-  { ctx: SCHEMA.products, goal: "Find the highest product price.", q: "SELECT ____ (price) FROM products;", a: "MAX", topic: "R2 MAX" },
-  { ctx: SCHEMA.products, goal: "Find the average product price.", q: "SELECT ____ (price) FROM products;", a: "AVG", topic: "R2 AVG" },
-  { ctx: SCHEMA.products, goal: "Find the total of all product prices (sum).", q: "SELECT ____ (price) FROM products;", a: "SUM", topic: "R2 SUM" },
-  { ctx: SCHEMA.customers, goal: "Count customers per country.", q: "SELECT country, COUNT(*) FROM customers GROUP BY ____;", a: "country", topic: "R2 GROUP BY" },
-  { ctx: SCHEMA.customers, goal: "Keep only cities with 2+ customers.", q: "SELECT city, COUNT(*) FROM customers GROUP BY city HAVING COUNT(*) ____ 2;", a: ">=", topic: "R2 HAVING" },
-  { ctx: SCHEMA.orders, goal: "Keep only customers with more than 1 order.", q: "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) ____ 1;", a: ">", topic: "R2 Duplicates" },
-  { ctx: SCHEMA.reviews, goal: "Keep products with average rating 4 or higher.", q: "SELECT product_id, AVG(rating) FROM reviews GROUP BY product_id HAVING AVG(rating) ____ 4;", a: ">=", topic: "R2 HAVING AVG" },
-  { ctx: SCHEMA.orders, goal: "Keep customers whose total spend is 500 or more.", q: "SELECT customer_id, SUM(total_amount) FROM orders GROUP BY customer_id HAVING SUM(total_amount) ____ 500;", a: ">=", topic: "R2 HAVING SUM" },
-  { ctx: SCHEMA.customers, goal: "Sort countries by customer count (largest first).", q: "SELECT country, COUNT(*) FROM customers GROUP BY country ORDER BY COUNT(*) ____;", a: "DESC", topic: "R2 ORDER BY agg" },
-  { ctx: SCHEMA.customers, goal: "Filter to customers who DO have an email.", q: "SELECT * FROM customers WHERE email IS ____ NULL;", a: "NOT", topic: "R2 NULL" },
-  { ctx: SCHEMA.customers, goal: "Match names ending with son OR sen.", q: "SELECT * FROM customers WHERE customer_name LIKE '%son' ____ customer_name LIKE '%sen';", a: "OR", topic: "R2 LIKE OR" },
-  { ctx: SCHEMA.customers, goal: "Wildcard for any-length in LIKE patterns.", q: "SELECT * FROM customers WHERE city LIKE 'A%'; -- wildcard for any length is ____", a: "%", topic: "R2 LIKE %" },
-  { ctx: SCHEMA.customers, goal: "Require Canada AND one of the listed cities.", q: "SELECT * FROM customers WHERE country='Canada' ____ city IN ('Calgary','Edmonton');", a: "AND", topic: "R2 AND + IN" },
-  { ctx: SCHEMA.orders, goal: "Not equal operator (status is NOT Cancelled).", q: "SELECT * FROM orders WHERE status ____ 'Cancelled';", a: "<>", topic: "R2 Not equal" },
-  { ctx: SCHEMA.products, goal: "Sort the between-range results by price low→high.", q: "SELECT * FROM products WHERE price BETWEEN 10 AND 20 ORDER BY price ____;", a: "ASC", topic: "R2 BETWEEN" },
-  { ctx: SCHEMA.orders, goal: "Count orders that are shipped OR delivered.", q: "SELECT COUNT(*) FROM orders WHERE status='Shipped' ____ status='Delivered';", a: "OR", topic: "R2 COUNT filter" },
-  { ctx: SCHEMA.orders, goal: "Delivered orders within the 2025 date range.", q: "SELECT * FROM orders WHERE order_date BETWEEN '2025-01-01' AND '2025-12-31' ____ status='Delivered';", a: "AND", topic: "R2 Date range" },
-  { ctx: SCHEMA.customers, goal: "Cities with 2–5 customers, shown most-to-least.", q: "SELECT city, COUNT(*) FROM customers GROUP BY city HAVING COUNT(*) BETWEEN 2 AND 5 ORDER BY COUNT(*) ____;", a: "DESC", topic: "R2 HAVING BETWEEN" },
-  { ctx: SCHEMA.products, goal: "Show top 5 products priced above the average price.", q: "SELECT * FROM products WHERE price > (SELECT AVG(price) FROM products) ORDER BY price DESC ____ 5;", a: "LIMIT", topic: "R2 Subquery" },
-  { ctx: SCHEMA.orders, goal: "Sort customer_id ascending after grouping.", q: "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) <> 0 ORDER BY customer_id ____;", a: "ASC", topic: "R2 Sort" },
-  { ctx: SCHEMA.customers, goal: "Sort by country ascending.", q: "SELECT * FROM customers WHERE country IN ('Canada','USA') ORDER BY country ____;", a: "ASC", topic: "R2 ORDER BY" },
-  { ctx: SCHEMA.customers, goal: "Exclude Calgary/Edmonton and take first 5 by city.", q: "SELECT * FROM customers WHERE city NOT IN ('Calgary','Edmonton') ORDER BY city ASC ____ 5;", a: "LIMIT", topic: "R2 NOT IN" },
-  { ctx: SCHEMA.customers, goal: "Use an alias in HAVING to filter totals above 10.", q: "SELECT country, COUNT(*) AS total FROM customers GROUP BY country HAVING total ____ 10;", a: ">", topic: "R2 HAVING alias" },
+  <!-- Result Overlay -->
+  <div class="result-overlay" id="result-overlay">
+    <div class="result-card">
+      <div class="result-icon" id="result-icon-wrapper"><span id="result-icon-text"></span></div>
+      <div class="result-title" id="result-title">Correct!</div>
+      <div class="result-message" id="result-message">Great job! You got it right.</div>
 
-  // ===== Round 3: JOINs (25) =====
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Match orders to their customer (only matches).", q: "SELECT * FROM orders o ____ JOIN customers c ON o.customer_id = c.customer_id;", a: "INNER", topic: "R3 INNER JOIN" },
-  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Keep all customers even if they have no orders.", q: "SELECT * FROM customers c ____ JOIN orders o ON c.customer_id = o.customer_id;", a: "LEFT", topic: "R3 LEFT JOIN" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "JOIN needs the keyword that defines the join condition line.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ____ o.customer_id = c.customer_id;", a: "ON", topic: "R3 ON" },
-  { ctx: `${SCHEMA.order_items}\n${SCHEMA.products}`, goal: "Filter joined rows to quantity > 1.", q: "SELECT oi.order_id, p.product_name FROM order_items oi INNER JOIN products p ON oi.product_id = p.product_id ____ oi.quantity > 1;", a: "WHERE", topic: "R3 JOIN + WHERE" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Sort results by order_id ascending.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id ORDER BY o.order_id ____;", a: "ASC", topic: "R3 ORDER BY" },
-  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Keep only customers WITH orders (order_id not null).", q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS ____ NULL;", a: "NOT", topic: "R3 NULL filter" },
-  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Find customers with NO orders (unmatched rows).", q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NULL;", a: "IS", topic: "R3 Unmatched" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.order_items}`, goal: "Filter to positive quantities.", q: "SELECT o.order_id, oi.quantity FROM orders o INNER JOIN order_items oi ON o.order_id = oi.order_id WHERE oi.quantity ____ 0;", a: ">", topic: "R3 Comparison" },
-  { ctx: `${SCHEMA.products}\n${SCHEMA.order_items}`, goal: "Show highest quantities first.", q: "SELECT p.product_name, oi.quantity FROM products p INNER JOIN order_items oi ON p.product_id=oi.product_id ORDER BY oi.quantity ____;", a: "DESC", topic: "R3 Sort" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Canada customers AND delivered orders.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.country = 'Canada' ____ o.status='Delivered';", a: "AND", topic: "R3 AND" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Orders for Canada OR USA customers.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.country='Canada' ____ c.country='USA';", a: "OR", topic: "R3 OR" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Negate the country condition in a join filter.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE ____ c.country='Canada';", a: "NOT", topic: "R3 NOT" },
-  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Customers with more than 1 order.", q: "SELECT c.customer_name, COUNT(o.order_id) FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id GROUP BY c.customer_name HAVING COUNT(o.order_id) ____ 1;", a: ">", topic: "R3 GROUP + HAVING" },
-  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Sort by alias total (largest first).", q: "SELECT c.customer_name, COUNT(o.order_id) AS total FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id GROUP BY c.customer_name ORDER BY total ____;", a: "DESC", topic: "R3 ORDER BY alias" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.order_items}`, goal: "Orders where total item quantity is 3 or more.", q: "SELECT o.order_id, SUM(oi.quantity) FROM orders o INNER JOIN order_items oi ON o.order_id=oi.order_id GROUP BY o.order_id HAVING SUM(oi.quantity) ____ 3;", a: ">=", topic: "R3 HAVING SUM" },
-  { ctx: `${SCHEMA.products}\n${SCHEMA.reviews}`, goal: "Products with average rating 4 or more.", q: "SELECT p.product_name, AVG(r.rating) FROM products p INNER JOIN reviews r ON p.product_id=r.product_id GROUP BY p.product_name HAVING AVG(r.rating) ____ 4;", a: ">=", topic: "R3 AVG" },
-  { ctx: `${SCHEMA.products}\n${SCHEMA.reviews}`, goal: "Filter to rows where rating equals 5.", q: "SELECT p.product_name, r.rating FROM products p INNER JOIN reviews r ON p.product_id=r.product_id WHERE r.rating ____ 5;", a: "=", topic: "R3 Filter" },
-  { ctx: `${SCHEMA.products}\n${SCHEMA.reviews}`, goal: "Sort ratings high-to-low within the range.", q: "SELECT p.product_name, r.rating FROM products p INNER JOIN reviews r ON p.product_id=r.product_id WHERE r.rating BETWEEN 3 AND 5 ORDER BY r.rating ____;", a: "DESC", topic: "R3 BETWEEN" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "WHERE clause belongs after FROM/JOIN section.", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id ____ o.order_id > 100;", a: "WHERE", topic: "R3 WHERE position" },
-  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Limit to the first 10 rows after sorting.", q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id ORDER BY c.customer_name ASC ____ 10;", a: "LIMIT", topic: "R3 LIMIT" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.customers}`, goal: "Use LIKE wildcard after A (any characters).", q: "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.customer_name LIKE 'A____';", a: "%", topic: "R3 LIKE %" },
-  { ctx: `${SCHEMA.order_items}\n${SCHEMA.products}`, goal: "Match either of two product-name patterns.", q: "SELECT oi.order_id, p.product_name FROM order_items oi INNER JOIN products p ON oi.product_id=p.product_id WHERE p.product_name LIKE '%phone%' ____ p.product_name LIKE '%tablet%';", a: "OR", topic: "R3 LIKE OR" },
-  { ctx: `${SCHEMA.orders}\n${SCHEMA.order_items}`, goal: "Sort by total quantity descending using alias qty.", q: "SELECT o.order_id, SUM(oi.quantity) AS qty FROM orders o INNER JOIN order_items oi ON o.order_id=oi.order_id GROUP BY o.order_id ORDER BY qty ____;", a: "DESC", topic: "R3 Aggregate sort" },
-  { ctx: `${SCHEMA.customers}\n${SCHEMA.orders}`, goal: "Unmatched (no orders) customers sorted A→Z.", q: "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NULL ORDER BY c.customer_name ____;", a: "ASC", topic: "R3 Unmatched sort" },
-  { ctx: `${SCHEMA.products}\n${SCHEMA.reviews}`, goal: "Products that have at least 1 review (count > 0).", q: "SELECT p.product_name, COUNT(r.review_id) FROM products p LEFT JOIN reviews r ON p.product_id=r.product_id GROUP BY p.product_name HAVING COUNT(r.review_id) ____ 0;", a: ">", topic: "R3 LEFT + COUNT" }
-];
+      <div class="result-correct-answer" id="result-correct-wrapper" style="display: none;">
+        <div class="label">Correct Answer</div>
+        <div class="answer" id="result-correct-answer"></div>
+      </div>
 
-let i = -1;
+      <div class="result-explanation" id="result-explanation-wrapper" style="display: none;">
+        <div class="label">Why?</div>
+        <div class="text" id="result-explanation-text"></div>
+      </div>
 
-function normalize(s) {
-  return (s ?? "")
-    .trim()
-    .replace(/\s+/g, " ")
-    .toUpperCase();
-}
+      <div class="result-xp" id="result-xp" style="display: none;">
+        +10 XP
+      </div>
+      <button class="btn btn-primary" onclick="closeResult()">Continue</button>
+    </div>
+  </div>
 
-function nextQ() {
-  i = (i + 1) % questions.length;
-  const item = questions[i];
+  <script>
+    // ============================================
+    // APP STATE
+    // ============================================
+    let questionsData = null;
+    let currentRound = null;
+    let currentQuestionIndex = 0;
+    let xp = parseInt(localStorage.getItem('sql-xp') || '0');
+    let streak = parseInt(localStorage.getItem('sql-streak') || '0');
+    let roundProgress = JSON.parse(localStorage.getItem('sql-progress') || '{}');
+    let selectedAnswer = null;
 
-  document.getElementById("ctx").textContent = "Context: " + (item.ctx ?? "—");
-  document.getElementById("goal").textContent = "Goal: " + (item.goal ?? "—");
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+    async function init() {
+      // Update stats display
+      document.getElementById('xp-display').textContent = xp;
+      document.getElementById('streak-display').textContent = streak;
 
-  document.getElementById("q").textContent = item.q;
+      // Load questions from JSON
+      try {
+        const response = await fetch('questions.json');
+        questionsData = await response.json();
+        renderRoundSelector();
+      } catch (err) {
+        console.error('Failed to load questions:', err);
+        document.getElementById('welcome-screen').innerHTML = `
+      <div class="welcome-icon">!</div>
+      <h2 class="welcome-title">Loading Error</h2>
+      <p class="welcome-subtitle">Could not load questions. Please run this from a local server (e.g., python -m http.server 8080).</p>
+    `;
+      }
+    }
 
-  document.getElementById("ans").value = "";
-  document.getElementById("result").textContent = "—";
-  document.getElementById("result").className = "chip";
-  document.getElementById("explain").style.display = "none";
-  document.getElementById("ans").focus();
-}
+    // ============================================
+    // ROUND SELECTOR
+    // ============================================
+    function renderRoundSelector() {
+      const container = document.getElementById('round-selector');
+      container.innerHTML = questionsData.rounds.map((round, idx) => {
+        const progress = roundProgress[round.id] || 0;
+        const total = round.questions.length;
+        const pct = Math.round((progress / total) * 100);
+        const roundNum = idx + 1;
+        return `
+      <button class="round-btn" data-round="${round.id}" onclick="selectRound('${round.id}')">
+        <div class="round-icon">R${roundNum}</div>
+        <span class="round-name">${round.name}</span>
+        ${progress > 0 ? `<span style="color: var(--color-success); font-size: 12px; font-weight: 700;">${pct}%</span>` : ''}
+      </button>
+    `;
+      }).join('');
+    }
 
-function check() {
-  if (i < 0) return;
+    function selectRound(roundId) {
+      // Update active button
+      document.querySelectorAll('.round-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.round === roundId);
+      });
 
-  const user = normalize(document.getElementById("ans").value);
-  const correct = normalize(questions[i].a);
+      // Set current round
+      currentRound = questionsData.rounds.find(r => r.id === roundId);
+      currentQuestionIndex = roundProgress[roundId] || 0;
 
-  const result = document.getElementById("result");
-  const explain = document.getElementById("explain");
+      // Wrap around if completed
+      if (currentQuestionIndex >= currentRound.questions.length) {
+        currentQuestionIndex = 0;
+      }
 
-  if (user === correct) {
-    result.textContent = "✅ Correct";
-    result.className = "chip ok";
-    explain.style.display = "none";
-  } else {
-    result.textContent = "❌ Not quite";
-    result.className = "chip bad";
-    explain.style.display = "block";
-    explain.textContent = "Correct answer: " + questions[i].a;
-  }
-}
+      // Show question UI
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('question-card').style.display = 'flex';
+      document.getElementById('progress-container').style.display = 'block';
+      document.getElementById('answer-tray').style.display = 'block';
 
-function reveal() {
-  if (i < 0) return;
-  const explain = document.getElementById("explain");
-  explain.style.display = "block";
-  explain.textContent = "Correct answer: " + questions[i].a;
-}
+      displayQuestion();
+    }
 
-// Allow Enter key to submit
-document.getElementById("ans").addEventListener("keydown", (e) => {
-  if (e.key === "Enter") check();
-});
-</script>
+    // ============================================
+    // QUESTION DISPLAY
+    // ============================================
+    function displayQuestion() {
+      const q = currentRound.questions[currentQuestionIndex];
+      const roundIdx = questionsData.rounds.findIndex(r => r.id === currentRound.id);
+
+      // Update progress
+      const total = currentRound.questions.length;
+      const pct = Math.round(((currentQuestionIndex + 1) / total) * 100);
+      document.getElementById('progress-label').textContent = `Question ${currentQuestionIndex + 1} of ${total}`;
+      document.getElementById('progress-percent').textContent = `${pct}%`;
+      document.getElementById('progress-fill').style.width = `${pct}%`;
+
+      // Topic badge
+      document.getElementById('topic-badge').innerHTML = `<span>R${roundIdx + 1}</span><span>${currentRound.name}</span>`;
+
+      // Schema
+      const schemas = q.ctx.map(table => questionsData.schema[table]).join('\n');
+      document.getElementById('schema-display').textContent = schemas;
+
+      // Goal
+      document.getElementById('goal-display').textContent = q.goal;
+
+      // SQL with drop zone
+      const sqlHtml = q.q.replace(/____/g, '<span class="drop-zone" id="drop-zone"></span>');
+      document.getElementById('sql-display').innerHTML = highlightSQL(sqlHtml);
+
+      // Hint
+      document.getElementById('hint-content').textContent = q.hint;
+      document.getElementById('hint-content').classList.remove('visible');
+
+      // Answer chips (correct + 3 distractors, shuffled)
+      const answers = shuffleArray([q.a, ...q.distractors]);
+      renderAnswerChips(answers);
+
+      // Reset state
+      selectedAnswer = null;
+      document.getElementById('check-btn').disabled = true;
+      document.getElementById('check-btn').style.display = 'inline-flex';
+      document.getElementById('next-btn').style.display = 'none';
+
+      // Setup drop zone
+      setupDragAndDrop();
+    }
+
+    function highlightSQL(html) {
+      const keywords = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'NOT', 'ORDER BY', 'GROUP BY', 'HAVING', 'LIMIT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'ON', 'AS', 'IN', 'BETWEEN', 'LIKE', 'IS', 'NULL', 'ASC', 'DESC', 'DISTINCT', 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX'];
+
+      let result = html;
+      keywords.forEach(kw => {
+        const regex = new RegExp(`\\b(${kw})\\b(?![^<]*>)`, 'gi');
+        result = result.replace(regex, '<span class="sql-keyword">$1</span>');
+      });
+
+      // Strings
+      result = result.replace(/'([^']+)'/g, '<span class="sql-string">\'$1\'</span>');
+
+      return result;
+    }
+
+    function renderAnswerChips(answers) {
+      const container = document.getElementById('answer-chips');
+      container.innerHTML = answers.map((ans, i) => `
+    <div class="answer-chip" draggable="true" data-answer="${ans}" id="chip-${i}">
+      ${ans}
+    </div>
+  `).join('');
+    }
+
+    // ============================================
+    // DRAG AND DROP
+    // ============================================
+    function setupDragAndDrop() {
+      const chips = document.querySelectorAll('.answer-chip');
+      const dropZone = document.getElementById('drop-zone');
+
+      chips.forEach(chip => {
+        chip.addEventListener('dragstart', handleDragStart);
+        chip.addEventListener('dragend', handleDragEnd);
+        chip.addEventListener('touchstart', handleTouchStart, { passive: false });
+        chip.addEventListener('touchmove', handleTouchMove, { passive: false });
+        chip.addEventListener('touchend', handleTouchEnd);
+        chip.addEventListener('click', () => selectChip(chip));
+      });
+
+      if (dropZone) {
+        dropZone.addEventListener('dragover', handleDragOver);
+        dropZone.addEventListener('dragleave', handleDragLeave);
+        dropZone.addEventListener('drop', handleDrop);
+        dropZone.addEventListener('click', () => {
+          if (dropZone.classList.contains('filled')) {
+            clearDropZone();
+          }
+        });
+      }
+    }
+
+    let draggedChip = null;
+
+    function handleDragStart(e) {
+      draggedChip = e.target;
+      e.target.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.target.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+      e.target.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      e.target.classList.remove('drag-over');
+
+      if (draggedChip && !e.target.classList.contains('correct') && !e.target.classList.contains('incorrect')) {
+        placeAnswer(draggedChip.dataset.answer, draggedChip);
+      }
+    }
+
+    let touchChip = null;
+
+    function handleTouchStart(e) {
+      touchChip = e.target.closest('.answer-chip');
+      if (!touchChip || touchChip.classList.contains('used')) return;
+      e.preventDefault();
+      touchChip.classList.add('dragging');
+    }
+
+    function handleTouchMove(e) {
+      if (!touchChip) return;
+      e.preventDefault();
+
+      const touch = e.touches[0];
+      const dropZone = document.getElementById('drop-zone');
+      const rect = dropZone.getBoundingClientRect();
+
+      if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+        touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+        dropZone.classList.add('drag-over');
+      } else {
+        dropZone.classList.remove('drag-over');
+      }
+    }
+
+    function handleTouchEnd(e) {
+      if (!touchChip) return;
+
+      const dropZone = document.getElementById('drop-zone');
+      dropZone.classList.remove('drag-over');
+      touchChip.classList.remove('dragging');
+
+      const touch = e.changedTouches[0];
+      const rect = dropZone.getBoundingClientRect();
+
+      if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+        touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+        if (!dropZone.classList.contains('correct') && !dropZone.classList.contains('incorrect')) {
+          placeAnswer(touchChip.dataset.answer, touchChip);
+        }
+      }
+
+      touchChip = null;
+    }
+
+    function selectChip(chip) {
+      if (chip.classList.contains('used')) return;
+
+      document.querySelectorAll('.answer-chip').forEach(c => c.style.outline = '');
+      chip.style.outline = '3px solid var(--royal)';
+
+      const dropZone = document.getElementById('drop-zone');
+      if (dropZone && !dropZone.classList.contains('correct') && !dropZone.classList.contains('incorrect')) {
+        placeAnswer(chip.dataset.answer, chip);
+      }
+    }
+
+    function placeAnswer(answer, chipElement) {
+      document.querySelectorAll('.answer-chip').forEach(c => {
+        c.classList.remove('used');
+        c.style.outline = '';
+      });
+
+      const dropZone = document.getElementById('drop-zone');
+      dropZone.textContent = answer;
+      dropZone.classList.add('filled');
+      chipElement.classList.add('used');
+
+      selectedAnswer = answer;
+      document.getElementById('check-btn').disabled = false;
+    }
+
+    function clearDropZone() {
+      const dropZone = document.getElementById('drop-zone');
+      dropZone.textContent = '';
+      dropZone.classList.remove('filled', 'correct', 'incorrect');
+
+      document.querySelectorAll('.answer-chip').forEach(c => {
+        c.classList.remove('used');
+      });
+
+      selectedAnswer = null;
+      document.getElementById('check-btn').disabled = true;
+    }
+
+    // ============================================
+    // ANSWER CHECKING
+    // ============================================
+    function checkAnswer() {
+      if (!selectedAnswer) return;
+
+      const q = currentRound.questions[currentQuestionIndex];
+      const isCorrect = selectedAnswer.toUpperCase() === q.a.toUpperCase();
+
+      const dropZone = document.getElementById('drop-zone');
+
+      if (isCorrect) {
+        dropZone.classList.add('correct');
+        streak++;
+        xp += 10;
+        showResult(true, q.a, q.hint);
+      } else {
+        dropZone.classList.add('incorrect');
+        streak = 0;
+        showResult(false, q.a, q.hint);
+      }
+
+      // Save progress
+      localStorage.setItem('sql-xp', xp);
+      localStorage.setItem('sql-streak', streak);
+      document.getElementById('xp-display').textContent = xp;
+      document.getElementById('streak-display').textContent = streak;
+
+      // Show next button
+      document.getElementById('check-btn').style.display = 'none';
+      document.getElementById('next-btn').style.display = 'inline-flex';
+    }
+
+    function showResult(isCorrect, correctAnswer, explanation) {
+      const overlay = document.getElementById('result-overlay');
+      const iconWrapper = document.getElementById('result-icon-wrapper');
+      const iconText = document.getElementById('result-icon-text');
+      const title = document.getElementById('result-title');
+      const message = document.getElementById('result-message');
+      const xpBadge = document.getElementById('result-xp');
+      const correctWrapper = document.getElementById('result-correct-wrapper');
+      const correctAnswerEl = document.getElementById('result-correct-answer');
+      const explanationWrapper = document.getElementById('result-explanation-wrapper');
+      const explanationText = document.getElementById('result-explanation-text');
+
+      if (isCorrect) {
+        iconWrapper.className = 'result-icon success';
+        iconText.textContent = '✓';
+        title.textContent = 'Correct!';
+        title.className = 'result-title success';
+        message.textContent = 'Great job! You nailed it.';
+        xpBadge.style.display = 'inline-flex';
+        correctWrapper.style.display = 'none';
+        explanationWrapper.style.display = 'none';
+      } else {
+        iconWrapper.className = 'result-icon error';
+        iconText.textContent = '✗';
+        title.textContent = 'Not Quite';
+        title.className = 'result-title error';
+        message.textContent = 'That wasn\'t the right answer, but here\'s what you need to know:';
+        xpBadge.style.display = 'none';
+
+        // Show correct answer
+        correctWrapper.style.display = 'block';
+        correctAnswerEl.textContent = correctAnswer;
+
+        // Show explanation
+        explanationWrapper.style.display = 'block';
+        explanationText.textContent = explanation;
+      }
+
+      overlay.classList.add('visible');
+    }
+
+    function closeResult() {
+      document.getElementById('result-overlay').classList.remove('visible');
+    }
+
+    // ============================================
+    // NAVIGATION
+    // ============================================
+    function nextQuestion() {
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex > (roundProgress[currentRound.id] || 0)) {
+        roundProgress[currentRound.id] = currentQuestionIndex;
+        localStorage.setItem('sql-progress', JSON.stringify(roundProgress));
+      }
+
+      if (currentQuestionIndex >= currentRound.questions.length) {
+        alert('Round Complete! You finished ' + currentRound.name + '!');
+        currentQuestionIndex = 0;
+        roundProgress[currentRound.id] = currentRound.questions.length;
+        localStorage.setItem('sql-progress', JSON.stringify(roundProgress));
+        renderRoundSelector();
+      }
+
+      displayQuestion();
+    }
+
+    function skipQuestion() {
+      nextQuestion();
+    }
+
+    function toggleHint() {
+      const hint = document.getElementById('hint-content');
+      hint.classList.toggle('visible');
+    }
+
+    // ============================================
+    // UTILITIES
+    // ============================================
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
 
 </body>
+
 </html>

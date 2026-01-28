@@ -1,0 +1,10 @@
+export { MultipleChoice } from './MultipleChoice';
+export { CodeOrdering } from './CodeOrdering';
+export { ErrorFix } from './ErrorFix';
+export { MultiBlank } from './MultiBlank';
+export { DragDrop } from './DragDrop';
+export { TypeIn } from './TypeIn';
+export { FreeformSQL } from './FreeformSQL';
+export { SpotError } from './SpotError';
+export { WordProblem } from './WordProblem';
+export { MultiDragDrop } from './MultiDragDrop';

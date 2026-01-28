@@ -1,0 +1,326 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 20px 0;
+}
+
+.row {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Connector Row */
+.connectorRow {
+    display: grid;
+    height: 40px;
+    /* Taller for branches */
+    position: relative;
+    width: 100%;
+}
+
+/* Straight Connector */
+.connectorStraight {
+    width: 4px;
+    /* Thicker */
+    height: 100%;
+    background: var(--slate);
+    opacity: 0.3;
+    justify-self: center;
+    border-radius: 2px;
+}
+
+.connectorStraight.unlocked {
+    background: linear-gradient(180deg, var(--royal), var(--midnight));
+    opacity: 1;
+}
+
+/* Split Connector (1 -> Many) */
+.connectorSplit {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.connectorSplit .lineFromParent {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 50%;
+    /* Top half */
+    background: var(--slate);
+    opacity: 0.3;
+    transform: translateX(-50%);
+}
+
+.connectorSplit .lineHorizontal {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    /* Start at center of first col (item is centered in 50% width cell -> 25%) */
+    right: 25%;
+    /* End at center of last col */
+    height: 4px;
+    background: var(--slate);
+    opacity: 0.3;
+    border-radius: 2px;
+}
+
+.connectorSplit .lineToChild {
+    /* This would need dynamic generation for >2 children, simplified for 2 cols here */
+}
+
+/* Being simpler with pseudo elements for 2-column split (Hardcoded for common case) */
+.connectorSplit::before {
+    /* Left vertical leg */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    width: 4px;
+    height: 50%;
+    background: var(--slate);
+    opacity: 0.3;
+    transform: translateX(-50%);
+}
+
+.connectorSplit::after {
+    /* Right vertical leg */
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 25%;
+    width: 4px;
+    height: 50%;
+    background: var(--slate);
+    opacity: 0.3;
+    transform: translateX(50%);
+}
+
+/* Unlocked states for Split */
+.connectorSplit.unlocked .lineFromParent,
+.connectorSplit.unlocked .lineHorizontal,
+.connectorSplit.unlocked::before,
+.connectorSplit.unlocked::after {
+    background: var(--royal);
+    opacity: 1;
+}
+
+
+/* Merge Connector (Many -> 1) */
+.connectorMerge {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.connectorMerge .lineHorizontal {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    right: 25%;
+    height: 4px;
+    background: var(--slate);
+    opacity: 0.3;
+    border-radius: 2px;
+}
+
+.connectorMerge .lineToChild {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 50%;
+    /* Bottom half to child */
+    background: var(--slate);
+    opacity: 0.3;
+    transform: translateX(-50%);
+}
+
+.connectorMerge::before {
+    /* Left leg from parent */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 4px;
+    height: 50%;
+    background: var(--slate);
+    opacity: 0.3;
+    transform: translateX(-50%);
+}
+
+.connectorMerge::after {
+    /* Right leg from parent */
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 25%;
+    width: 4px;
+    height: 50%;
+    background: var(--slate);
+    opacity: 0.3;
+    transform: translateX(50%);
+}
+
+/* Unlocked states for Merge */
+.connectorMerge.unlocked .lineHorizontal,
+.connectorMerge.unlocked .lineToChild,
+.connectorMerge.unlocked::before,
+.connectorMerge.unlocked::after {
+    background: var(--royal);
+    opacity: 1;
+}
+
+
+/* Node Row */
+.nodeRow {
+    display: grid;
+    gap: 20px;
+    justify-items: center;
+}
+
+.nodeCell {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* ... Existing Node Styles ... */
+.nodeCard {
+    background: var(--bg-base);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--neu-raised);
+    padding: 20px;
+    min-width: 220px;
+    max-width: 280px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    text-align: center;
+    z-index: 2;
+    /* above lines */
+}
+
+/* ... Keeping previous node styles ... */
+.nodeCard:hover:not(.locked) {
+    transform: translateY(-4px);
+    box-shadow: 8px 8px 20px var(--shadow-dark), -8px -8px 20px var(--shadow-light);
+}
+
+.nodeCard:active:not(.locked) {
+    transform: translateY(0);
+    box-shadow: var(--neu-inset);
+}
+
+.nodeCard.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.nodeCard.completed {
+    background: linear-gradient(135deg, rgba(34, 160, 107, 0.08), var(--bg-base));
+    border: 2px solid var(--color-success);
+}
+
+.lockBadge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--slate), #7a8599);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: var(--neu-raised);
+}
+
+.startBadge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 12px;
+    background: linear-gradient(135deg, var(--royal), var(--midnight));
+    border-radius: var(--radius-sm);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.nodeIcon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--midnight), var(--royal));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 800;
+    margin: 0 auto 12px;
+}
+
+.nodeCard.completed .nodeIcon {
+    background: linear-gradient(135deg, #1a8754, var(--color-success));
+}
+
+.nodeCard.locked .nodeIcon {
+    background: var(--slate);
+}
+
+.nodeName {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--midnight);
+    margin-bottom: 4px;
+}
+
+.nodeCard.locked .nodeName {
+    color: var(--text-secondary);
+}
+
+.nodeDesc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.scoreBar {
+    height: 6px;
+    background: var(--bg-inset);
+    border-radius: 3px;
+    box-shadow: var(--neu-inset);
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.scoreFill {
+    height: 100%;
+    background: var(--royal);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.scoreFill.passed {
+    background: linear-gradient(90deg, var(--color-success), #22A06B);
+}
+
+.scoreText {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.scoreText.passed {
+    color: var(--color-success);
+}

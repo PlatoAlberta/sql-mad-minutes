@@ -1,0 +1,1826 @@
+{
+  "schema": {
+    "customers": "customers(customer_id, customer_name, city, country, email)",
+    "orders": "orders(order_id, customer_id, order_date, status, total_amount)",
+    "products": "products(product_id, product_name, price, stock_quantity)",
+    "order_items": "order_items(order_item_id, order_id, product_id, quantity, discount_percent)",
+    "reviews": "reviews(review_id, product_id, rating)"
+  },
+  "rounds": [
+    {
+      "id": "r1",
+      "name": "SQL Basics",
+      "description": "Core SELECT, WHERE, and ORDER BY fundamentals",
+      "icon": "📘",
+      "row": 0,
+      "col": 0,
+      "prerequisites": [],
+      "questions": [
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Return all customer rows (all columns).",
+          "q": "____ * FROM customers;",
+          "a": "SELECT",
+          "hint": "The SELECT keyword retrieves data from a table. Use SELECT * to get all columns.",
+          "distractors": [
+            "FROM",
+            "WHERE",
+            "GET"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Return each customer's name and their city.",
+          "q": "SELECT customer_name, ____ FROM customers;",
+          "a": "city",
+          "hint": "List the column names you want separated by commas after SELECT.",
+          "distractors": [
+            "country",
+            "email",
+            "customer_id"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Return each country only once (unique list).",
+          "q": "SELECT ____ country FROM customers;",
+          "a": "DISTINCT",
+          "hint": "DISTINCT removes duplicate values from your results.",
+          "distractors": [
+            "UNIQUE",
+            "SINGLE",
+            "ONLY"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Filter customers to only those in Canada.",
+          "q": "SELECT * FROM customers ____ country = 'Canada';",
+          "a": "WHERE",
+          "hint": "WHERE filters rows based on a condition.",
+          "distractors": [
+            "AND",
+            "IF",
+            "WHEN"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Use the equals operator for an exact match.",
+          "q": "SELECT * FROM customers WHERE country ____ 'Canada';",
+          "a": "=",
+          "hint": "Use = for exact equality comparisons in SQL.",
+          "distractors": [
+            "==",
+            "EQUALS",
+            "IS"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Require BOTH conditions (Canada AND Calgary).",
+          "q": "SELECT * FROM customers WHERE country='Canada' ____ city='Calgary';",
+          "a": "AND",
+          "hint": "AND requires both conditions to be true.",
+          "distractors": [
+            "OR",
+            "ALSO",
+            "WITH"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Match EITHER country (Canada OR USA).",
+          "q": "SELECT * FROM customers WHERE country='Canada' ____ country='USA';",
+          "a": "OR",
+          "hint": "OR returns rows matching either condition.",
+          "distractors": [
+            "AND",
+            "EITHER",
+            "ELSE"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Negate the condition (NOT Canada).",
+          "q": "SELECT * FROM customers WHERE ____ country='Canada';",
+          "a": "NOT",
+          "hint": "NOT negates the condition that follows it.",
+          "distractors": [
+            "NO",
+            "EXCEPT",
+            "WITHOUT"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Sort city A→Z.",
+          "q": "SELECT * FROM customers ORDER BY city ____;",
+          "a": "ASC",
+          "hint": "ASC sorts in ascending order (A-Z, 0-9).",
+          "distractors": [
+            "DESC",
+            "UP",
+            "ALPHA"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Sort city Z→A.",
+          "q": "SELECT * FROM customers ORDER BY city ____;",
+          "a": "DESC",
+          "hint": "DESC sorts in descending order (Z-A, 9-0).",
+          "distractors": [
+            "ASC",
+            "DOWN",
+            "REVERSE"
+          ]
+        },
+        {
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Return only the first 10 orders.",
+          "q": "SELECT * FROM orders ____ 10;",
+          "a": "LIMIT",
+          "hint": "LIMIT restricts the number of rows returned.",
+          "distractors": [
+            "TOP",
+            "FIRST",
+            "MAX"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Check for NULL emails (missing value).",
+          "q": "SELECT * FROM customers WHERE email ____ NULL;",
+          "a": "IS",
+          "hint": "Use IS NULL to check for missing/null values, not = NULL.",
+          "distractors": [
+            "=",
+            "EQUALS",
+            "=="
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Check for NOT NULL emails (present value).",
+          "q": "SELECT * FROM customers WHERE email IS ____ NULL;",
+          "a": "NOT",
+          "hint": "IS NOT NULL finds rows where a value exists.",
+          "distractors": [
+            "NO",
+            "NONE",
+            "EXCEPT"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Find cities starting with letter A.",
+          "q": "SELECT * FROM customers WHERE city ____ 'A%';",
+          "a": "LIKE",
+          "hint": "LIKE enables pattern matching with wildcards.",
+          "distractors": [
+            "MATCH",
+            "EQUALS",
+            "STARTS"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Filter to customers in a set of countries.",
+          "q": "SELECT * FROM customers WHERE country ____ ('Canada','USA');",
+          "a": "IN",
+          "hint": "IN checks if a value matches any value in a list.",
+          "distractors": [
+            "WITHIN",
+            "MATCHES",
+            "FROM"
+          ]
+        },
+        {
+          "ctx": [
+            "products"
+          ],
+          "goal": "Filter prices within a numeric range (10 to 20).",
+          "q": "SELECT * FROM products WHERE price ____ 10 AND 20;",
+          "a": "BETWEEN",
+          "hint": "BETWEEN includes both boundary values (10 and 20).",
+          "distractors": [
+            "FROM",
+            "RANGE",
+            "WITHIN"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Exclude TWO cities using two comparisons (both must be true).",
+          "q": "SELECT * FROM customers WHERE city <> 'Calgary' ____ city <> 'Edmonton';",
+          "a": "AND",
+          "hint": "Use AND when both conditions must be satisfied.",
+          "distractors": [
+            "OR",
+            "NOT",
+            "BUT"
+          ]
+        },
+        {
+          "ctx": [
+            "products"
+          ],
+          "goal": "Keep prices between 100 and 200 using two comparisons.",
+          "q": "SELECT * FROM products WHERE price >= 100 ____ price <= 200;",
+          "a": "AND",
+          "hint": "Both conditions must be true for a range filter.",
+          "distractors": [
+            "OR",
+            "TO",
+            "BETWEEN"
+          ]
+        },
+        {
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Keep orders after 2025-01-01.",
+          "q": "SELECT * FROM orders WHERE order_date ____ '2025-01-01';",
+          "a": ">",
+          "hint": "Greater than (>) means 'after' for dates.",
+          "distractors": [
+            "<",
+            ">=",
+            "AFTER"
+          ]
+        },
+        {
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Keep orders before 2025-01-01.",
+          "q": "SELECT * FROM orders WHERE order_date ____ '2025-01-01';",
+          "a": "<",
+          "hint": "Less than (<) means 'before' for dates.",
+          "distractors": [
+            ">",
+            "<=",
+            "BEFORE"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Rename a column in the output (alias).",
+          "q": "SELECT customer_name ____ name FROM customers;",
+          "a": "AS",
+          "hint": "AS creates an alias (nickname) for a column.",
+          "distractors": [
+            "TO",
+            "CALLED",
+            "NAMED"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Use a LIKE wildcard for any tail characters.",
+          "q": "SELECT * FROM customers WHERE city LIKE 'S____';",
+          "a": "%",
+          "hint": "% matches any sequence of characters (including none).",
+          "distractors": [
+            "*",
+            "_",
+            "?"
+          ]
+        },
+        {
+          "ctx": [
+            "products"
+          ],
+          "goal": "Return rows either outside range OR missing price.",
+          "q": "SELECT * FROM products WHERE price NOT BETWEEN 10 AND 20 ____ price IS NULL;",
+          "a": "OR",
+          "hint": "OR returns rows matching either condition.",
+          "distractors": [
+            "AND",
+            "ALSO",
+            "ELSE"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Group OR conditions with parentheses.",
+          "q": "SELECT * FROM customers WHERE (city='Calgary' ____ city='Edmonton') AND country='Canada';",
+          "a": "OR",
+          "hint": "Parentheses group conditions to control evaluation order.",
+          "distractors": [
+            "AND",
+            "ALSO",
+            "BOTH"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Sort by country then city, both ascending.",
+          "q": "SELECT * FROM customers ORDER BY country ASC, city ____;",
+          "a": "ASC",
+          "hint": "Multi-column ORDER BY sorts by the first, then second column.",
+          "distractors": [
+            "DESC",
+            "NEXT",
+            "THEN"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r2",
+      "name": "Aggregates & Grouping",
+      "description": "COUNT, SUM, AVG, GROUP BY, and HAVING",
+      "icon": "📊",
+      "row": 1,
+      "col": 0,
+      "prerequisites": [
+        "r1"
+      ],
+      "questions": [
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Count how many customer rows exist.",
+          "q": "SELECT ____ (*) FROM customers;",
+          "a": "COUNT",
+          "hint": "COUNT(*) returns the number of rows in a table.",
+          "distractors": [
+            "SUM",
+            "TOTAL",
+            "NUMBER"
+          ]
+        },
+        {
+          "ctx": [
+            "products"
+          ],
+          "goal": "Find the lowest product price.",
+          "q": "SELECT ____ (price) FROM products;",
+          "a": "MIN",
+          "hint": "MIN returns the smallest value in a column.",
+          "distractors": [
+            "LOW",
+            "LEAST",
+            "SMALL"
+          ]
+        },
+        {
+          "ctx": [
+            "products"
+          ],
+          "goal": "Find the highest product price.",
+          "q": "SELECT ____ (price) FROM products;",
+          "a": "MAX",
+          "hint": "MAX returns the largest value in a column.",
+          "distractors": [
+            "HIGH",
+            "MOST",
+            "TOP"
+          ]
+        },
+        {
+          "ctx": [
+            "products"
+          ],
+          "goal": "Find the average product price.",
+          "q": "SELECT ____ (price) FROM products;",
+          "a": "AVG",
+          "hint": "AVG calculates the arithmetic mean of values.",
+          "distractors": [
+            "MEAN",
+            "AVERAGE",
+            "MID"
+          ]
+        },
+        {
+          "ctx": [
+            "products"
+          ],
+          "goal": "Find the total of all product prices (sum).",
+          "q": "SELECT ____ (price) FROM products;",
+          "a": "SUM",
+          "hint": "SUM adds up all values in a column.",
+          "distractors": [
+            "TOTAL",
+            "ADD",
+            "COUNT"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Count customers per country.",
+          "q": "SELECT country, COUNT(*) FROM customers GROUP BY ____;",
+          "a": "country",
+          "hint": "GROUP BY groups rows with the same value; list the same column(s) you're selecting.",
+          "distractors": [
+            "customer_id",
+            "city",
+            "ALL"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Keep only cities with 2+ customers.",
+          "q": "SELECT city, COUNT(*) FROM customers GROUP BY city HAVING COUNT(*) ____ 2;",
+          "a": ">=",
+          "hint": "HAVING filters groups after aggregation (like WHERE for groups).",
+          "distractors": [
+            ">",
+            "=",
+            "=>"
+          ]
+        },
+        {
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Keep only customers with more than 1 order.",
+          "q": "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) ____ 1;",
+          "a": ">",
+          "hint": "> means strictly greater than (not including 1).",
+          "distractors": [
+            ">=",
+            "=",
+            "<"
+          ]
+        },
+        {
+          "ctx": [
+            "reviews"
+          ],
+          "goal": "Keep products with average rating 4 or higher.",
+          "q": "SELECT product_id, AVG(rating) FROM reviews GROUP BY product_id HAVING AVG(rating) ____ 4;",
+          "a": ">=",
+          "hint": ">= includes the boundary value (4 itself).",
+          "distractors": [
+            ">",
+            "=",
+            "=>"
+          ]
+        },
+        {
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Keep customers whose total spend is 500 or more.",
+          "q": "SELECT customer_id, SUM(total_amount) FROM orders GROUP BY customer_id HAVING SUM(total_amount) ____ 500;",
+          "a": ">=",
+          "hint": "HAVING SUM() filters groups by their sum total.",
+          "distractors": [
+            ">",
+            "=",
+            "=>"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Sort countries by customer count (largest first).",
+          "q": "SELECT country, COUNT(*) FROM customers GROUP BY country ORDER BY COUNT(*) ____;",
+          "a": "DESC",
+          "hint": "DESC sorts from highest to lowest.",
+          "distractors": [
+            "ASC",
+            "HIGH",
+            "TOP"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Filter to customers who DO have an email.",
+          "q": "SELECT * FROM customers WHERE email IS ____ NULL;",
+          "a": "NOT",
+          "hint": "IS NOT NULL finds rows where a value exists.",
+          "distractors": [
+            "NO",
+            "NONE",
+            "HAS"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Match names ending with son OR sen.",
+          "q": "SELECT * FROM customers WHERE customer_name LIKE '%son' ____ customer_name LIKE '%sen';",
+          "a": "OR",
+          "hint": "OR matches either pattern.",
+          "distractors": [
+            "AND",
+            "ALSO",
+            "BOTH"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Wildcard for any-length in LIKE patterns.",
+          "q": "SELECT * FROM customers WHERE city LIKE 'A%'; -- wildcard for any length is ____",
+          "a": "%",
+          "hint": "% matches zero or more characters.",
+          "distractors": [
+            "*",
+            "_",
+            "?"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Require Canada AND one of the listed cities.",
+          "q": "SELECT * FROM customers WHERE country='Canada' ____ city IN ('Calgary','Edmonton');",
+          "a": "AND",
+          "hint": "Both the country AND city conditions must be true.",
+          "distractors": [
+            "OR",
+            "WITH",
+            "ALSO"
+          ]
+        },
+        {
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Not equal operator (status is NOT Cancelled).",
+          "q": "SELECT * FROM orders WHERE status ____ 'Cancelled';",
+          "a": "<>",
+          "hint": "<> is SQL's 'not equal' operator.",
+          "distractors": [
+            "!=",
+            "NOT",
+            "=/="
+          ]
+        },
+        {
+          "ctx": [
+            "products"
+          ],
+          "goal": "Sort the between-range results by price low→high.",
+          "q": "SELECT * FROM products WHERE price BETWEEN 10 AND 20 ORDER BY price ____;",
+          "a": "ASC",
+          "hint": "ASC sorts from smallest to largest.",
+          "distractors": [
+            "DESC",
+            "LOW",
+            "UP"
+          ]
+        },
+        {
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Count orders that are shipped OR delivered.",
+          "q": "SELECT COUNT(*) FROM orders WHERE status='Shipped' ____ status='Delivered';",
+          "a": "OR",
+          "hint": "OR counts rows matching either status.",
+          "distractors": [
+            "AND",
+            "ALSO",
+            "BOTH"
+          ]
+        },
+        {
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Delivered orders within the 2025 date range.",
+          "q": "SELECT * FROM orders WHERE order_date BETWEEN '2025-01-01' AND '2025-12-31' ____ status='Delivered';",
+          "a": "AND",
+          "hint": "Both conditions must be true: date range AND status.",
+          "distractors": [
+            "OR",
+            "WITH",
+            "ALSO"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Cities with 2–5 customers, shown most-to-least.",
+          "q": "SELECT city, COUNT(*) FROM customers GROUP BY city HAVING COUNT(*) BETWEEN 2 AND 5 ORDER BY COUNT(*) ____;",
+          "a": "DESC",
+          "hint": "DESC orders from highest count to lowest.",
+          "distractors": [
+            "ASC",
+            "HIGH",
+            "TOP"
+          ]
+        },
+        {
+          "ctx": [
+            "products"
+          ],
+          "goal": "Show top 5 products priced above the average price.",
+          "q": "SELECT * FROM products WHERE price > (SELECT AVG(price) FROM products) ORDER BY price DESC ____ 5;",
+          "a": "LIMIT",
+          "hint": "LIMIT restricts output to first N rows.",
+          "distractors": [
+            "TOP",
+            "FIRST",
+            "TAKE"
+          ]
+        },
+        {
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Sort customer_id ascending after grouping.",
+          "q": "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) <> 0 ORDER BY customer_id ____;",
+          "a": "ASC",
+          "hint": "ASC is ascending order (1, 2, 3...).",
+          "distractors": [
+            "DESC",
+            "UP",
+            "INC"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Sort by country ascending.",
+          "q": "SELECT * FROM customers WHERE country IN ('Canada','USA') ORDER BY country ____;",
+          "a": "ASC",
+          "hint": "ASC orders alphabetically A-Z.",
+          "distractors": [
+            "DESC",
+            "ALPHA",
+            "UP"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Exclude Calgary/Edmonton and take first 5 by city.",
+          "q": "SELECT * FROM customers WHERE city NOT IN ('Calgary','Edmonton') ORDER BY city ASC ____ 5;",
+          "a": "LIMIT",
+          "hint": "LIMIT comes after ORDER BY to take the first N sorted rows.",
+          "distractors": [
+            "TOP",
+            "FIRST",
+            "TAKE"
+          ]
+        },
+        {
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Use an alias in HAVING to filter totals above 10.",
+          "q": "SELECT country, COUNT(*) AS total FROM customers GROUP BY country HAVING total ____ 10;",
+          "a": ">",
+          "hint": "You can reference aliases in HAVING.",
+          "distractors": [
+            ">=",
+            "=",
+            "<"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r3",
+      "name": "JOINs",
+      "description": "Combining data from multiple tables",
+      "icon": "🔗",
+      "row": 1,
+      "col": 1,
+      "prerequisites": [
+        "r1"
+      ],
+      "questions": [
+        {
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "Match orders to their customer (only matches).",
+          "q": "SELECT * FROM orders o ____ JOIN customers c ON o.customer_id = c.customer_id;",
+          "a": "INNER",
+          "hint": "INNER JOIN returns only rows with matches in both tables.",
+          "distractors": [
+            "LEFT",
+            "RIGHT",
+            "OUTER"
+          ]
+        },
+        {
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Keep all customers even if they have no orders.",
+          "q": "SELECT * FROM customers c ____ JOIN orders o ON c.customer_id = o.customer_id;",
+          "a": "LEFT",
+          "hint": "LEFT JOIN keeps all rows from the left table, even without matches.",
+          "distractors": [
+            "INNER",
+            "RIGHT",
+            "FULL"
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "JOIN needs the keyword that defines the join condition line.",
+          "q": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ____ o.customer_id = c.customer_id;",
+          "a": "ON",
+          "hint": "ON specifies how to match rows between tables.",
+          "distractors": [
+            "WHERE",
+            "WITH",
+            "USING"
+          ]
+        },
+        {
+          "ctx": [
+            "order_items",
+            "products"
+          ],
+          "goal": "Filter joined rows to quantity > 1.",
+          "q": "SELECT oi.order_id, p.product_name FROM order_items oi INNER JOIN products p ON oi.product_id = p.product_id ____ oi.quantity > 1;",
+          "a": "WHERE",
+          "hint": "WHERE filters results after the join is made.",
+          "distractors": [
+            "AND",
+            "ON",
+            "HAVING"
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "Sort results by order_id ascending.",
+          "q": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id ORDER BY o.order_id ____;",
+          "a": "ASC",
+          "hint": "ASC sorts from lowest to highest.",
+          "distractors": [
+            "DESC",
+            "UP",
+            "INC"
+          ]
+        },
+        {
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Keep only customers WITH orders (order_id not null).",
+          "q": "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS ____ NULL;",
+          "a": "NOT",
+          "hint": "IS NOT NULL finds rows where a match exists.",
+          "distractors": [
+            "NO",
+            "NONE",
+            "HAS"
+          ]
+        },
+        {
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Find customers with NO orders (unmatched rows).",
+          "q": "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id ____ NULL;",
+          "a": "IS",
+          "hint": "IS NULL finds unmatched rows in a LEFT JOIN.",
+          "distractors": [
+            "=",
+            "EQUALS",
+            "=="
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "order_items"
+          ],
+          "goal": "Filter to positive quantities.",
+          "q": "SELECT o.order_id, oi.quantity FROM orders o INNER JOIN order_items oi ON o.order_id = oi.order_id WHERE oi.quantity ____ 0;",
+          "a": ">",
+          "hint": "> 0 means positive (greater than zero).",
+          "distractors": [
+            ">=",
+            "!=",
+            "<>"
+          ]
+        },
+        {
+          "ctx": [
+            "products",
+            "order_items"
+          ],
+          "goal": "Show highest quantities first.",
+          "q": "SELECT p.product_name, oi.quantity FROM products p INNER JOIN order_items oi ON p.product_id=oi.product_id ORDER BY oi.quantity ____;",
+          "a": "DESC",
+          "hint": "DESC orders from highest to lowest.",
+          "distractors": [
+            "ASC",
+            "HIGH",
+            "TOP"
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "Canada customers AND delivered orders.",
+          "q": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.country = 'Canada' ____ o.status='Delivered';",
+          "a": "AND",
+          "hint": "Both conditions must be true.",
+          "distractors": [
+            "OR",
+            "WITH",
+            "ALSO"
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "Orders for Canada OR USA customers.",
+          "q": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.country='Canada' ____ c.country='USA';",
+          "a": "OR",
+          "hint": "OR matches either country.",
+          "distractors": [
+            "AND",
+            "ALSO",
+            "BOTH"
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "Negate the country condition in a join filter.",
+          "q": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE ____ c.country='Canada';",
+          "a": "NOT",
+          "hint": "NOT inverts the condition.",
+          "distractors": [
+            "NO",
+            "EXCEPT",
+            "WITHOUT"
+          ]
+        },
+        {
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Customers with more than 1 order.",
+          "q": "SELECT c.customer_name, COUNT(o.order_id) FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id GROUP BY c.customer_name HAVING COUNT(o.order_id) ____ 1;",
+          "a": ">",
+          "hint": "> 1 means more than one.",
+          "distractors": [
+            ">=",
+            "=",
+            "!="
+          ]
+        },
+        {
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Sort by alias total (largest first).",
+          "q": "SELECT c.customer_name, COUNT(o.order_id) AS total FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id GROUP BY c.customer_name ORDER BY total ____;",
+          "a": "DESC",
+          "hint": "DESC sorts from largest to smallest.",
+          "distractors": [
+            "ASC",
+            "HIGH",
+            "TOP"
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "order_items"
+          ],
+          "goal": "Orders where total item quantity is 3 or more.",
+          "q": "SELECT o.order_id, SUM(oi.quantity) FROM orders o INNER JOIN order_items oi ON o.order_id=oi.order_id GROUP BY o.order_id HAVING SUM(oi.quantity) ____ 3;",
+          "a": ">=",
+          "hint": ">= 3 includes 3 and above.",
+          "distractors": [
+            ">",
+            "=",
+            "=>"
+          ]
+        },
+        {
+          "ctx": [
+            "products",
+            "reviews"
+          ],
+          "goal": "Products with average rating 4 or more.",
+          "q": "SELECT p.product_name, AVG(r.rating) FROM products p INNER JOIN reviews r ON p.product_id=r.product_id GROUP BY p.product_name HAVING AVG(r.rating) ____ 4;",
+          "a": ">=",
+          "hint": ">= 4 means 4 or higher.",
+          "distractors": [
+            ">",
+            "=",
+            "=>"
+          ]
+        },
+        {
+          "ctx": [
+            "products",
+            "reviews"
+          ],
+          "goal": "Filter to rows where rating equals 5.",
+          "q": "SELECT p.product_name, r.rating FROM products p INNER JOIN reviews r ON p.product_id=r.product_id WHERE r.rating ____ 5;",
+          "a": "=",
+          "hint": "= checks for exact equality.",
+          "distractors": [
+            "==",
+            "EQUALS",
+            "IS"
+          ]
+        },
+        {
+          "ctx": [
+            "products",
+            "reviews"
+          ],
+          "goal": "Sort ratings high-to-low within the range.",
+          "q": "SELECT p.product_name, r.rating FROM products p INNER JOIN reviews r ON p.product_id=r.product_id WHERE r.rating BETWEEN 3 AND 5 ORDER BY r.rating ____;",
+          "a": "DESC",
+          "hint": "DESC orders from 5 down to 3.",
+          "distractors": [
+            "ASC",
+            "HIGH",
+            "TOP"
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "WHERE clause belongs after FROM/JOIN section.",
+          "q": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id ____ o.order_id > 100;",
+          "a": "WHERE",
+          "hint": "WHERE comes after all JOINs to filter results.",
+          "distractors": [
+            "AND",
+            "ON",
+            "HAVING"
+          ]
+        },
+        {
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Limit to the first 10 rows after sorting.",
+          "q": "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id ORDER BY c.customer_name ASC ____ 10;",
+          "a": "LIMIT",
+          "hint": "LIMIT comes last to restrict output rows.",
+          "distractors": [
+            "TOP",
+            "FIRST",
+            "TAKE"
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "Use LIKE wildcard after A (any characters).",
+          "q": "SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id=c.customer_id WHERE c.customer_name LIKE 'A____';",
+          "a": "%",
+          "hint": "% matches any number of characters.",
+          "distractors": [
+            "*",
+            "_",
+            "?"
+          ]
+        },
+        {
+          "ctx": [
+            "order_items",
+            "products"
+          ],
+          "goal": "Match either of two product-name patterns.",
+          "q": "SELECT oi.order_id, p.product_name FROM order_items oi INNER JOIN products p ON oi.product_id=p.product_id WHERE p.product_name LIKE '%phone%' ____ p.product_name LIKE '%tablet%';",
+          "a": "OR",
+          "hint": "OR matches either pattern.",
+          "distractors": [
+            "AND",
+            "ALSO",
+            "BOTH"
+          ]
+        },
+        {
+          "ctx": [
+            "orders",
+            "order_items"
+          ],
+          "goal": "Sort by total quantity descending using alias qty.",
+          "q": "SELECT o.order_id, SUM(oi.quantity) AS qty FROM orders o INNER JOIN order_items oi ON o.order_id=oi.order_id GROUP BY o.order_id ORDER BY qty ____;",
+          "a": "DESC",
+          "hint": "DESC sorts highest first.",
+          "distractors": [
+            "ASC",
+            "HIGH",
+            "TOP"
+          ]
+        },
+        {
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Unmatched (no orders) customers sorted A→Z.",
+          "q": "SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id=o.customer_id WHERE o.order_id IS NULL ORDER BY c.customer_name ____;",
+          "a": "ASC",
+          "hint": "ASC sorts alphabetically.",
+          "distractors": [
+            "DESC",
+            "ALPHA",
+            "UP"
+          ]
+        },
+        {
+          "ctx": [
+            "products",
+            "reviews"
+          ],
+          "goal": "Products that have at least 1 review (count > 0).",
+          "q": "SELECT p.product_name, COUNT(r.review_id) FROM products p LEFT JOIN reviews r ON p.product_id=r.product_id GROUP BY p.product_name HAVING COUNT(r.review_id) ____ 0;",
+          "a": ">",
+          "hint": "> 0 means at least one.",
+          "distractors": [
+            ">=",
+            "!=",
+            "<>"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r4",
+      "name": "Subqueries",
+      "description": "Nested SELECT statements and correlated subqueries",
+      "icon": "🔍",
+      "row": 2,
+      "col": 0,
+      "prerequisites": [
+        "r2",
+        "r3"
+      ],
+      "questions": [
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "products"
+          ],
+          "goal": "Find products priced above average.",
+          "q": "SELECT * FROM products WHERE price > (____ AVG(price) FROM products);",
+          "a": "SELECT",
+          "hint": "A subquery is a SELECT statement inside another statement.",
+          "distractors": [
+            "GET",
+            "FIND",
+            "RETURN"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Find customers who have placed at least one order.",
+          "q": "SELECT * FROM customers WHERE customer_id ____ (SELECT customer_id FROM orders);",
+          "a": "IN",
+          "hint": "IN checks if a value exists in the subquery result set.",
+          "distractors": [
+            "EXISTS",
+            "=",
+            "ANY"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Find customers who have never placed an order.",
+          "q": "SELECT * FROM customers WHERE customer_id ____ IN (SELECT customer_id FROM orders);",
+          "a": "NOT",
+          "hint": "NOT IN excludes values found in the subquery.",
+          "distractors": [
+            "NO",
+            "EXCEPT",
+            "WITHOUT"
+          ]
+        },
+        {
+          "type": "multiple-choice",
+          "ctx": [
+            "products",
+            "order_items"
+          ],
+          "goal": "Which subquery returns products that have been ordered?",
+          "q": "SELECT * FROM products WHERE product_id IN (SELECT product_id FROM order_items);",
+          "a": "Products that appear in at least one order",
+          "hint": "IN with a subquery checks for membership in the result set.",
+          "distractors": [
+            "All products",
+            "Products never ordered",
+            "Only the first product ordered"
+          ],
+          "choices": [
+            "Products that appear in at least one order",
+            "All products",
+            "Products never ordered",
+            "Only the first product ordered"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Check if ANY orders exist for a customer.",
+          "q": "SELECT * FROM customers c WHERE ____ (SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id);",
+          "a": "EXISTS",
+          "hint": "EXISTS returns true if the subquery returns any rows.",
+          "distractors": [
+            "IN",
+            "ANY",
+            "SOME"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Find orders with total above the average total.",
+          "q": "SELECT * FROM orders WHERE total_amount > (SELECT ____(total_amount) FROM orders);",
+          "a": "AVG",
+          "hint": "AVG calculates the average of all values.",
+          "distractors": [
+            "SUM",
+            "COUNT",
+            "MAX"
+          ]
+        },
+        {
+          "type": "multiple-choice",
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "What does this correlated subquery do?",
+          "q": "SELECT * FROM customers c WHERE (SELECT COUNT(*) FROM orders o WHERE o.customer_id = c.customer_id) > 5;",
+          "a": "Finds customers with more than 5 orders",
+          "hint": "The subquery references the outer query's row (c.customer_id).",
+          "distractors": [
+            "Finds the 5 most recent customers",
+            "Finds customers with exactly 5 orders",
+            "Finds the first 5 customers"
+          ],
+          "choices": [
+            "Finds customers with more than 5 orders",
+            "Finds the 5 most recent customers",
+            "Finds customers with exactly 5 orders",
+            "Finds the first 5 customers"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "products"
+          ],
+          "goal": "Find the product with the highest price.",
+          "q": "SELECT * FROM products WHERE price = (SELECT ____(price) FROM products);",
+          "a": "MAX",
+          "hint": "MAX returns the highest value.",
+          "distractors": [
+            "TOP",
+            "FIRST",
+            "BEST"
+          ]
+        },
+        {
+          "type": "code-ordering",
+          "ctx": [
+            "orders",
+            "customers"
+          ],
+          "goal": "Arrange to find customers with orders over $100.",
+          "q": "Arrange the clauses:",
+          "a": [
+            "SELECT * FROM customers",
+            "WHERE customer_id IN",
+            "(SELECT customer_id FROM orders",
+            "WHERE total_amount > 100);"
+          ],
+          "hint": "Main query first, then WHERE with IN, then the subquery.",
+          "distractors": []
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "products",
+            "reviews"
+          ],
+          "goal": "Find products with avg rating higher than product 1's avg.",
+          "q": "SELECT product_id FROM reviews GROUP BY product_id HAVING AVG(rating) > (SELECT AVG(rating) FROM reviews WHERE product_id ____ 1);",
+          "a": "=",
+          "hint": "= filters the subquery to a specific product.",
+          "distractors": [
+            "==",
+            "IS",
+            "EQUALS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r5",
+      "name": "Window Functions",
+      "description": "ROW_NUMBER, RANK, LEAD/LAG, PARTITION BY",
+      "icon": "🪟",
+      "row": 3,
+      "col": 0,
+      "prerequisites": [
+        "r4"
+      ],
+      "questions": [
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Number rows within each customer's orders.",
+          "q": "SELECT order_id, customer_id, ROW_NUMBER() ____ (PARTITION BY customer_id ORDER BY order_date) as rn FROM orders;",
+          "a": "OVER",
+          "hint": "OVER defines the window for the function to operate on.",
+          "distractors": [
+            "BY",
+            "IN",
+            "WITHIN"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Partition orders by customer_id.",
+          "q": "SELECT order_id, ROW_NUMBER() OVER (____ BY customer_id ORDER BY order_date) FROM orders;",
+          "a": "PARTITION",
+          "hint": "PARTITION BY groups rows for the window function.",
+          "distractors": [
+            "GROUP",
+            "SPLIT",
+            "DIVIDE"
+          ]
+        },
+        {
+          "type": "multiple-choice",
+          "ctx": [
+            "products"
+          ],
+          "goal": "What does ROW_NUMBER() do?",
+          "q": "SELECT product_name, ROW_NUMBER() OVER (ORDER BY price DESC) FROM products;",
+          "a": "Assigns unique sequential numbers (1,2,3...) by price descending",
+          "hint": "ROW_NUMBER always gives unique sequential integers.",
+          "distractors": [
+            "Counts total products",
+            "Returns the product price",
+            "Groups products by name"
+          ],
+          "choices": [
+            "Assigns unique sequential numbers (1,2,3...) by price descending",
+            "Counts total products",
+            "Returns the product price",
+            "Groups products by name"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "products"
+          ],
+          "goal": "Rank products by price (ties get same rank).",
+          "q": "SELECT product_name, ____(ORDER BY price DESC) OVER () as price_rank FROM products;",
+          "a": "RANK",
+          "hint": "RANK assigns the same rank to ties, then skips numbers.",
+          "distractors": [
+            "ROW_NUMBER",
+            "DENSE_RANK",
+            "ORDER"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Get the previous order's total for comparison.",
+          "q": "SELECT order_id, total_amount, ____(total_amount) OVER (ORDER BY order_date) as prev_total FROM orders;",
+          "a": "LAG",
+          "hint": "LAG looks at the previous row's value.",
+          "distractors": [
+            "LEAD",
+            "PREV",
+            "BEFORE"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Get the next order's date.",
+          "q": "SELECT order_id, order_date, ____(order_date) OVER (ORDER BY order_date) as next_date FROM orders;",
+          "a": "LEAD",
+          "hint": "LEAD looks at the next row's value.",
+          "distractors": [
+            "LAG",
+            "NEXT",
+            "AFTER"
+          ]
+        },
+        {
+          "type": "multi-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Calculate running total of order amounts.",
+          "q": "SELECT order_id, total_amount, ____(total_amount) ____ (ORDER BY order_date) as running_total FROM orders;",
+          "a": [
+            "SUM",
+            "OVER"
+          ],
+          "hint": "SUM with OVER creates a running total when ordered.",
+          "distractors": [
+            "COUNT",
+            "BY",
+            "PARTITION",
+            "AVG"
+          ]
+        },
+        {
+          "type": "multiple-choice",
+          "ctx": [
+            "reviews"
+          ],
+          "goal": "What's the difference between RANK and DENSE_RANK?",
+          "q": "Given ratings: 5,5,4,3 - what ranks does each assign?",
+          "a": "RANK: 1,1,3,4 | DENSE_RANK: 1,1,2,3",
+          "hint": "RANK skips numbers after ties, DENSE_RANK doesn't.",
+          "distractors": [
+            "Both give 1,2,3,4",
+            "RANK: 1,1,2,3 | DENSE_RANK: 1,1,3,4",
+            "They're identical"
+          ],
+          "choices": [
+            "RANK: 1,1,3,4 | DENSE_RANK: 1,1,2,3",
+            "Both give 1,2,3,4",
+            "RANK: 1,1,2,3 | DENSE_RANK: 1,1,3,4",
+            "They're identical"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Get row number resetting for each customer.",
+          "q": "SELECT order_id, customer_id, ROW_NUMBER() OVER (PARTITION BY ____ ORDER BY order_date) FROM orders;",
+          "a": "customer_id",
+          "hint": "PARTITION BY resets the counter for each distinct value.",
+          "distractors": [
+            "order_id",
+            "order_date",
+            "status"
+          ]
+        },
+        {
+          "type": "code-ordering",
+          "ctx": [
+            "products"
+          ],
+          "goal": "Arrange to rank products by price descending.",
+          "q": "Arrange the clauses:",
+          "a": [
+            "SELECT product_name, price,",
+            "RANK() OVER",
+            "(ORDER BY price DESC)",
+            "FROM products;"
+          ],
+          "hint": "SELECT columns, then window function with OVER, then FROM.",
+          "distractors": []
+        }
+      ]
+    },
+    {
+      "id": "r6",
+      "name": "CTEs & Advanced",
+      "description": "WITH clauses, CASE statements, COALESCE",
+      "icon": "⚡",
+      "row": 3,
+      "col": 1,
+      "prerequisites": [
+        "r4"
+      ],
+      "questions": [
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Start a Common Table Expression (CTE).",
+          "q": "____ high_value_orders AS (SELECT * FROM orders WHERE total_amount > 1000) SELECT * FROM high_value_orders;",
+          "a": "WITH",
+          "hint": "WITH creates a named temporary result set (CTE).",
+          "distractors": [
+            "CREATE",
+            "DEFINE",
+            "SET"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Name the CTE before defining it.",
+          "q": "WITH expensive_orders ____ (SELECT * FROM orders WHERE total_amount > 500) SELECT * FROM expensive_orders;",
+          "a": "AS",
+          "hint": "AS links the CTE name to its definition.",
+          "distractors": [
+            "=",
+            "IS",
+            "EQUALS"
+          ]
+        },
+        {
+          "type": "multiple-choice",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "What is a CTE useful for?",
+          "q": "WITH monthly_totals AS (SELECT MONTH(order_date) as m, SUM(total_amount) as total FROM orders GROUP BY MONTH(order_date)) SELECT * FROM monthly_totals WHERE total > 10000;",
+          "a": "Creating a named, reusable subquery for cleaner code",
+          "hint": "CTEs improve readability by naming complex subqueries.",
+          "distractors": [
+            "Creating permanent tables",
+            "Speeding up queries automatically",
+            "Replacing all JOINs"
+          ],
+          "choices": [
+            "Creating a named, reusable subquery for cleaner code",
+            "Creating permanent tables",
+            "Speeding up queries automatically",
+            "Replacing all JOINs"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Categorize orders as High/Medium/Low based on amount.",
+          "q": "SELECT order_id, ____ WHEN total_amount > 500 THEN 'High' WHEN total_amount > 100 THEN 'Medium' ELSE 'Low' END as tier FROM orders;",
+          "a": "CASE",
+          "hint": "CASE creates conditional logic like if/else.",
+          "distractors": [
+            "IF",
+            "SWITCH",
+            "WHEN"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Complete the CASE condition.",
+          "q": "SELECT order_id, CASE ____ status = 'Delivered' THEN 'Complete' ELSE 'Pending' END FROM orders;",
+          "a": "WHEN",
+          "hint": "WHEN specifies each condition in a CASE statement.",
+          "distractors": [
+            "IF",
+            "WHERE",
+            "THEN"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "End the CASE statement.",
+          "q": "SELECT order_id, CASE WHEN total_amount > 100 THEN 'Big' ELSE 'Small' ____ FROM orders;",
+          "a": "END",
+          "hint": "END closes a CASE statement.",
+          "distractors": [
+            "STOP",
+            "DONE",
+            "CLOSE"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "customers"
+          ],
+          "goal": "Replace NULL emails with 'No Email'.",
+          "q": "SELECT customer_name, ____(email, 'No Email') as email FROM customers;",
+          "a": "COALESCE",
+          "hint": "COALESCE returns the first non-null value.",
+          "distractors": [
+            "IFNULL",
+            "ISNULL",
+            "NVL"
+          ]
+        },
+        {
+          "type": "multiple-choice",
+          "ctx": [
+            "products"
+          ],
+          "goal": "What does COALESCE(price, 0) return?",
+          "q": "COALESCE(price, 0) when price is NULL",
+          "a": "Returns 0",
+          "hint": "COALESCE returns the first non-null argument.",
+          "distractors": [
+            "Returns NULL",
+            "Throws an error",
+            "Returns the string 'NULL'"
+          ],
+          "choices": [
+            "Returns 0",
+            "Returns NULL",
+            "Throws an error",
+            "Returns the string 'NULL'"
+          ]
+        },
+        {
+          "type": "fill-blank",
+          "ctx": [
+            "order_items"
+          ],
+          "goal": "Return NULL if discount is 0 (avoid divide by zero).",
+          "q": "SELECT order_id, quantity / ____(discount_percent, 0) FROM order_items;",
+          "a": "NULLIF",
+          "hint": "NULLIF returns NULL if both arguments are equal.",
+          "distractors": [
+            "COALESCE",
+            "IFNULL",
+            "ISNULL"
+          ]
+        },
+        {
+          "type": "error-fix",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Fix the CTE syntax error.",
+          "q": "WITH orders_cte SELECT * FROM orders WHERE total_amount > 100 SELECT * FROM orders_cte;",
+          "a": "AS",
+          "errorCode": "WITH orders_cte SELECT * FROM orders WHERE total_amount > 100 SELECT * FROM orders_cte;",
+          "errorLocation": "orders_cte SELECT",
+          "hint": "CTEs require AS after the name and parentheses around the query.",
+          "distractors": [
+            "=",
+            "IS",
+            ":"
+          ]
+        },
+        {
+          "type": "multi-blank",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Create a CTE and query it.",
+          "q": "____ recent_orders ____ (SELECT * FROM orders WHERE order_date > '2025-01-01') SELECT * FROM recent_orders;",
+          "a": [
+            "WITH",
+            "AS"
+          ],
+          "hint": "WITH starts the CTE, AS links name to definition.",
+          "distractors": [
+            "CREATE",
+            "=",
+            "DEFINE",
+            "SET"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r7",
+      "name": "SQL Mastery",
+      "description": "Complex queries combining all techniques",
+      "icon": "🏆",
+      "row": 4,
+      "col": 0,
+      "prerequisites": [
+        "r5",
+        "r6"
+      ],
+      "questions": [
+        {
+          "type": "drag-drop",
+          "ctx": [
+            "customers",
+            "orders"
+          ],
+          "goal": "Calculate total revenue per country (Drag & Drop)",
+          "q": "SELECT country, SUM(total_amount) FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY ____;",
+          "a": "country",
+          "hint": "Group by the non-aggregated column.",
+          "distractors": [
+            "total_amount",
+            "customer_id",
+            "order_id",
+            "SUM"
+          ]
+        },
+        {
+          "type": "type-in",
+          "ctx": [
+            "products"
+          ],
+          "goal": "Find the most expensive product (Type In)",
+          "q": "SELECT product_name FROM products ORDER BY price ____ LIMIT 1;",
+          "a": "DESC",
+          "hint": "Sort high-to-low to get the most expensive.",
+          "distractors": []
+        },
+        {
+          "type": "spot-error",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "Identify the error in this grouping query.",
+          "q": "The following query fails. Why?",
+          "errorCode": "SELECT customer_id, total_amount \nFROM orders \nGROUP BY customer_id;",
+          "a": "total_amount is not aggregated",
+          "hint": "Columns in SELECT must be either aggregated or in GROUP BY.",
+          "distractors": [
+            "GROUP BY should be ORDER BY",
+            "FROM clause is missing",
+            "customer_id cannot be grouped"
+          ]
+        },
+        {
+          "type": "freeform-sql",
+          "ctx": [
+            "products"
+          ],
+          "goal": "Write a query to select all products with 'Pro' in the name.",
+          "q": "Select product_name from products where...",
+          "a": "SELECT product_name FROM products WHERE product_name LIKE '%Pro%'",
+          "hint": "Use LIKE with wildcards (%)",
+          "distractors": []
+        },
+        {
+          "type": "multi-drag-drop",
+          "ctx": [
+            "employees",
+            "departments"
+          ],
+          "goal": "Join and Group (Drag Multiple)",
+          "q": "SELECT d.name, COUNT(e.id) FROM departments d ____ JOIN employees e ____ d.id = e.dept_id ____ BY d.name;",
+          "a": [
+            "LEFT",
+            "ON",
+            "GROUP"
+          ],
+          "hint": "Use LEFT JOIN to include depts with no employees.",
+          "distractors": [
+            "INNER",
+            "WHERE",
+            "ORDER",
+            "HAVING",
+            "RIGHT"
+          ]
+        },
+        {
+          "type": "word-problem",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "What does this query retrieve?",
+          "q": "SELECT customer_id FROM orders WHERE order_date > '2023-01-01' GROUP BY customer_id HAVING count(*) > 5",
+          "a": "Customers who placed more than 5 orders since Jan 2023",
+          "hint": "Look at the HAVING clause count > 5.",
+          "distractors": [
+            "Customers who placed exactly 5 orders in 2023",
+            "Total number of orders per customer since Jan 2023",
+            "Orders with quantity > 5 placed after Jan 2023"
+          ]
+        },
+        {
+          "type": "multi-drag-drop",
+          "ctx": [
+            "employees",
+            "departments"
+          ],
+          "goal": "Join and Group (Drag Multiple)",
+          "q": "SELECT d.name, COUNT(e.id) FROM departments d ____ JOIN employees e ____ d.id = e.dept_id ____ BY d.name;",
+          "a": [
+            "LEFT",
+            "ON",
+            "GROUP"
+          ],
+          "hint": "Use LEFT JOIN to include depts with no employees.",
+          "distractors": [
+            "INNER",
+            "WHERE",
+            "ORDER",
+            "HAVING",
+            "RIGHT"
+          ]
+        },
+        {
+          "type": "word-problem",
+          "ctx": [
+            "orders"
+          ],
+          "goal": "What does this query retrieve?",
+          "q": "SELECT customer_id FROM orders WHERE order_date > '2023-01-01' GROUP BY customer_id HAVING count(*) > 5",
+          "a": "Customers who placed more than 5 orders since Jan 2023",
+          "hint": "Look at the HAVING clause count > 5.",
+          "distractors": [
+            "Customers who placed exactly 5 orders in 2023",
+            "Total number of orders per customer since Jan 2023",
+            "Orders with quantity > 5 placed after Jan 2023"
+          ]
+        }
+      ]
+    }
+  ]
+}

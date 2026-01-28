@@ -1,0 +1,101 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--bg-base);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-raised);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.option:hover {
+    transform: translateY(-2px);
+    box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+}
+
+.option.selected {
+    border-color: var(--royal);
+    background: rgba(0, 89, 232, 0.05);
+}
+
+.option.correct {
+    border-color: var(--color-success);
+    background: rgba(34, 160, 107, 0.1);
+}
+
+.option.incorrect {
+    border-color: var(--flare);
+    background: rgba(255, 26, 20, 0.1);
+}
+
+.option.disabled {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.radio {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bg-inset);
+    box-shadow: var(--neu-inset);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.radio::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background 0.2s ease;
+}
+
+.option.selected .radio::after {
+    background: var(--royal);
+}
+
+.option.correct .radio::after {
+    background: var(--color-success);
+}
+
+.option.incorrect .radio::after {
+    background: var(--flare);
+}
+
+.letter {
+    width: 28px;
+    height: 28px;
+    background: var(--bg-inset);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.option.selected .letter {
+    background: var(--royal);
+    color: white;
+}
+
+.text {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--text-primary);
+}

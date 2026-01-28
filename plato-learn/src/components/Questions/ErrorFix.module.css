@@ -1,0 +1,97 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.codeBlock {
+    background: var(--bg-inset);
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-inset);
+    padding: 20px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.errorLine {
+    display: inline;
+    padding: 2px 6px;
+    background: rgba(255, 26, 20, 0.15);
+    border-bottom: 2px wavy var(--flare);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.errorLine:hover {
+    background: rgba(255, 26, 20, 0.25);
+}
+
+.errorLine.selected {
+    background: rgba(255, 26, 20, 0.3);
+    border-bottom-color: var(--flare);
+}
+
+.fixOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fixOption {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--bg-base);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-raised);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.fixOption:hover {
+    transform: translateY(-2px);
+}
+
+.fixOption.selected {
+    border-color: var(--royal);
+    background: rgba(0, 89, 232, 0.05);
+}
+
+.fixOption.correct {
+    border-color: var(--color-success);
+    background: rgba(34, 160, 107, 0.1);
+}
+
+.fixOption.incorrect {
+    border-color: var(--flare);
+    background: rgba(255, 26, 20, 0.1);
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.arrow {
+    color: var(--slate);
+    font-size: 18px;
+}
+
+.original {
+    font-family: var(--font-mono);
+    color: var(--flare);
+    text-decoration: line-through;
+}
+
+.fix {
+    font-family: var(--font-mono);
+    color: var(--color-success);
+    font-weight: 600;
+}

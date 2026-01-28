@@ -1,0 +1,68 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sqlDisplay {
+    background: var(--bg-inset);
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-inset);
+    padding: 24px;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    line-height: 2;
+    color: var(--text-primary);
+}
+
+.inputWrapper {
+    position: relative;
+}
+
+.inputField {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--bg-base);
+    border: 2px solid var(--slate);
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-inset);
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--midnight);
+    transition: all 0.2s ease;
+}
+
+.inputField:focus {
+    outline: none;
+    border-color: var(--royal);
+    box-shadow: 0 0 0 3px rgba(0, 89, 232, 0.15);
+}
+
+.inputField.correct {
+    border-color: var(--color-success);
+    background: rgba(34, 160, 107, 0.05);
+}
+
+.inputField.incorrect {
+    border-color: var(--flare);
+    background: rgba(255, 26, 20, 0.05);
+}
+
+.inputField:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+}

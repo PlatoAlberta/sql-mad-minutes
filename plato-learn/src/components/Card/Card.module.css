@@ -1,0 +1,37 @@
+.card {
+    background: var(--bg-base);
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+}
+
+/* Variants */
+.card.raised {
+    box-shadow: var(--neu-raised);
+}
+
+.card.inset {
+    box-shadow: var(--neu-inset);
+    background: var(--bg-inset);
+}
+
+.card.flat {
+    box-shadow: none;
+    border: 1px solid var(--bg-inset);
+}
+
+/* Padding */
+.card.padding-none {
+    padding: 0;
+}
+
+.card.padding-sm {
+    padding: 12px;
+}
+
+.card.padding-md {
+    padding: 20px;
+}
+
+.card.padding-lg {
+    padding: 28px;
+}

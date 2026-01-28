@@ -1,0 +1,119 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.badCode {
+    background: linear-gradient(135deg, rgba(255, 26, 20, 0.08), rgba(255, 26, 20, 0.03));
+    border: 2px solid rgba(255, 26, 20, 0.3);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    position: relative;
+}
+
+.badCode::before {
+    content: '⚠️ This SQL has an error';
+    position: absolute;
+    top: -12px;
+    left: 16px;
+    padding: 2px 10px;
+    background: var(--bg-base);
+    font-family: var(--font-base);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--flare);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.errorHighlight {
+    background: rgba(255, 26, 20, 0.2);
+    text-decoration: wavy underline;
+    text-decoration-color: var(--flare);
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--bg-base);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-raised);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.option:hover:not(.disabled) {
+    transform: translateX(4px);
+    border-color: var(--royal);
+}
+
+.option.selected {
+    border-color: var(--royal);
+    background: rgba(0, 89, 232, 0.05);
+}
+
+.option.correct {
+    border-color: var(--color-success);
+    background: rgba(34, 160, 107, 0.08);
+}
+
+.option.incorrect {
+    border-color: var(--flare);
+    background: rgba(255, 26, 20, 0.05);
+}
+
+.option.disabled {
+    cursor: default;
+}
+
+.optionLetter {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-inset);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.option.selected .optionLetter {
+    background: var(--royal);
+    color: white;
+}
+
+.option.correct .optionLetter {
+    background: var(--color-success);
+    color: white;
+}
+
+.optionText {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.4;
+}

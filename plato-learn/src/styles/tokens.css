@@ -1,0 +1,50 @@
+/* ============================================
+   PLATO LEARN - DESIGN TOKENS
+   Color Palette: Chalk, Slate, Midnight, Royal, Flare
+   ============================================ */
+
+:root {
+  /* Primary Palette */
+  --chalk: #FFFFFF;
+  --chalk-soft: #E6E8F1;
+  --slate: #A3B5CB;
+  --slate-dark: #6C828D;
+  --midnight: #000B68;
+  --midnight-soft: #1A2258;
+  --royal: #0059E8;
+  --royal-soft: #63F8B5;
+  --flare: #FF1A14;
+  --flare-soft: #FF6B52;
+
+  /* Neumorphic Base */
+  --bg-base: #E6E8F1;
+  --bg-raised: #F0F2F8;
+  --bg-inset: #D8DBE6;
+
+  /* Shadows for neumorphism */
+  --shadow-light: rgba(255, 255, 255, 0.8);
+  --shadow-dark: rgba(166, 180, 200, 0.5);
+  --neu-raised: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+  --neu-inset: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+  --neu-subtle: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
+
+  /* Text */
+  --text-primary: #1A2258;
+  --text-secondary: #6C828D;
+  --text-muted: #A3B5CB;
+
+  /* Semantic */
+  --color-success: #22A06B;
+  --color-error: #FF1A14;
+  --color-warning: #E2B203;
+
+  /* Spacing */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'SF Mono', 'Consolas', 'Monaco', monospace;
+}

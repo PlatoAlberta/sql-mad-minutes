@@ -1,0 +1,133 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sqlDisplay {
+    background: var(--bg-inset);
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-inset);
+    padding: 24px;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    line-height: 2;
+    color: var(--text-primary);
+    word-wrap: break-word;
+}
+
+/* Drop Zone */
+.dropZone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    height: 36px;
+    padding: 0 14px;
+    background: var(--bg-base);
+    border: 2px dashed var(--slate);
+    border-radius: var(--radius-sm);
+    margin: 0 6px;
+    vertical-align: middle;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.dropZone.dragOver {
+    background: rgba(0, 89, 232, 0.15);
+    border-color: var(--royal);
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(0, 89, 232, 0.3);
+}
+
+.dropZone.filled {
+    background: linear-gradient(135deg, var(--midnight), var(--royal));
+    border-style: solid;
+    border-color: transparent;
+    color: white;
+    cursor: pointer;
+}
+
+.dropZone.correct {
+    background: linear-gradient(135deg, #1a8754, var(--color-success));
+}
+
+.dropZone.incorrect {
+    background: linear-gradient(135deg, #cc1510, var(--flare));
+    animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-8px);
+    }
+
+    50% {
+        transform: translateX(8px);
+    }
+
+    75% {
+        transform: translateX(-4px);
+    }
+}
+
+/* Answer Chips Tray */
+.chipTray {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 22px;
+    background: var(--bg-base);
+    border: none;
+    border-radius: var(--radius-md);
+    box-shadow: var(--neu-raised);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--midnight);
+    cursor: grab;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.chip:hover {
+    color: var(--royal);
+    transform: translateY(-3px);
+    box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+}
+
+.chip.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+    transform: scale(1.1);
+    box-shadow: 8px 8px 20px var(--shadow-dark);
+}
+
+.chip.used {
+    opacity: 0.35;
+    pointer-events: none;
+    box-shadow: var(--neu-inset);
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
