@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GamificationProvider } from './engine';
 import { AppLayout } from './layouts';
-import { Dashboard, CoursePage, PracticePage, MadMinutePage, LessonPage } from './pages';
+import { Dashboard, CoursePage, CoursesPage, CourseWorkshop, PracticePage, MadMinutePage, LessonPage } from './pages';
 import './styles/global.css';
 
 /**
@@ -15,6 +15,9 @@ function App() {
         <Routes>
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Dashboard />} />
+            <Route path="courses" element={<CoursesPage />} />
+            <Route path="workshop" element={<CourseWorkshop />} />
+            <Route path="workshop/:courseId" element={<CourseWorkshop />} />
             <Route path="course/:moduleId" element={<CoursePage />} />
             <Route path="practice/:moduleId" element={<PracticePage />} />
             <Route path="lesson/:moduleId/:roundId" element={<LessonPage />} />

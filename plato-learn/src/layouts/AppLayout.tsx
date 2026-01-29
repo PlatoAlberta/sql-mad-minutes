@@ -1,4 +1,4 @@
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { useGamification } from '../engine';
 import styles from './AppLayout.module.css';
 
@@ -7,6 +7,16 @@ import styles from './AppLayout.module.css';
  */
 export function AppLayout() {
     const { progress } = useGamification();
+    const location = useLocation();
+    const isFullscreen = location.pathname.startsWith('/workshop');
+
+    if (isFullscreen) {
+        return (
+            <div className={styles.fullscreenLayout}>
+                <Outlet />
+            </div>
+        );
+    }
 
     return (
         <div className={styles.layout}>
@@ -37,6 +47,12 @@ export function AppLayout() {
                     end
                 >
                     Dashboard
+                </NavLink>
+                <NavLink
+                    to="/courses"
+                    className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
+                >
+                    Courses
                 </NavLink>
                 <NavLink
                     to="/mad-minute/sql"

@@ -17,6 +17,7 @@ export interface LearningModule {
   icon: string;
   color: string;
   questionsPath: string;
+  category?: 'engineering' | 'qa' | 'data' | 'design' | 'compliance' | 'other';
   rounds: Round[];
 }
 
@@ -73,7 +74,10 @@ export type QuestionType =
   | 'error-fix'        // Find and fix the bug
   | 'multi-blank'      // Multiple blanks to fill (click)
   | 'word-problem'     // Explain what query does
-  | 'multi-drag-drop'; // Drag multiple blanks (required drag)
+  | 'multi-drag-drop'  // Drag multiple blanks (required drag)
+  | 'playground'       // Interactive code playground
+  | 'info'             // Informational text/markdown blocks
+  | 'video';           // Video lecture blocks
 
 /**
  * Base question interface
@@ -88,12 +92,18 @@ export interface Question {
   distractors: string[];
   hint: string;
   explanation?: string;
+  codeLanguage?: 'sql' | 'javascript' | 'python' | 'html' | 'css' | 'text';
   // For multiple choice
   choices?: string[];
   // For error-fix
   errorCode?: string;           // The broken code
   correctCode?: string;         // The fixed code
   errorLocation?: string;       // What part is wrong
+  // For media
+  media?: {
+    type: 'image' | 'video';
+    url: string;
+  };
 }
 
 /**
