@@ -1,0 +1,1332 @@
+/* Course Workshop - Professional B2B Theme */
+
+.studioContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #121212;
+    /* Neutral Dark Gray/Black */
+    color: #e5e5e5;
+    /* Neutral Light Gray Text */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* --- Top Bar --- */
+.topBar {
+    height: 56px;
+    /* Standard dense height */
+    background: #18181b;
+    /* Zinc 900 */
+    border-bottom: 1px solid #27272a;
+    /* Zinc 800 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    flex-shrink: 0;
+    z-index: 50;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.backButton {
+    background: transparent;
+    border: 1px solid #27272a;
+    color: #a1a1aa;
+    /* Zinc 400 */
+    font-size: 16px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.backButton:hover {
+    background: #27272a;
+    color: white;
+    border-color: #3f3f46;
+}
+
+.courseTitle {
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #f4f4f5;
+}
+
+.statusBadge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border: 1px solid;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.actionButton {
+    background: #3f3f46;
+    /* Zinc 700 */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.actionButton:hover {
+    background: #52525b;
+    /* Zinc 600 */
+}
+
+.saveButton {
+    background: #2563eb;
+    /* Primary Blue */
+}
+
+.saveButton:hover {
+    background: #1d4ed8;
+}
+
+/* --- Workspace --- */
+.workspace {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    background-color: #09090b;
+    /* Deep Zinc Black */
+    /* Remove blue gradients, just subtle grid */
+    background-image:
+        linear-gradient(#18181b 1px, transparent 1px),
+        linear-gradient(90deg, #18181b 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 300px;
+    background: #18181b;
+    /* Zinc 900 */
+    border-right: 1px solid #27272a;
+    /* Zinc 800 */
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebarTabs {
+    display: flex;
+    background: #18181b;
+    border-bottom: 1px solid #27272a;
+    padding: 0;
+}
+
+.navTab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-right: 1px solid #27272a;
+    color: #71717a;
+    /* Zinc 500 */
+    padding: 12px 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+}
+
+.navTab:last-child {
+    border-right: none;
+}
+
+.activeNavTab {
+    color: #3b82f6;
+    /* Primary Blue Text */
+    border-bottom-color: #3b82f6;
+    background: #18181b;
+}
+
+.navTab:hover:not(.activeNavTab) {
+    color: #d4d4d8;
+    background: #27272a;
+}
+
+.panelHeader {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #71717a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #27272a;
+    background: #18181b;
+}
+
+/* Tree View */
+.treeView {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.treeItem {
+    display: flex;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #d4d4d8;
+    font-size: 13px;
+    transition: all 0.1s;
+    user-select: none;
+    border: 1px solid transparent;
+    margin-bottom: 2px;
+}
+
+.treeItem:hover {
+    background: #27272a;
+}
+
+.treeItem.selected {
+    background: #2563eb;
+    /* Solid Selection Color for B2B robustness */
+    color: white;
+}
+
+.treeItemIcon {
+    margin-right: 8px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.treeItemLabel {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.treeGroup {
+    margin-left: 20px;
+    border-left: 1px solid #27272a;
+    padding-left: 4px;
+    margin-top: 2px;
+    margin-bottom: 4px;
+}
+
+.addRoundBtn {
+    width: 100%;
+    background: transparent;
+    border: 1px dashed #3f3f46;
+    color: #71717a;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    margin-top: 8px;
+}
+
+.addRoundBtn:hover {
+    background: #27272a;
+    border-color: #52525b;
+    color: #e4e4e7;
+}
+
+.miniSelect {
+    background: #18181b;
+    /* Zinc 900 */
+    color: #a1a1aa;
+    border: 1px solid #3f3f46;
+    border-radius: 2px;
+    font-size: 10px;
+    padding: 1px 4px;
+    outline: none;
+    cursor: pointer;
+    height: 20px;
+}
+
+.miniSelect:hover {
+    border-color: #71717a;
+}
+
+/* Library / Templates Grid */
+.libraryGrid {
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    overflow-y: auto;
+    background: #18181b;
+}
+
+.libraryItem {
+    background: #27272a;
+    /* Zinc 800 */
+    border: 1px solid #3f3f46;
+    border-radius: 4px;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: grab;
+    transition: all 0.2s;
+}
+
+.libraryItem:hover {
+    background: #3f3f46;
+    border-color: #52525b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.libraryIcon {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.libraryLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: #e4e4e7;
+    margin-bottom: 2px;
+}
+
+/* --- Canvas --- */
+.canvas {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    background-color: #121212;
+}
+
+.canvasContent {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff;
+    /* White paper remains for content creation context */
+    color: #1e293b;
+    border-radius: 2px;
+    padding: 48px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    min-height: 800px;
+    border: 1px solid #e5e5e5;
+}
+
+/* Canvas Preview Layouts */
+.previewCard {
+    text-align: center;
+    padding: 40px;
+}
+
+.previewIcon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.previewTitle {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #0f172a;
+}
+
+.previewDesc {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+.previewStats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 24px;
+}
+
+.previewStatValue {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.previewStatLabel {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* --- Inspector --- */
+.inspector {
+    width: 320px;
+    background: #18181b;
+    /* Zinc 900 */
+    border-left: 1px solid #27272a;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+    /* Remove overlay transition for solid B2B feel, just exist */
+}
+
+.inspector.open {
+    /* Keep class for logic but remove transform if we just want it persistently there */
+}
+
+.formSection {
+    padding: 16px;
+    border-bottom: 1px solid #27272a;
+}
+
+.formGroup {
+    margin-bottom: 16px;
+}
+
+.formLabel {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #a1a1aa;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.formInput {
+    width: 100%;
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    border-radius: 4px;
+    padding: 8px 10px;
+    color: #f4f4f5;
+    font-family: inherit;
+    font-size: 13px;
+    transition: border-color 0.2s;
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: #27272a;
+}
+
+.formTextarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.gridSelector {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+}
+
+.gridOption {
+    aspect-ratio: 1;
+    background: #27272a;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-size: 14px;
+}
+
+.gridOption:hover {
+    background: #3f3f46;
+}
+
+.gridOption.selected {
+    border-color: #3b82f6;
+    background: #3f3f46;
+    color: white;
+}
+
+/* --- Drag & Drop Visuals --- */
+.draggableItem {
+    cursor: grab;
+    position: relative;
+    border-radius: 4px;
+}
+
+.draggableItem.dragOver::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #3b82f6;
+    border-radius: 4px;
+    pointer-events: none;
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.imageUploadArea {
+    border: 1px dashed #52525b;
+    border-radius: 4px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    background: #27272a;
+    transition: all 0.2s;
+}
+
+.imageUploadArea:hover {
+    border-color: #71717a;
+    background: #3f3f46;
+}
+
+.removeMediaBtn {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: white;
+    border: 2px solid #18181b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* Tutorial Highlighting */
+.highlightSidebar {
+    border: 2px solid #3b82f6;
+    z-index: 100;
+}
+
+.highlightCanvas {
+    border: 2px solid #3b82f6;
+    z-index: 100;
+}
+
+.highlightInspector {
+    border: 2px solid #3b82f6;
+    z-index: 100;
+}
+
+.tutorialOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tutorialModal {
+    background: #18181b;
+    padding: 32px;
+    border-radius: 8px;
+    max-width: 480px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid #3f3f46;
+}
+
+.tutorialTitle {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: white;
+}
+
+.tutorialText {
+    color: #a1a1aa;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    font-size: 15px;
+}
+
+.tutorialActions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.tutorialBtn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    font-size: 14px;
+}
+
+.tutorialBtnPrimary {
+    background: #3b82f6;
+    color: white;
+}
+
+.tutorialBtnPrimary:hover {
+    background: #2563eb;
+}
+
+.tutorialBtnSecondary {
+    background: #27272a;
+    color: #e4e4e7;
+    border: 1px solid #3f3f46;
+}
+
+.tutorialBtnSecondary:hover {
+    background: #3f3f46;
+}
+
+.tutorialTooltip {
+    position: absolute;
+    background: #18181b;
+    padding: 16px;
+    border-radius: 6px;
+    width: 280px;
+    border: 1px solid #3f3f46;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    z-index: 110;
+}
+
+.tooltipSidebar {
+    top: 100px;
+    left: 320px;
+}
+
+.tooltipCanvas {
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.tooltipInspector {
+    top: 100px;
+    right: 340px;
+}
+
+.tutorialTooltip h4 {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #3b82f6;
+}
+
+.tutorialTooltip p {
+    font-size: 13px;
+    margin-bottom: 12px;
+    color: #d4d4d8;
+    line-height: 1.4;
+}
+
+/* --- V2 Tree Editor Styles --- */
+.treeEditorContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #121212;
+    /* Match workspace */
+    height: 100%;
+}
+
+
+.studioContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #0f172a;
+    /* Slate 900 */
+    color: #f8fafc;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+}
+
+/* --- Top Bar --- */
+.topBar {
+    height: 60px;
+    background: rgba(30, 41, 59, 0.7);
+    /* Slate 800 */
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+    z-index: 50;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.backButton {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.backButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.courseTitle {
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.statusBadge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border: 1px solid;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.actionButton {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.actionButton:hover {
+    opacity: 0.9;
+}
+
+.saveButton {
+    background: #2563eb;
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+}
+
+/* --- Workspace --- */
+.workspace {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.03) 0%, transparent 50%),
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 340px;
+    /* Wider for new tabs */
+    background: rgba(30, 41, 59, 0.4);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebarTabs {
+    display: flex;
+    background: #1e293b;
+    padding: 0;
+}
+
+.navTab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 12px 4px;
+    /* Tight padding */
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.activeNavTab {
+    color: #38bdf8;
+    border-bottom-color: #38bdf8;
+    background: linear-gradient(180deg, transparent, rgba(56, 189, 248, 0.05));
+}
+
+.navTab:hover:not(.activeNavTab) {
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.panelHeader {
+    padding: 16px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Tree View */
+.treeView {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 10px 20px 10px;
+}
+
+.treeItem {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #cbd5e1;
+    font-size: 14px;
+    transition: all 0.15s;
+    user-select: none;
+    border: 1px solid transparent;
+}
+
+.treeItem:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.treeItem.selected {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.3);
+    color: white;
+}
+
+.treeItemIcon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.treeItemLabel {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.treeGroup {
+    margin-left: 24px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 4px;
+    margin-top: 2px;
+    margin-bottom: 8px;
+}
+
+.addRoundBtn {
+    width: 100%;
+    background: transparent;
+    border: 1 dashed rgba(255, 255, 255, 0.2);
+    color: #94a3b8;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s;
+    margin-top: 10px;
+}
+
+.addRoundBtn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.miniSelect {
+    background: #0f172a;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    font-size: 10px;
+    padding: 2px 4px;
+    outline: none;
+    cursor: pointer;
+}
+
+.miniSelect:hover {
+    border-color: #64748b;
+}
+
+/* Library / Templates Grid */
+.libraryGrid {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    overflow-y: auto;
+}
+
+.libraryItem {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: grab;
+    transition: all 0.2s;
+}
+
+.libraryItem:hover {
+    background: rgba(56, 189, 248, 0.1);
+    border-color: #38bdf8;
+}
+
+.libraryIcon {
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.libraryLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: #e2e8f0;
+}
+
+/* --- Canvas --- */
+.canvas {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.canvasContent {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff;
+    /* White paper */
+    color: #1e293b;
+    border-radius: 8px;
+    /* Standard radius */
+    padding: 40px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    min-height: 800px;
+}
+
+/* Canvas Previews */
+.previewContent {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.previewCard {
+    text-align: center;
+    padding: 40px;
+}
+
+.previewIcon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.previewTitle {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.previewDesc {
+    color: #64748b;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.previewStats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 30px;
+}
+
+.previewStatValue {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.previewStatLabel {
+    font-size: 13px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* --- Inspector --- */
+.inspector {
+    width: 320px;
+    background: rgba(30, 41, 59, 0.4);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+    transform: translateX(320px);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: absolute;
+    /* Overlay logic for animation, or layout? Revert to flex if simpler */
+    right: 0;
+    top: 60px;
+    bottom: 0;
+    backdrop-filter: blur(20px);
+}
+
+.inspector.open {
+    transform: translateX(0);
+    position: relative;
+    /* Lock in place */
+    flex-shrink: 0;
+    top: 0;
+}
+
+.formSection {
+    padding: 20px;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.formLabel {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 8px;
+}
+
+.formInput {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 10px;
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.formTextarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.gridSelector {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+}
+
+.gridOption {
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    font-size: 16px;
+}
+
+.gridOption:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.gridOption.selected {
+    border-color: white;
+    transform: scale(1.1);
+}
+
+/* --- Drag & Drop Visuals --- */
+.draggableItem {
+    cursor: grab;
+    position: relative;
+    border-radius: 6px;
+}
+
+.draggableItem.dragOver::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px dashed #38bdf8;
+    /* Highlight color */
+    border-radius: 6px;
+    pointer-events: none;
+    background: rgba(56, 189, 248, 0.05);
+}
+
+.imageUploadArea {
+    border: 2px dashed #475569;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    background: rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+}
+
+.imageUploadArea:hover {
+    border-color: #94a3b8;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.removeMediaBtn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: white;
+    border: 2px solid #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Tutorial Highlighting */
+.highlightSidebar {
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    z-index: 100;
+}
+
+.highlightCanvas {
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    z-index: 100;
+}
+
+.highlightInspector {
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    z-index: 100;
+}
+
+.tutorialOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.tutorialModal {
+    background: #1e293b;
+    padding: 40px;
+    border-radius: 16px;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tutorialTitle {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, white, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tutorialText {
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.tutorialActions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.tutorialBtn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.tutorialBtnPrimary {
+    background: #3b82f6;
+    color: white;
+}
+
+.tutorialBtnPrimary:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+}
+
+.tutorialBtnSecondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.tutorialBtnSecondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.tutorialTooltip {
+    position: absolute;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 110;
+}
+
+.tooltipSidebar {
+    top: 100px;
+    left: 360px;
+}
+
+.tooltipCanvas {
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.tooltipInspector {
+    top: 100px;
+    right: 340px;
+}
+
+.tutorialTooltip h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #38bdf8;
+}
+
+.tutorialTooltip p {
+    font-size: 14px;
+    margin-bottom: 16px;
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+/* --- V2 Tree Editor Styles --- */
+.treeEditorContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #0f172a;
+    height: 100%;
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { getModuleById } from '../modules';
 import { loadModuleQuestions, useGamification } from '../engine';
@@ -25,7 +25,7 @@ export function PracticePage() {
     const { moduleId } = useParams<{ moduleId: string }>();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const { addXP, incrementStreak, resetStreak, recordAnswer, completeRound, isRoundUnlocked, resetRoundProgress } = useGamification();
+    const { addXP, incrementStreak, resetStreak, recordAnswer, completeRound, resetRoundProgress } = useGamification();
 
     const [questionData, setQuestionData] = useState<QuestionData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ export function PracticePage() {
     const [roundComplete, setRoundComplete] = useState(false);
     const [roundScore, setRoundScore] = useState({ correct: 0, total: 0 });
 
-    const module = moduleId ? getModuleById(moduleId) : null;
+    const module = useMemo(() => moduleId ? getModuleById(moduleId) : null, [moduleId]);
 
     // Load question data
     useEffect(() => {
@@ -97,17 +97,13 @@ export function PracticePage() {
     useEffect(() => {
         if (currentQuestion) {
             const answer = Array.isArray(currentQuestion.a) ? currentQuestion.a[0] : currentQuestion.a;
-            setAnswerOptions(shuffleArray([answer, ...currentQuestion.distractors]));
+            setAnswerOptions(shuffleArray([answer, ...(currentQuestion.distractors || [])]));
             setSelectedAnswer(null);
             setAnswerState('pending');
             setShowHint(false);
         }
     }, [currentQuestion]);
 
-    const selectRound = (round: Round, index: number) => {
-        if (!isRoundUnlocked(module?.id || '', round.prerequisites)) return;
-        setCurrentRoundIndex(index);
-    };
 
     const handleAnswerSelect = (answer: string) => {
         if (answerState !== 'pending') return;
@@ -299,11 +295,13 @@ export function PracticePage() {
 
             case 'fill-blank':
             default: {
+                if (!currentQuestion.q) return <div>Error: Question text missing</div>;
                 const dropZoneState = answerState === 'correct' ? styles.correct : answerState === 'incorrect' ? styles.incorrect : selectedAnswer ? styles.filled : '';
                 const sqlWithBlank = currentQuestion.q.replace(
                     /____/g,
                     `<span class="${styles.dropZone} ${dropZoneState}" id="drop-zone">${selectedAnswer || ''}</span>`
                 );
+
                 return (
                     <div
                         className={styles.sqlDisplay}
@@ -434,30 +432,12 @@ export function PracticePage() {
                 </div>
             </div>
 
-            {/* Round Selector */}
-            <div className={styles.roundSelector}>
-                {questionData.rounds.map((round, index) => {
-                    const unlocked = isRoundUnlocked(module.id, round.prerequisites);
-                    return (
-                        <button
-                            key={round.id}
-                            className={`${styles.roundBtn} ${index === currentRoundIndex ? styles.active : ''} ${!unlocked ? styles.locked : ''} `}
-                            onClick={() => selectRound(round, index)}
-                            disabled={!unlocked}
-                        >
-                            <div className={styles.roundIcon}>R{index + 1}</div>
-                            <span>{round.name}</span>
-                            {!unlocked && <span className={styles.lockIcon}>🔒</span>}
-                        </button>
-                    );
-                })}
-            </div>
 
             {/* Question Card */}
             <div className={styles.questionCard}>
                 <div className={styles.questionContext}>
                     <div className={styles.topicBadge}>
-                        {currentRound.name} • {questionType.replace('-', ' ').toUpperCase()}
+                        {questionType.replace('-', ' ').toUpperCase()}
                     </div>
 
                     <div className={styles.schemaBox}>

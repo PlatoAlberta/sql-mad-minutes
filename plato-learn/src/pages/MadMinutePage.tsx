@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getModuleById } from '../modules';
 import { loadModuleQuestions } from '../engine';
-import { Button } from '../components';
+import { Button, LessonRenderer } from '../components';
 import {
     MultipleChoice,
     CodeOrdering,
@@ -277,7 +277,16 @@ export function MadMinutePage() {
                         <h1>Lesson: {difficulty.toUpperCase()}</h1>
                         <Button variant="primary" size="sm" onClick={() => setGameState('intro')}>Close</Button>
                     </div>
-                    <div className={styles.lessonContent} style={{ textAlign: 'left', background: 'white', padding: '2rem', borderRadius: '12px', color: '#1e293b' }}>
+                    <div className={styles.lessonContent} style={{
+                        textAlign: 'left',
+                        background: 'rgba(255, 255, 255, 0.8)',
+                        backdropFilter: 'blur(12px)',
+                        padding: '2.5rem',
+                        borderRadius: '24px',
+                        color: '#1e293b',
+                        border: '1px solid rgba(255, 255, 255, 0.5)',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05)'
+                    }}>
                         {(() => {
                             let targetRounds: Round[] = [];
                             switch (difficulty) {
@@ -294,20 +303,11 @@ export function MadMinutePage() {
                                     </div>
                                     {r.lesson && r.lesson.length > 0 ? (
                                         <div style={{ lineHeight: '1.6' }}>
-                                            {(Array.isArray(r.lesson) ? r.lesson.map(s => `## ${s.title}\n${s.content}`).join('\n\n') : r.lesson).split('\n').map((line: string, i: number) => {
-                                                if (line.startsWith('## ')) return <h3 key={i} style={{ marginTop: '1.5rem', color: '#3b82f6' }}>{line.replace('## ', '')}</h3>;
-                                                if (line.startsWith('### ')) return <h4 key={i} style={{ marginTop: '1rem', color: '#475569' }}>{line.replace('### ', '')}</h4>;
-                                                if (line.startsWith('- ')) return (
-                                                    <div key={i} style={{ display: 'flex', gap: '8px', marginLeft: '1rem', marginBottom: '0.5rem' }}>
-                                                        <span style={{ color: '#3b82f6' }}>•</span>
-                                                        <span dangerouslySetInnerHTML={{
-                                                            __html: line.replace('- ', '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:#f1f5f9; padding:2px 4px; border-radius:4px; font-family:monospace; color:#ef4444">$1</code>')
-                                                        }} />
-                                                    </div>
-                                                );
-                                                if (line.trim() === '') return <div key={i} style={{ height: '0.5rem' }} />;
-                                                return <p key={i} style={{ margin: '0.5rem 0' }}>{line}</p>;
-                                            })}
+                                            <LessonRenderer
+                                                content={Array.isArray(r.lesson)
+                                                    ? r.lesson.map(s => `## ${s.title}\n${s.content}`).join('\n\n')
+                                                    : r.lesson}
+                                            />
                                         </div>
                                     ) : (
                                         <p style={{ fontStyle: 'italic', opacity: 0.6 }}>No lesson content available for this round.</p>

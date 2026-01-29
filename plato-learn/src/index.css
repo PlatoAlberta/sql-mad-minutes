@@ -1,11 +1,59 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Vibrant Pastel Theme Palette */
+
+  /* Backgrounds & Surfaces */
+  --bg-root: #fff1eb;
+  /* Warm base */
+  /* Mesh Gradient: Soft Coral + Mint + Pale Azure + Gold */
+  --bg-gradient:
+    radial-gradient(at 0% 0%, rgba(254, 130, 84, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(251, 191, 36, 0.15) 0px, transparent 50%),
+    linear-gradient(135deg, #fff1eb 0%, #e0f2fe 100%);
+
+  --bg-panel: rgba(255, 255, 255, 0.65);
+  /* Frosted Glass */
+  --bg-panel-hover: rgba(255, 255, 255, 0.8);
+  --bg-inset: rgba(255, 255, 255, 0.4);
+
+  /* Accents */
+  --accent-primary: #FE8254;
+  /* Burnt Peach - Vibrant Coral */
+  --accent-hover: #ff9f7a;
+  --accent-secondary: #0f766e;
+  /* Deep Teal for contrast */
+  --accent-tertiary: #4f46e5;
+  /* Indigo */
+
+  /* Text - High contrast for readability */
+  --text-primary: #0f172a;
+  /* Slate 900 - Deep Navy */
+  --text-secondary: #334155;
+  /* Slate 700 */
+  --text-muted: #64748b;
+  /* Slate 500 */
+
+  /* Borders & Effects */
+  --border-color: rgba(255, 255, 255, 0.6);
+  /* Semi-transparent white border */
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+  /* Softer, colored shadows */
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08);
+  /* Navy shadow tint */
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08);
+  --shadow-glow: 0 0 20px rgba(254, 130, 84, 0.25);
+  /* Peachy glow */
+
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: var(--text-primary);
+  background: var(--bg-gradient);
+  background-attachment: fixed;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +61,86 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
   display: flex;
   place-items: center;
+  /* This might be legacy from Vite template, usually we want block layout for apps */
   min-width: 320px;
   min-height: 100vh;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  align-items: flex-start;
+  /* Reset center alignment often found in Vite starter */
+  justify-content: flex-start;
+  width: 100%;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: var(--accent-primary);
+  text-decoration: inherit;
+  transition: opacity 0.2s;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-primary);
+  margin-top: 0;
 }
 
 button {
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--bg-panel);
+  color: var(--text-primary);
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: all 0.25s;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button:hover {
+  background-color: var(--bg-panel-hover);
+  border-color: var(--accent-primary);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-root);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #556c75;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
 }

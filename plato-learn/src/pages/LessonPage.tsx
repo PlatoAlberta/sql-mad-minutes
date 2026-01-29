@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { loadModuleQuestions, useGamification } from '../engine';
-import { Button } from '../components';
+import { Button, LessonRenderer, LessonPlayground } from '../components';
 import type { Round, LessonSlide } from '../types';
 import styles from './LessonPage.module.css';
 
@@ -57,13 +57,6 @@ export function LessonPage() {
         }
     };
 
-    // Simple markdown parser
-    const parseMarkdown = (text: string) => {
-        return text
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/`(.*?)`/g, '<code>$1</code>')
-            .replace(/\n/g, '<br/>');
-    };
 
     if (loading) {
         return (
@@ -111,71 +104,90 @@ export function LessonPage() {
                 />
             </div>
 
-            {/* Slide Content */}
-            <main className={styles.slideContainer}>
-                <div className={styles.slide}>
-                    <h2 className={styles.slideTitle}>{slide.title}</h2>
+            {/* Split Layout Container */}
+            <div className={styles.splitLayout}>
 
-                    <div
-                        className={styles.slideContent}
-                        dangerouslySetInnerHTML={{ __html: parseMarkdown(slide.content) }}
-                    />
+                {/* Left Panel */}
+                <section className={styles.panelColumn}>
+                    <header className={styles.panelHeader}>
+                        <h2 className={styles.panelTitle}>{slide.title}</h2>
+                    </header>
 
-                    {slide.codeExample && (
-                        <div className={styles.codeBlock}>
-                            <div className={styles.codeHeader}>Example</div>
-                            <pre className={styles.code}>{slide.codeExample}</pre>
-                            {slide.codeExplanation && (
-                                <div className={styles.codeExplanation}>
-                                    <span dangerouslySetInnerHTML={{ __html: parseMarkdown(slide.codeExplanation) }} />
+                    <div className={styles.contentCard}>
+                        <div className={styles.scrollableContent}>
+                            <div className={styles.lessonText}>
+                                <LessonRenderer content={slide.content} />
+                            </div>
+
+                            {slide.codeExample && (
+                                <div className={styles.codeBlock}>
+                                    <div className={styles.codeHeader}>
+                                        <span>Example</span>
+                                    </div>
+                                    <pre className={styles.code}>{slide.codeExample}</pre>
+                                    {slide.codeExplanation && (
+                                        <div className={styles.codeExplanation}>
+                                            <LessonRenderer content={slide.codeExplanation} />
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
-                    )}
-                </div>
-            </main>
+                    </div>
 
-            {/* Progress Dots */}
-            <div className={styles.progressDots}>
-                {slides.map((_, idx) => (
-                    <button
-                        key={idx}
-                        className={`${styles.dot} ${idx === currentSlide ? styles.active : ''} ${idx < currentSlide ? styles.completed : ''}`}
-                        onClick={() => setCurrentSlide(idx)}
-                        aria-label={`Go to slide ${idx + 1}`}
-                    />
-                ))}
+                    <footer className={styles.navigation}>
+                        <Button
+                            variant="secondary"
+                            size="lg"
+                            onClick={handlePrev}
+                            disabled={isFirstSlide}
+                        >
+                            ← Previous
+                        </Button>
+
+                        <div className={styles.progressDots}>
+                            {slides.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    className={`${styles.dot} ${idx === currentSlide ? styles.active : ''} ${idx < currentSlide ? styles.completed : ''}`}
+                                    onClick={() => setCurrentSlide(idx)}
+                                    aria-label={`Go to slide ${idx + 1}`}
+                                />
+                            ))}
+                        </div>
+
+                        {isLastSlide ? (
+                            <Button
+                                variant="primary"
+                                size="lg"
+                                onClick={handleComplete}
+                            >
+                                ✓ Complete
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="primary"
+                                size="lg"
+                                onClick={handleNext}
+                            >
+                                Next →
+                            </Button>
+                        )}
+                    </footer>
+                </section>
+
+                {/* Right Panel */}
+                <section className={styles.panelColumn}>
+                    <header className={styles.panelHeader}>
+                        <h2 className={styles.panelTitle}>SQL Playground</h2>
+                    </header>
+
+                    <div className={styles.contentCard}>
+                        <LessonPlayground initialSQL={slide.codeExample || 'SELECT * FROM students'} />
+                    </div>
+                </section>
+
             </div>
-
-            {/* Navigation */}
-            <footer className={styles.navigation}>
-                <Button
-                    variant="secondary"
-                    size="lg"
-                    onClick={handlePrev}
-                    disabled={isFirstSlide}
-                >
-                    ← Previous
-                </Button>
-
-                {isLastSlide ? (
-                    <Button
-                        variant="primary"
-                        size="lg"
-                        onClick={handleComplete}
-                    >
-                        ✓ Complete Lesson
-                    </Button>
-                ) : (
-                    <Button
-                        variant="primary"
-                        size="lg"
-                        onClick={handleNext}
-                    >
-                        Next →
-                    </Button>
-                )}
-            </footer>
         </div>
     );
 }

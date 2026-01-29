@@ -54,6 +54,8 @@ export interface Round {
   col?: number;
   /** Multi-slide lesson content */
   lesson?: LessonSlide[];
+  /** Type of the round */
+  type?: 'lesson' | 'test';
 }
 
 // ============================================
@@ -188,19 +190,24 @@ export interface QuestionComponentProps {
 }
 
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent) => void;
   children: React.ReactNode;
   className?: string;
+  type?: 'button' | 'submit' | 'reset';
+  title?: string;
 }
 
 export interface CardProps {
   variant?: 'raised' | 'inset' | 'flat';
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  interactive?: boolean;
   children: React.ReactNode;
   className?: string;
+  onClick?: (e: React.MouseEvent) => void;
+  style?: React.CSSProperties;
 }
 
 export interface ProgressBarProps {

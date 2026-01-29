@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllModules, getCustomModules, deleteCustomModule } from '../modules';
 import type { LearningModule } from '../types';
+import { Card, Button } from '../components';
 import styles from './CoursesPage.module.css';
 
 type FilterType = 'all' | 'built-in' | 'custom';
@@ -40,18 +41,17 @@ export function CoursesPage() {
         navigate(`/course/${moduleId}`);
     };
 
-    const handleEditCourse = (e: React.MouseEvent, moduleId: string) => {
-        e.stopPropagation();
+    const handleEditCourse = (e: React.MouseEvent | undefined, moduleId: string) => {
+        if (e) e.stopPropagation();
         navigate(`/workshop/${moduleId}`);
     };
 
-    const handleDeleteCourse = (e: React.MouseEvent, module: LearningModule) => {
-        e.stopPropagation();
+    const handleDeleteCourse = (e: React.MouseEvent | undefined, module: LearningModule) => {
+        if (e) e.stopPropagation();
         if (confirm(`Delete "${module.name}"? This cannot be undone.`)) {
             deleteCustomModule(module.id);
-            // Force re-render by updating state
-            setFilter(prev => prev); // This triggers a re-render
-            window.location.reload(); // Simple reload to refresh data
+            setFilter(prev => prev); // Force re-render
+            window.location.reload();
         }
     };
 
@@ -71,13 +71,10 @@ export function CoursesPage() {
                     <h1>Course Library</h1>
                     <p>Browse courses or create your own custom learning content</p>
                 </div>
-                <button
-                    className={styles.createButton}
-                    onClick={() => navigate('/workshop')}
-                >
+                <Button variant="primary" onClick={() => navigate('/workshop')}>
                     <span className={styles.plusIcon}>+</span>
                     Create Course
-                </button>
+                </Button>
             </header>
 
             {/* Filters */}
@@ -89,30 +86,33 @@ export function CoursesPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button
-                    className={`${styles.filterButton} ${filter === 'all' ? styles.active : ''}`}
+                <Button
+                    variant={filter === 'all' ? 'primary' : 'ghost'}
+                    size="sm"
                     onClick={() => setFilter('all')}
                 >
                     All
-                </button>
-                <button
-                    className={`${styles.filterButton} ${filter === 'built-in' ? styles.active : ''}`}
+                </Button>
+                <Button
+                    variant={filter === 'built-in' ? 'primary' : 'ghost'}
+                    size="sm"
                     onClick={() => setFilter('built-in')}
                 >
                     Built-in
-                </button>
-                <button
-                    className={`${styles.filterButton} ${filter === 'custom' ? styles.active : ''}`}
+                </Button>
+                <Button
+                    variant={filter === 'custom' ? 'primary' : 'ghost'}
+                    size="sm"
                     onClick={() => setFilter('custom')}
                 >
                     Custom
-                </button>
+                </Button>
             </div>
 
             {/* Course Grid */}
             <div className={styles.courseGrid}>
                 {filteredModules.length === 0 ? (
-                    <div className={styles.emptyState}>
+                    <Card className={styles.emptyState} padding="lg">
                         <div className={styles.emptyIcon}>📚</div>
                         <h3>No courses found</h3>
                         <p>
@@ -121,15 +121,12 @@ export function CoursesPage() {
                                 : "No courses match your search."}
                         </p>
                         {filter === 'custom' && (
-                            <button
-                                className={styles.createButton}
-                                onClick={() => navigate('/workshop')}
-                            >
+                            <Button variant="primary" onClick={() => navigate('/workshop')}>
                                 <span className={styles.plusIcon}>+</span>
                                 Create Your First Course
-                            </button>
+                            </Button>
                         )}
-                    </div>
+                    </Card>
                 ) : (
                     filteredModules.map((module) => {
                         const isCustom = customModuleIds.has(module.id);
@@ -137,29 +134,34 @@ export function CoursesPage() {
                         const questionCount = countQuestions(module);
 
                         return (
-                            <div
+                            <Card
                                 key={module.id}
                                 className={styles.courseCard}
                                 style={{ '--card-accent-color': module.color } as React.CSSProperties}
+                                interactive
                                 onClick={() => handleCourseClick(module.id)}
                             >
                                 {/* Card Actions (only for custom courses) */}
                                 {isCustom && (
                                     <div className={styles.cardActions}>
-                                        <button
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
                                             className={`${styles.actionButton} ${styles.editButton}`}
                                             onClick={(e) => handleEditCourse(e, module.id)}
                                             title="Edit course"
                                         >
                                             ✏️
-                                        </button>
-                                        <button
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
                                             className={`${styles.actionButton} ${styles.deleteButton}`}
                                             onClick={(e) => handleDeleteCourse(e, module)}
                                             title="Delete course"
                                         >
                                             🗑️
-                                        </button>
+                                        </Button>
                                     </div>
                                 )}
 
@@ -177,7 +179,7 @@ export function CoursesPage() {
                                                 {isCustom ? 'Custom' : 'Official'}
                                             </span>
                                             {module.category && (
-                                                <span className={styles.courseType} style={{ background: '#f1f5f9', color: '#64748b' }}>
+                                                <span className={styles.courseType} style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--text-secondary)' }}>
                                                     {module.category.toUpperCase()}
                                                 </span>
                                             )}
@@ -197,7 +199,7 @@ export function CoursesPage() {
                                         <span className={styles.statLabel}>Questions</span>
                                     </div>
                                 </div>
-                            </div>
+                            </Card>
                         );
                     })
                 )}

@@ -1,0 +1,137 @@
+/* Container */
+.container {
+    padding: 24px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Typography */
+.h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-top: 32px;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+}
+
+.h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    margin-top: 24px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.paragraph {
+    margin-bottom: 16px;
+    font-size: 15px;
+    color: #334155;
+}
+
+/* Lists */
+.listItem {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+    margin-left: 8px;
+}
+
+.listDot {
+    color: var(--accent-primary);
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+/* Code Blocks */
+.codeBlock {
+    background: #1e293b;
+    /* Dark slate for contrast */
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0 24px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: #e2e8f0;
+    line-height: 1.5;
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+.codeBlock::before {
+    content: 'SQL';
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 0 12px 0 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Inline Elements */
+.inlineCode {
+    background: #eff6ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9em;
+    color: var(--accent-primary);
+    border: 1px solid #dbeafe;
+    font-weight: 600;
+}
+
+.bold {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.spacer {
+    height: 16px;
+}
+
+/* Warning/Info Callout if needed (for lines starting with >) */
+.callout {
+    background: rgba(251, 191, 36, 0.1);
+    /* Amber tint */
+    border-left: 4px solid #f59e0b;
+    padding: 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    color: #92400e;
+}
+
+/* Playground Wrapper */
+.playgroundWrapper {
+    margin: 32px 0;
+    width: 100%;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

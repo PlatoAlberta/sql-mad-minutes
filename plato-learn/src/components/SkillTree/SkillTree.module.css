@@ -24,8 +24,9 @@
     width: 4px;
     /* Thicker */
     height: 100%;
-    background: var(--slate);
-    opacity: 0.3;
+    background: #94a3b8;
+    /* Darker slate */
+    opacity: 0.5;
     justify-self: center;
     border-radius: 2px;
 }
@@ -49,8 +50,8 @@
     width: 4px;
     height: 50%;
     /* Top half */
-    background: var(--slate);
-    opacity: 0.3;
+    background: #94a3b8;
+    opacity: 0.5;
     transform: translateX(-50%);
 }
 
@@ -62,8 +63,8 @@
     right: 25%;
     /* End at center of last col */
     height: 4px;
-    background: var(--slate);
-    opacity: 0.3;
+    background: #94a3b8;
+    opacity: 0.5;
     border-radius: 2px;
 }
 
@@ -80,8 +81,8 @@
     left: 25%;
     width: 4px;
     height: 50%;
-    background: var(--slate);
-    opacity: 0.3;
+    background: #94a3b8;
+    opacity: 0.5;
     transform: translateX(-50%);
 }
 
@@ -93,8 +94,8 @@
     right: 25%;
     width: 4px;
     height: 50%;
-    background: var(--slate);
-    opacity: 0.3;
+    background: #94a3b8;
+    opacity: 0.5;
     transform: translateX(50%);
 }
 
@@ -419,15 +420,15 @@
 .pairConnector {
     width: 2px;
     height: 24px;
-    background: #E2E8F0;
-    /* Lighter dashed line look? */
-    border-left: 2px dashed #CBD5E1;
-    background: transparent;
-    width: 0;
+    background: #CBD5E1;
+    /* Visible slate color */
+    margin: -4px 0;
+    /* Pull them closer? Gap is 8px. */
+    z-index: 1;
 }
 
 .pairConnector.unlocked {
-    border-left: 2px solid var(--color-success);
+    background: var(--royal);
     opacity: 1;
 }
 

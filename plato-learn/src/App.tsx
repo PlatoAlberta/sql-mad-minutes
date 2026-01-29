@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GamificationProvider } from './engine';
 import { AppLayout } from './layouts';
 import { Dashboard, CoursePage, CoursesPage, CourseWorkshop, PracticePage, MadMinutePage, LessonPage } from './pages';
-import './styles/global.css';
 
 /**
  * PLATO Learn - Main Application

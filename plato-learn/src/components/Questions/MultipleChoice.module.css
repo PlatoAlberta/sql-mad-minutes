@@ -1,90 +1,123 @@
+/* Main Container */
 .container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
+/* Option Card */
 .option {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 16px 20px;
-    background: var(--bg-base);
-    border: 2px solid transparent;
-    border-radius: var(--radius-md);
-    box-shadow: var(--neu-raised);
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 .option:hover {
+    background: rgba(255, 255, 255, 0.7);
     transform: translateY(-2px);
-    box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: rgba(99, 102, 241, 0.3);
 }
 
+/* Selected State */
 .option.selected {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
     border-color: var(--royal);
-    background: rgba(0, 89, 232, 0.05);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
 }
 
 .option.correct {
-    border-color: var(--color-success);
-    background: rgba(34, 160, 107, 0.1);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+    border-color: #10B981;
 }
 
 .option.incorrect {
-    border-color: var(--flare);
-    background: rgba(255, 26, 20, 0.1);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(248, 113, 113, 0.1));
+    border-color: #EF4444;
 }
 
 .option.disabled {
     pointer-events: none;
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
+/* Radio Circle */
 .radio {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: var(--bg-inset);
-    box-shadow: var(--neu-inset);
+    border: 2px solid rgba(148, 163, 184, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .radio::after {
     content: '';
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: transparent;
-    transition: background 0.2s ease;
+    background: var(--royal);
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.option:hover .radio {
+    border-color: var(--royal);
+}
+
+.option.selected .radio {
+    border-color: var(--royal);
+    background: white;
 }
 
 .option.selected .radio::after {
+    transform: scale(1);
     background: var(--royal);
 }
 
+.option.correct .radio {
+    border-color: #10B981;
+}
+
 .option.correct .radio::after {
-    background: var(--color-success);
+    transform: scale(1);
+    background: #10B981;
+}
+
+.option.incorrect .radio {
+    border-color: #EF4444;
 }
 
 .option.incorrect .radio::after {
-    background: var(--flare);
+    transform: scale(1);
+    background: #EF4444;
 }
 
+/* Letter (A/B/C/D) */
 .letter {
-    width: 28px;
-    height: 28px;
-    background: var(--bg-inset);
-    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 13px;
+    font-weight: 800;
+    font-size: 14px;
     color: var(--text-secondary);
     flex-shrink: 0;
 }
@@ -94,8 +127,21 @@
     color: white;
 }
 
+.option.correct .letter {
+    background: #10B981;
+    color: white;
+}
+
+.option.incorrect .letter {
+    background: #EF4444;
+    color: white;
+}
+
+/* Text */
 .text {
-    font-family: var(--font-mono);
-    font-size: 15px;
-    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: var(--midnight);
+    font-weight: 500;
+    line-height: 1.5;
 }

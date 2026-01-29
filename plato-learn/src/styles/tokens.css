@@ -1,92 +1,65 @@
 /* ============================================
    PLATO LEARN - DESIGN TOKENS
-   Color Palette: Chalk, Slate, Midnight, Royal, Flare
+   Color Palette: Deep Space, Neon, Glass
    ============================================ */
 
 :root {
-  /* Brand Palette - Clean & Professional */
-  --royal: #3b82f6;
-  /* Blue-500 */
-  --royal-dark: #2563eb;
-  /* Blue-600 */
-  --indigo: #4f46e5;
-  /* Indigo-600 */
-  --midnight: #1e293b;
-  /* Slate-800 */
-  --slate: #64748b;
-  /* Slate-500 */
+  /* Brand Palette - Premium & Dark */
+  --royal: #3b82f6;          /* Primary Blue */
+  --royal-dark: #2563eb;     /* Darker Blue */
+  --indigo: #6366f1;         /* Primary Indigo */
+  --purple: #a855f7;         /* Accent Purple */
+  --cyan: #06b6d4;           /* Accent Cyan */
+  
+  /* Dark Mode Base Colors */
+  --midnight: #0f172a;       /* Deepest Background */
+  --midnight-light: #1e293b; /* Lighter Background (Cards) */
+  --slate: #94a3b8;          /* Muted Text */
+  
+  /* Semantic Colors - Vibrant */
+  --color-success: #10b981;  /* Emerald */
+  --color-error: #ef4444;    /* Red */
+  --color-warning: #f59e0b;  /* Amber */
+  --color-info: #3b82f6;     /* Blue */
 
-  /* Semantic Colors */
-  --color-success: #10b981;
-  /* Emerald-500 */
-  --color-success-dark: #059669;
-  /* Emerald-600 */
-  --color-error: #ef4444;
-  /* Red-500 */
-  --color-warning: #f59e0b;
-  /* Amber-500 */
-
+  /* Glassmorphism & Surfaces */
+  /* For light/glass overlays on top of dark */
+  --glass-surface: rgba(30, 41, 59, 0.7); 
+  --glass-border: rgba(148, 163, 184, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.05);
+  
   /* Backgrounds */
-  --bg-base: #FFFFFF;
-  --bg-subtle: #F8FAFC;
-  /* Slate-50 */
-  --bg-inset: #F1F5F9;
-  /* Slate-100 */
-  --bg-highlight: #EEF2FF;
-  /* Indigo-50 */
-
+  --bg-base: #0f172a;        /* Main App Bg */
+  --bg-surface: #1e293b;     /* Card Bg */
+  --bg-inset: #020617;       /* Deep Inset (Code blocks) */
+  
   /* Text */
-  --text-primary: #0F172A;
-  /* Slate-900 */
-  --text-secondary: #475569;
-  /* Slate-600 */
-  --text-muted: #94A3B8;
-  /* Slate-400 */
-  --text-inverse: #FFFFFF;
+  --text-primary: #f8fafc;   /* White-ish */
+  --text-secondary: #cbd5e1; /* Light Slate */
+  --text-muted: #64748b;     /* Dark Slate */
+  --text-inverse: #0f172a;   /* Dark Text */
 
-  /* Shadows (Modern, soft) */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-
-  /* Legacy mapping for existing Neumorphism components to prevent breaking */
-  --neu-raised: var(--shadow-md);
-  --neu-inset: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
-  --neu-subtle: var(--shadow-sm);
-
+  /* Shadows (Glow) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  
+  /* Neon Glows */
+  --glow-royal: 0 0 15px rgba(59, 130, 246, 0.5);
+  --glow-success: 0 0 15px rgba(16, 185, 129, 0.5);
+  
   /* Spacing */
   --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-md: 10px;         /* Slightly rounder */
+  --radius-lg: 16px;         /* Modern look */
+  --radius-xl: 24px;
   --radius-full: 9999px;
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-
-  /* =========================================
-     Backwards Compatibility / Legacy Tokens
-     Map old values to new system to verify no breakage
-     ========================================= */
-
-  /* Old Shadows */
-  --shadow-light: rgba(255, 255, 255, 0.5);
-  --shadow-dark: rgba(0, 0, 0, 0.1);
-
-  /* Old Colors */
-  --chalk: #FFFFFF;
-  --chalk-soft: #F8FAFC;
-  --midnight-soft: var(--midnight);
-  --slate-dark: #475569;
-
-  --royal-soft: #60a5fa;
-  --purple: #8b5cf6;
-  --teal: #14b8a6;
-  --pink: #ec4899;
-  --amber: #f59e0b;
-
-  --gradient-primary: linear-gradient(135deg, var(--royal) 0%, var(--indigo) 100%);
-  --gradient-success: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-dark) 100%);
-  --gradient-royal: linear-gradient(135deg, var(--royal) 0%, var(--indigo) 100%);
+  
+  /* Backdrop Filters */
+  --blur-md: blur(12px);
+  --blur-lg: blur(20px);
 }

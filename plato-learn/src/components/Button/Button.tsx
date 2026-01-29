@@ -11,6 +11,8 @@ export function Button({
     onClick,
     children,
     className = '',
+    type = 'button',
+    title,
 }: ButtonProps) {
     const classes = [
         styles.button,
@@ -21,9 +23,11 @@ export function Button({
 
     return (
         <button
+            type={type}
             className={classes}
             onClick={onClick}
             disabled={disabled}
+            title={title}
         >
             {children}
         </button>

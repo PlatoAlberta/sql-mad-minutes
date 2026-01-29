@@ -1,0 +1,206 @@
+/* Main Container */
+.container {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+    /* Fill panel */
+}
+
+/* Editor Section */
+/* Editor Section - Now inside a shared card */
+.editorCard {
+    /* Background matches code block theme, but fills entire card now? 
+       Actually, if we put this INSIDE the .contentCard, do we want double borders?
+       The user wants the "tile" look.
+       
+       Hypothesis: The "Right Panel" itself is the Tile.
+       Inside it is the Editor.
+    */
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    /* Grow to fill space */
+    height: 100%;
+}
+
+.editorHeader {
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* Wrapper for the Editor to handle scrolling and styling */
+.editorWrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+    background: #0F172A;
+    /* Dark slate matching left side code block */
+    border-radius: 16px;
+    margin: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.editorArea {
+    width: 100%;
+    min-height: 100%;
+    /* Fill the wrapper */
+    padding: 24px;
+    /* Match padding of left side code block */
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    font-family: 'JetBrains Mono', monospace, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    /* Auto-size handled by wrapper/flex */
+}
+
+.editorArea:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.cardFooter {
+    padding: 0 16px 16px 16px;
+    background: transparent;
+    border-top: none;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Run Button */
+/* Run Button - Matches .button.primary styles */
+.runBtn {
+    background: linear-gradient(135deg, var(--accent-primary), #fdba74);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(254, 130, 84, 0.3);
+    text-shadow: none;
+    opacity: 1;
+}
+
+.runBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(254, 130, 84, 0.4);
+    filter: brightness(1.05);
+}
+
+.runBtn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(254, 130, 84, 0.3);
+}
+
+.runBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(1);
+    background: #cbd5e1;
+    box-shadow: none;
+    transform: none;
+}
+
+.runBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Results Section */
+.resultsContainer {
+    animation: fadeIn 0.2s ease;
+}
+
+.errorBox {
+    padding: 16px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid #EF4444;
+    border-radius: var(--radius-md);
+    color: #EF4444;
+    font-size: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.tableWrapper {
+    overflow-x: auto;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.resultTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.resultTable th {
+    background: rgba(241, 245, 249, 0.8);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.resultTable td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.resultTable tr:last-child td {
+    border-bottom: none;
+}
+
+.resultTable tr:nth-child(even) {
+    background: rgba(248, 250, 252, 0.5);
+}
+
+.emptyState {
+    padding: 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 14px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

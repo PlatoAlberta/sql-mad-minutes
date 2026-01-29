@@ -1,15 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { getAllModules } from '../modules'; // Assuming this exports module list
 import { useGamification } from '../engine';
+import { Card, Button } from '../components';
 import styles from './Dashboard.module.css';
 
 export function Dashboard() {
     const navigate = useNavigate();
     const modules = getAllModules();
     const { progress } = useGamification();
-
-    // Calculate overall progress? For now just showing stats.
-    // In a real app we'd sum up progress from all modules.
 
     return (
         <div className={styles.container}>
@@ -20,24 +18,24 @@ export function Dashboard() {
                     <p className={styles.subtitle}>Ready to continue your mastery?</p>
                 </div>
 
-                {/* Profile Stats - Minimalist Cards */}
+                {/* Profile Stats */}
                 <div className={styles.statsRow}>
-                    <div className={styles.statCard}>
+                    <Card className={styles.statCard} padding="md">
                         <div className={styles.statLabel}>Total XP</div>
                         <div className={styles.statValue}>{progress.xp.toLocaleString()}</div>
-                    </div>
-                    <div className={styles.statCard}>
+                    </Card>
+                    <Card className={styles.statCard} padding="md">
                         <div className={styles.statLabel}>Day Streak</div>
                         <div className={styles.statValue}>
                             {progress.streak} <span className={styles.fire}>🔥</span>
                         </div>
-                    </div>
-                    <div className={styles.statCard}>
+                    </Card>
+                    <Card className={styles.statCard} padding="md">
                         <div className={styles.statLabel}>Modules</div>
                         <div className={styles.statValue}>
                             {Object.keys(progress.moduleProgress).length}<span>/{modules.length}</span>
                         </div>
-                    </div>
+                    </Card>
                 </div>
             </header>
 
@@ -49,7 +47,9 @@ export function Dashboard() {
                         <h2>Mad Minute Challenge</h2>
                         <p>Test your speed. 60 seconds. Unlimited questions.</p>
                     </div>
-                    <button className={styles.ctaButton}>Start Drill</button>
+                    <Button variant="primary" onClick={(e) => { e?.stopPropagation(); navigate('/mad-minute/sql'); }}>
+                        Start Drill
+                    </Button>
                 </div>
             </section>
 
@@ -58,19 +58,17 @@ export function Dashboard() {
                 <h2 className={styles.sectionTitle}>Your Courses</h2>
                 <div className={styles.courseGrid}>
                     {modules.map((module) => {
-                        // Calculate module specific progress (mock for now or derive)
                         const modProgress = progress.moduleProgress[module.id] || {};
                         const completedRounds = Object.values(modProgress).filter(r => r.completed).length;
-                        // Assuming roughly 7-10 rounds per module for percentage
-                        // Ideally we'd know total rounds per module without loading heavy question data. 
-                        // For MVP, we'll just show "Started" or "New".
                         const isStarted = completedRounds > 0;
 
                         return (
-                            <div
+                            <Card
                                 key={module.id}
                                 className={styles.courseCard}
+                                interactive
                                 onClick={() => navigate(`/course/${module.id}`)}
+                                padding="lg"
                             >
                                 <div
                                     className={styles.courseIcon}
@@ -83,31 +81,41 @@ export function Dashboard() {
                                     <p className={styles.courseDesc}>{module.description}</p>
 
                                     <div className={styles.courseMeta}>
-                                        <div className={styles.progressBar}>
-                                            <div
-                                                className={styles.progressFill}
-                                                style={{ width: isStarted ? `${Math.min(completedRounds * 10, 100)}%` : '0%' }}
-                                            />
-                                        </div>
-                                        <div className={styles.statusText}>
-                                            {isStarted ? `${completedRounds} Rounds Complete` : 'Start Course'}
-                                        </div>
+                                        {isStarted ? (
+                                            <>
+                                                <div className={styles.progressBar}>
+                                                    <div
+                                                        className={styles.progressFill}
+                                                        style={{ width: `${Math.min(completedRounds * 10, 100)}%` }}
+                                                    />
+                                                </div>
+                                                <div className={styles.statusText}>
+                                                    {completedRounds} Rounds
+                                                </div>
+                                            </>
+                                        ) : (
+                                            /* Not started: Show Start Course text next to arrow */
+                                            <div className={styles.startAction}>
+                                                <span className={styles.statusText}>START COURSE</span>
+                                                <div className={styles.arrowIcon}>→</div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                                <div className={styles.arrowIcon}>→</div>
-                            </div>
+                                {/* Arrow removed from root level, now conditional inside meta */}
+                            </Card>
                         );
                     })}
 
                     {/* Placeholder for future expansion */}
-                    <div className={`${styles.courseCard} ${styles.comingSoon}`}>
+                    <Card className={`${styles.comingSoon}`} padding="lg">
                         <div className={styles.courseIcon}>⚡</div>
                         <div className={styles.courseInfo}>
                             <h3 className={styles.courseName}>Python for Data</h3>
                             <p className={styles.courseDesc}>Data structures, Pandas, and more.</p>
                             <div className={styles.statusText}>Coming Soon</div>
                         </div>
-                    </div>
+                    </Card>
                 </div>
             </section>
         </div>

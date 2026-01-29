@@ -4,7 +4,6 @@
     display: flex;
     flex-direction: column;
     min-height: calc(100vh - 100px);
-    /* Adjust for app padding */
 }
 
 .header {
@@ -72,68 +71,109 @@
     transition: width 0.3s ease;
 }
 
-.slideContainer {
-    flex: 1;
+/* Split Layout */
+.splitLayout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    height: calc(100vh - 220px);
+    overflow: hidden;
+    padding: 0 48px 32px 48px;
+    align-items: stretch;
+    /* Stretch children to fill height */
+}
+
+/* Reusable Panel Styling */
+.panelColumn {
     display: flex;
     flex-direction: column;
-}
-
-.slide {
-    display: grid;
-    grid-template-columns: 1.2fr 1.5fr;
-    /* Text | Code */
-    gap: 64px;
     height: 100%;
-    animation: fadeIn 0.4s ease;
+    overflow: hidden;
+    /* Prevent inner scroll spill */
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.panelHeader {
+    margin-bottom: 16px;
+    flex-shrink: 0;
 }
 
-.slideTitle {
-    grid-column: 1 / -1;
-    font-size: 48px;
+.panelTitle {
+    font-size: 32px;
     font-weight: 800;
     color: var(--midnight);
-    margin-bottom: 24px;
     letter-spacing: -0.03em;
     line-height: 1.1;
     background: linear-gradient(135deg, var(--midnight), var(--royal));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    margin: 0;
 }
 
-.slideContent {
-    font-size: 20px;
+/* The Shared Card Style */
+.contentCard {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 10px 15px -3px rgba(0, 0, 0, 0.05),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.contentCard:hover {
+    box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.05),
+        0 8px 10px -6px rgba(0, 0, 0, 0.01),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.75);
+}
+
+/* Scrollable Content Areas */
+.scrollableContent {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+    /* Custom Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(15, 23, 42, 0.1) transparent;
+}
+
+.scrollableContent::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollableContent::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollableContent::-webkit-scrollbar-thumb {
+    background-color: rgba(15, 23, 42, 0.1);
+    border-radius: 3px;
+}
+
+/* Specific Content Styling */
+.lessonText {
+    font-size: 18px;
     line-height: 1.8;
     color: var(--text-secondary);
     font-family: 'Merriweather', 'Georgia', serif;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(12px);
-    padding: 32px;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
 }
 
-.slideContent strong {
+.lessonText strong {
     color: var(--text-primary);
     font-weight: 900;
 }
 
-.slideContent code {
+.lessonText code {
     background: #FFF7ED;
-    /* Light orange tint */
     color: #C2410C;
     padding: 2px 6px;
     border-radius: 4px;
@@ -141,78 +181,21 @@
     border: 1px solid #FFEDD5;
 }
 
-/* Code Column */
-.codeBlock {
-    background: #0F172A;
-    border-radius: 16px;
-    padding: 32px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    color: #E2E8F0;
-    font-family: 'JetBrains Mono', monospace;
-    position: sticky;
-    top: 24px;
-    height: fit-content;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.codeHeader {
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #64748B;
-    margin-bottom: 24px;
-    letter-spacing: 0.1em;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.codeHeader::after {
-    content: 'SQL';
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px 8px;
-    border-radius: 4px;
-    color: #94A3B8;
-}
-
-.code {
-    font-size: 16px;
-    line-height: 1.6;
-    margin: 0;
-    white-space: pre-wrap;
-    color: #A5B4FC;
-}
-
-.codeExplanation {
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 14px;
-    color: #94A3B8;
-    line-height: 1.6;
-    display: flex;
-    gap: 12px;
-}
-
-.codeExplanation::before {
-    content: '💡';
-}
-
-/* Navigation Footer */
+/* Navigation Footer in Left Panel - Now inside the card ?? Or keep outside?
+   User asked for "tile on the left". Nav buttons are usually outside content tiles.
+   We'll keep nav buttons separate below the card in the column.
+*/
 .navigation {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 64px;
-    padding-top: 32px;
-    border-top: 1px solid #E2E8F0;
+    margin-top: 24px;
+    flex-shrink: 0;
 }
 
 .progressDots {
     display: flex;
     gap: 12px;
-    justify-content: center;
-    margin-bottom: 32px;
 }
 
 .dot {
@@ -234,15 +217,47 @@
     background: #CBD5E1;
 }
 
+/* Code Example Block (Static) */
+.codeBlock {
+    background: #0F172A;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.codeHeader {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #64748B;
+    margin-bottom: 16px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+}
+
+.code {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #A5B4FC;
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.codeExplanation {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+    color: #94A3B8;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
-    .slide {
+    .splitLayout {
         grid-template-columns: 1fr;
-        gap: 40px;
-    }
-
-    .codeBlock {
-        position: relative;
-        top: 0;
+        height: auto;
+        overflow: visible;
     }
 }

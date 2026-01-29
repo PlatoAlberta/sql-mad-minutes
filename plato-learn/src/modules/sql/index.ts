@@ -34,8 +34,8 @@ export const sqlModule: LearningModule = {
         // Row 0: Root node
         {
             id: 'r1',
-            name: 'SQL Basics',
-            description: 'Core SELECT, WHERE, and ORDER BY fundamentals',
+            name: 'The SELECT Statement',
+            description: 'Master the anatomy of a query: SELECT, FROM, and DISTINCT.',
             questions: [],
             prerequisites: [], // No prereqs = root node
             row: 0,
@@ -44,8 +44,8 @@ export const sqlModule: LearningModule = {
         // Row 1: Branch into two paths
         {
             id: 'r2',
-            name: 'Aggregates & Grouping',
-            description: 'COUNT, SUM, AVG, GROUP BY, and HAVING',
+            name: 'Filtering Data (WHERE)',
+            description: 'Standard logical operators, AND/OR, and fuzzy matching.',
             questions: [],
             prerequisites: ['r1'],
             row: 1,
@@ -53,8 +53,8 @@ export const sqlModule: LearningModule = {
         },
         {
             id: 'r3',
-            name: 'JOINs',
-            description: 'Combining data from multiple tables',
+            name: 'Aggregation & Groups',
+            description: 'Summarize data with COUNT, SUM, AVG and GROUP BY.',
             questions: [],
             prerequisites: ['r1'],
             row: 1,
@@ -63,8 +63,8 @@ export const sqlModule: LearningModule = {
         // Row 2: Converge - requires BOTH branches
         {
             id: 'r4',
-            name: 'Subqueries',
-            description: 'Nested SELECT statements and correlated subqueries',
+            name: 'Joins (Inner & Left)',
+            description: 'Combine data from multiple tables using keys.',
             questions: [],
             prerequisites: ['r2', 'r3'], // Must complete BOTH to unlock
             row: 2,
@@ -73,8 +73,8 @@ export const sqlModule: LearningModule = {
         // Row 3: Branch again
         {
             id: 'r5',
-            name: 'Window Functions',
-            description: 'ROW_NUMBER, RANK, LEAD, LAG, and PARTITION BY',
+            name: 'Subqueries',
+            description: 'Nested queries for dynamic filtering.',
             questions: [],
             prerequisites: ['r4'],
             row: 3,
@@ -82,8 +82,8 @@ export const sqlModule: LearningModule = {
         },
         {
             id: 'r6',
-            name: 'CTEs & Advanced',
-            description: 'WITH clauses, CASE statements, COALESCE',
+            name: 'Window Functions',
+            description: 'Advanced analytics with OVER() and PARTITION BY.',
             questions: [],
             prerequisites: ['r4'],
             row: 3,
@@ -92,8 +92,8 @@ export const sqlModule: LearningModule = {
         // Row 4: Final mastery - requires both advanced paths
         {
             id: 'r7',
-            name: 'SQL Mastery',
-            description: 'Complex queries combining all techniques',
+            name: 'Advanced Mastery (CTEs)',
+            description: 'Clean up complex logic with Common Table Expressions.',
             questions: [],
             prerequisites: ['r5', 'r6'], // Must complete BOTH advanced paths
             row: 4,
